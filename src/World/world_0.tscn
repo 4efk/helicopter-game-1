@@ -9,7 +9,7 @@ specular_mode = 1
 albedo_color = Color(0.160784, 0.372549, 0.141176, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_o38uk"]
-size = Vector3(3, 1, 1)
+size = Vector3(8.74, 1.75, 1.12)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j7u3f"]
 specular_mode = 1
@@ -17,7 +17,7 @@ albedo_color = Color(0, 0.454902, 0.509804, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_sf0r1"]
 material = SubResource("StandardMaterial3D_j7u3f")
-size = Vector3(3, 1, 1)
+size = Vector3(8.74, 1.75, 1.12)
 
 [node name="world0" type="Node3D"]
 
@@ -36,7 +36,14 @@ material = SubResource("StandardMaterial3D_3lkrr")
 
 [node name="Helicopter0" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.08919, 0)
+mass = 400.0
 script = ExtResource("1_qcidy")
+
+[node name="MainRotorPos" type="Marker3D" parent="Helicopter0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.528, 0)
+
+[node name="TailRotorPos" type="Marker3D" parent="Helicopter0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.97835, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Helicopter0"]
 shape = SubResource("BoxShape3D_o38uk")

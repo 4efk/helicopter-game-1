@@ -35,7 +35,7 @@ size = Vector3(50, 1, 50)
 material = SubResource("StandardMaterial3D_3lkrr")
 
 [node name="Helicopter0" type="RigidBody3D" parent="."]
-transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 5.08351, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.08351, 0)
 mass = 400.0
 script = ExtResource("1_qcidy")
 

@@ -36,7 +36,7 @@ material = SubResource("StandardMaterial3D_3lkrr")
 
 [node name="Helicopter0" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.08351, 0)
-mass = 400.0
+mass = 500.0
 script = ExtResource("1_qcidy")
 
 [node name="MainRotorPos" type="Marker3D" parent="Helicopter0"]

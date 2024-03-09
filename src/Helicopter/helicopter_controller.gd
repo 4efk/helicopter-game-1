@@ -34,7 +34,7 @@ func _physics_process(_delta):
 	
 	#print(Input.get_vector("cyclic_backward", "cyclic_forward", "cyclic_left", "cyclic_right"))
 	
-	cyclic = Input.get_vector("cyclic_backward", "cyclic_forward", "cyclic_right", "cyclic_left")
+	cyclic = Input.get_vector("cyclic_forward", "cyclic_backward", "cyclic_left", "cyclic_right")
 	
 	print(cyclic)
 	

@@ -1,2 +1,5 @@
 # Godot 4+ specific ignores
 .godot/
+
+#ignoring a folder with possibly copyrighted reference
+ref/

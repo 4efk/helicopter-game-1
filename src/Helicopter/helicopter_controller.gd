@@ -36,11 +36,14 @@ func _physics_process(_delta):
 	
 	cyclic = Input.get_vector("cyclic_backward", "cyclic_forward", "cyclic_right", "cyclic_left")
 	
+	print(cyclic)
+	
 	var main_rotor_thrust_direction = transform.basis.y.rotated(Vector3(1, 0, 0), cyclic.y * PI/12).rotated(Vector3(0, 0, 1), cyclic.x * PI/12)
 	
 	apply_central_force(main_rotor_thrust_direction * main_rotor_thrust_force)
 	#apply_force(main_rotor_thrust_direction * main_rotor_thrust_force, main_rotor_pos)
-	print(main_rotor_thrust_direction)
+	
+	#print(main_rotor_thrust_direction)
 	apply_torque(Vector3(0, -256.45 , 0))
 	
 	var tail_rotor_thrust_force = 64.47 + Input.get_axis("antitorque_right", "antitorque_left") * 400#2523.46

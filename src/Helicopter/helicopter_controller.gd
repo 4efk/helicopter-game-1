@@ -8,8 +8,8 @@ extends RigidBody3D
 @export var main_rotor_collective_max = 12 # max/min angle of main rotor blades [°]; made up
 @export var main_rotor_collective_min = -12
 
-@onready var main_rotor_pos = $MainRotorPos.position
-@onready var tail_rotor_pos = $TailRotorPos.position
+@onready var main_rotor_pos = $MainRotorPos.global_position
+@onready var tail_rotor_pos = $TailRotorPos.global_position
 
 var main_rotor_omega =  55.50 # angular velocity [rad/s]
 
@@ -33,6 +33,7 @@ func _physics_process(_delta):
 	
 	#i'm stupid, this didn't update
 	main_rotor_pos = $MainRotorPos.global_position
+	tail_rotor_pos = $TailRotorPos.global_position
 	
 	
 	
@@ -48,11 +49,12 @@ func _physics_process(_delta):
 	var main_rotor_thrust_direction = transform.basis.y.rotated(Vector3(1, 0, 0), cyclic.y * PI/30).rotated(Vector3(0, 0, 1), cyclic.x * PI/30)
 	main_rotor_thrust_direction = Vector3.UP.rotated(Vector3(1, 0, 0), cyclic.y * PI/30).rotated(Vector3(0, 0, 1), cyclic.x * PI/30)
 	
-	print(main_rotor_thrust_direction)
+	#print(main_rotor_thrust_direction)
+	print(main_rotor_pos - global_position)
 	
-	#apply_central_force(Vector3(0, 1, 0) * main_rotor_thrust_force)
+	apply_force(Vector3(0, 1, 0) * main_rotor_thrust_force, main_rotor_pos)
 	#apply_central_force(main_rotor_thrust_direction * main_rotor_thrust_force)
-	apply_force(main_rotor_thrust_direction * main_rotor_thrust_force, main_rotor_pos)
+	#apply_force(main_rotor_thrust_direction * main_rotor_thrust_force, main_rotor_pos)
 	
 	#apply_force(Vector3(0, 500 * 9.8, 0), main_rotor_pos)
 	

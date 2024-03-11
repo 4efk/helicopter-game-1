@@ -8,7 +8,7 @@ extends RigidBody3D
 @export var main_rotor_collective_max = 12 # max/min angle of main rotor blades [°]; made up
 @export var main_rotor_collective_min = -12
 
-@onready var main_rotor_pos = $MainRotorPos.global_position
+@onready var main_rotor_pos = $MainRotorPos.position
 @onready var tail_rotor_pos = $TailRotorPos.position
 
 var main_rotor_omega =  55.50 # angular velocity [rad/s]
@@ -29,6 +29,13 @@ func _process(delta):
 	main_rotor_collective_pitch = clamp(main_rotor_collective_pitch, main_rotor_collective_min, main_rotor_collective_max)
 	
 func _physics_process(_delta):
+	
+	
+	#i'm stupid, this didn't update
+	main_rotor_pos = $MainRotorPos.global_position
+	
+	
+	
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_collective_pitch * 0.001
 	#print(main_rotor_thrust_force)
 	
@@ -45,9 +52,9 @@ func _physics_process(_delta):
 	
 	#apply_central_force(Vector3(0, 1, 0) * main_rotor_thrust_force)
 	#apply_central_force(main_rotor_thrust_direction * main_rotor_thrust_force)
-	#apply_force(main_rotor_thrust_direction * main_rotor_thrust_force, main_rotor_pos)
+	apply_force(main_rotor_thrust_direction * main_rotor_thrust_force, main_rotor_pos)
 	
-	apply_force(Vector3(0, 500 * 9.8, 0), main_rotor_pos)
+	#apply_force(Vector3(0, 500 * 9.8, 0), main_rotor_pos)
 	
 	#if Input.is_action_pressed("start_engine"):
 		#apply_force(main_rotor_thrust_direction * main_rotor_thrust_force, main_rotor_pos)

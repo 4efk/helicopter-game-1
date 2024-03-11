@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bmka3hhlv6i10"]
+[gd_scene load_steps=6 format=3 uid="uid://bmka3hhlv6i10"]
 
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_qcidy"]
 [ext_resource type="ArrayMesh" uid="uid://c7ot7gqxgy1ov" path="res://Helicopter/Helicopter0/helicopter_placeholder1.obj" id="2_2hdk4"]
@@ -9,19 +9,8 @@
 specular_mode = 1
 albedo_color = Color(0.160784, 0.372549, 0.141176, 1)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_o38uk"]
-size = Vector3(6.06964, 1.86914, 1.12)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j7u3f"]
-specular_mode = 1
-albedo_color = Color(0, 0.454902, 0.509804, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_sf0r1"]
-material = SubResource("StandardMaterial3D_j7u3f")
-size = Vector3(8.74, 1.75, 1.12)
-
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_h1acr"]
-points = PackedVector3Array(-0.55902, -0.74741, -1.01472, 0.55898, -0.74741, -1.01472, -0.55902, -0.74741, 1.33174, -0.55902, 0.615792, -1.01472, -0.0726856, 0.616185, -4.74313, 0.55898, 0.615792, -1.01472, 0.55898, -0.74741, 1.33174, 0.0725362, 0.616185, -4.74313, 0.142904, 0.649401, -4.68604, 0.142904, 0.654118, -4.69496, 0.142904, 0.660603, -4.70269, 0.142904, 0.668465, -4.70924, 0.142904, 0.677309, -4.71399, 0.142904, 0.687136, -4.71697, 0.142904, 0.69716, -4.71816, -0.55902, 0.615792, 1.33174, -0.22316, 1.26044, -0.495599, -0.0726856, 0.760839, -4.73005, 0.223011, 1.26044, -0.495599, 0.55898, 0.615792, 1.33174, 0.142904, 0.707184, -4.71697, 0.142904, 0.717011, -4.71399, 0.142904, 0.725855, -4.70924, 0.142904, 0.733716, -4.70269, 0.142904, 0.740202, -4.69496, 0.142904, 0.744919, -4.68604, 0.142904, 0.747867, -4.67653, 0.0725362, 0.760839, -4.73005, -0.22316, 1.26044, -0.0496168, 0.223011, 1.26044, -0.0496168)
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_t65l7"]
+points = PackedVector3Array(-0.559, -0.747258, -1.01579, -0.559, 0.615944, -1.01579, -0.0726656, 0.616337, -4.74414, 0.559, -0.747258, -1.01579, -0.559, -0.747258, 1.33064, -0.0726656, 0.76099, -4.73106, -0.559, 0.615944, 1.33064, -0.22314, 1.2604, -0.49667, 0.0725562, 0.616337, -4.74414, 0.559, 0.615944, -1.01579, 0.559, -0.747258, 1.33064, 0.0725562, 0.76099, -4.73106, 0.559, 0.615944, 1.33064, -0.22314, 1.2604, -0.0506945, 0.223031, 1.2604, -0.49667, 0.223031, 1.2604, -0.0506945)
 
 [node name="world0" type="Node3D"]
 
@@ -48,39 +37,31 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 1, -12)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 15)
 
 [node name="Helicopter0" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.08351, 0)
+transform = Transform3D(0.898358, 0.439265, 0, -0.439265, 0.898358, 0, 0, 0, 1, 0, 5.08351, 0)
 mass = 500.0
 center_of_mass_mode = 1
 script = ExtResource("1_qcidy")
 
 [node name="Camera3D" type="Camera3D" parent="Helicopter0"]
 transform = Transform3D(-4.37114e-08, 0.5, -0.866025, 0, 0.866025, 0.5, 1, 2.18557e-08, -3.78552e-08, -9, 5, -2)
+current = true
 fov = 61.0
 
 [node name="MainRotorPos" type="Marker3D" parent="Helicopter0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.271826, 1.33931, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.339, 0)
 
 [node name="TailRotorPos" type="Marker3D" parent="Helicopter0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.72667, 0.429435, -0.130828)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Helicopter0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.216462, -0.0595703, 0)
-visible = false
-shape = SubResource("BoxShape3D_o38uk")
-disabled = true
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Helicopter0"]
-visible = false
-mesh = SubResource("BoxMesh_sf0r1")
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="Helicopter0"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
-shape = SubResource("ConvexPolygonShape3D_h1acr")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.727, 0, -0.131)
 
 [node name="HelicopterPlaceholder1" type="MeshInstance3D" parent="Helicopter0"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.272, 0, 0)
 mesh = ExtResource("2_2hdk4")
 skeleton = NodePath("../..")
 
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Helicopter0"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.272, 0, 0)
+shape = SubResource("ConvexPolygonShape3D_t65l7")
+
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55358, 12.7278)
+current = true

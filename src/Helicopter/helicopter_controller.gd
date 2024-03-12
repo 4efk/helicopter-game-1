@@ -2,8 +2,8 @@ extends RigidBody3D
 
 @export var thrust_coefficient = 0.0
 @export var main_rotor_blades_n = 2
-@export var main_rotor_radius = 3.835 # diameter of the main rotor disc [m^2]
-@export var second_rotor_radius = 0
+@export var main_rotor_radius = 3.835 # radius of the main rotor disc [m]
+@export var second_rotor_radius = 0.0
 
 @export var main_rotor_collective_max = 12 # max/min angle of main rotor blades [°]; made up
 @export var main_rotor_collective_min = -12
@@ -30,8 +30,6 @@ func _process(delta):
 	
 func _physics_process(_delta):
 	
-	
-	#i'm stupid, this didn't update
 	main_rotor_pos = $MainRotorPos.global_position
 	tail_rotor_pos = $TailRotorPos.global_position
 	
@@ -42,17 +40,24 @@ func _physics_process(_delta):
 	
 	#print(Input.get_vector("cyclic_backward", "cyclic_forward", "cyclic_left", "cyclic_right"))
 	
-	cyclic = Input.get_vector("cyclic_forward", "cyclic_backward", "cyclic_left", "cyclic_right")
+	cyclic = Input.get_vector("cyclic_backward", "cyclic_forward", "cyclic_left", "cyclic_right")
 	
-	#print(cyclic)
+	print(cyclic)
 	
-	var main_rotor_thrust_direction = transform.basis.y.rotated(Vector3(1, 0, 0), cyclic.y * PI/30).rotated(Vector3(0, 0, 1), cyclic.x * PI/30)
-	main_rotor_thrust_direction = Vector3.UP.rotated(Vector3(1, 0, 0), cyclic.y * PI/30).rotated(Vector3(0, 0, 1), cyclic.x * PI/30)
 	
+	#the direction doesn't take y rotation into account so that's why it's offset and broken
+	
+	var main_rotor_thrust_direction = transform.basis.y.rotated(Vector3(1, 0, 0), cyclic.x * PI/30).rotated(Vector3(0, 0, 1), cyclic.y * PI/30)
+	main_rotor_thrust_direction = Vector3.UP.rotated(Vector3(1, 0, 0), cyclic.x * PI/30).rotated(Vector3(0, 0, 1), cyclic.y * PI/30)
+	
+	$markers/MainRotorThrustMarker.rotation = Vector3(main_rotor_thrust_direction.x, 0, main_rotor_thrust_direction.z)
+	$markers/MainRotorThrustMarker.global_position = main_rotor_pos
 	#print(main_rotor_thrust_direction)
-	print(main_rotor_pos - global_position)
+	#print(main_rotor_pos - global_position)
+	#print(main_rotor_thrust_direction)
 	
-	apply_force(Vector3(0, 1, 0) * main_rotor_thrust_force, main_rotor_pos)
+	
+	apply_force(Vector3(0, 1, 0) * 5000, main_rotor_pos)
 	#apply_central_force(main_rotor_thrust_direction * main_rotor_thrust_force)
 	#apply_force(main_rotor_thrust_direction * main_rotor_thrust_force, main_rotor_pos)
 	

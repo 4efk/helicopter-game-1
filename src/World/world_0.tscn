@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bmka3hhlv6i10"]
+[gd_scene load_steps=13 format=3 uid="uid://bmka3hhlv6i10"]
 
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_qcidy"]
 [ext_resource type="ArrayMesh" uid="uid://c7ot7gqxgy1ov" path="res://Helicopter/Helicopter0/helicopter_placeholder1.obj" id="2_2hdk4"]
@@ -9,8 +9,36 @@
 specular_mode = 1
 albedo_color = Color(0.160784, 0.372549, 0.141176, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6e08a"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.498039)
+
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_t65l7"]
 points = PackedVector3Array(-0.559, -0.747258, -1.01579, -0.559, 0.615944, -1.01579, -0.0726656, 0.616337, -4.74414, 0.559, -0.747258, -1.01579, -0.559, -0.747258, 1.33064, -0.0726656, 0.76099, -4.73106, -0.559, 0.615944, 1.33064, -0.22314, 1.2604, -0.49667, 0.0725562, 0.616337, -4.74414, 0.559, 0.615944, -1.01579, 0.559, -0.747258, 1.33064, 0.0725562, 0.76099, -4.73106, 0.559, 0.615944, 1.33064, -0.22314, 1.2604, -0.0506945, 0.223031, 1.2604, -0.49667, 0.223031, 1.2604, -0.0506945)
+
+[sub_resource type="SphereMesh" id="SphereMesh_knjux"]
+radius = 0.25
+height = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_74ot3"]
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hhhxb"]
+top_radius = 0.0
+bottom_radius = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i046w"]
+shading_mode = 0
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_nxh01"]
+radius = 0.25
+height = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yh7ry"]
+shading_mode = 0
+albedo_color = Color(0, 1, 0, 1)
 
 [node name="world0" type="Node3D"]
 
@@ -37,7 +65,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 1, -12)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 15)
 
 [node name="Helicopter0" type="RigidBody3D" parent="."]
-transform = Transform3D(0.898358, 0.439265, 0, -0.439265, 0.898358, 0, 0, 0, 1, 0, 5.08351, 0)
+transform = Transform3D(0.707107, -0.707107, 0, 0.5, 0.5, -0.707107, 0.5, 0.5, 0.707107, 0, 5.08351, 0)
 mass = 500.0
 center_of_mass_mode = 1
 script = ExtResource("1_qcidy")
@@ -57,10 +85,34 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.727, 0, -0.131)
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.272, 0, 0)
 mesh = ExtResource("2_2hdk4")
 skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_6e08a")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Helicopter0"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.272, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_t65l7")
+disabled = true
+
+[node name="markers" type="Node3D" parent="Helicopter0"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Helicopter0/markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("SphereMesh_knjux")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_74ot3")
+
+[node name="MainRotorThrustMarker" type="Node3D" parent="Helicopter0/markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.339, 0)
+top_level = true
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Helicopter0/markers/MainRotorThrustMarker"]
+transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 1, 0, 1.011, 0)
+mesh = SubResource("CylinderMesh_hhhxb")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_i046w")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Helicopter0/markers/MainRotorThrustMarker"]
+mesh = SubResource("SphereMesh_nxh01")
+surface_material_override/0 = SubResource("StandardMaterial3D_yh7ry")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55358, 12.7278)

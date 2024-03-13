@@ -43,12 +43,12 @@ func _physics_process(_delta):
 	cyclic = Input.get_vector("cyclic_backward", "cyclic_forward", "cyclic_left", "cyclic_right")
 	
 	#print(cyclic)
-	print(rotation.normalized())
-	print(quaternion.normalized())
+	#print(rotation.normalized())
+	#print(quaternion.normalized())
 	#the direction doesn't take y rotation into account so that's why it's offset and broken
 	
 	var main_rotor_thrust_direction = transform.basis.y.rotated(Vector3(1, 0, 0), cyclic.x * PI/30).rotated(Vector3(0, 0, 1), cyclic.y * PI/30)
-	main_rotor_thrust_direction = Vector3.UP.rotated(Vector3(1, 0, 0), cyclic.x * PI/30).rotated(Vector3(0, 0, 1), cyclic.y * PI/30)
+	main_rotor_thrust_direction = Vector3(0, transform.basis.y.y, 0).rotated(Vector3(1, 0, 0), cyclic.x * PI/30).rotated(Vector3(0, 0, 1), cyclic.y * PI/30)
 	
 	$markers/MainRotorThrustMarker.rotation = Vector3(main_rotor_thrust_direction.x, 0, main_rotor_thrust_direction.z)
 	$markers/MainRotorThrustMarker.global_position = main_rotor_pos
@@ -56,10 +56,11 @@ func _physics_process(_delta):
 	#print(main_rotor_pos - global_position)
 	#print(main_rotor_thrust_direction)
 	
+	print(transform.basis.y)
 	
-	apply_force(Vector3(0, 1, 0) * 5000, main_rotor_pos)
+	#apply_force(Vector3(0, 1, 0) * 5000, main_rotor_pos)
 	#apply_central_force(main_rotor_thrust_direction * main_rotor_thrust_force)
-	#apply_force(main_rotor_thrust_direction * main_rotor_thrust_force, main_rotor_pos)
+	apply_force(main_rotor_thrust_direction * main_rotor_thrust_force, main_rotor_pos)
 	
 	#apply_force(Vector3(0, 500 * 9.8, 0), main_rotor_pos)
 	

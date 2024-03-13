@@ -64,52 +64,51 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 1, -12)
 [node name="CSGBox3D4" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 15)
 
-[node name="Helicopter0" type="RigidBody3D" parent="."]
-transform = Transform3D(0.707107, -0.707107, 0, 0.5, 0.5, -0.707107, 0.5, 0.5, 0.707107, 0, 5.08351, 0)
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.08351, 0)
 mass = 500.0
 center_of_mass_mode = 1
 script = ExtResource("1_qcidy")
 
-[node name="Camera3D" type="Camera3D" parent="Helicopter0"]
+[node name="Camera3D" type="Camera3D" parent="RigidBody3D"]
 transform = Transform3D(-4.37114e-08, 0.5, -0.866025, 0, 0.866025, 0.5, 1, 2.18557e-08, -3.78552e-08, -9, 5, -2)
 current = true
 fov = 61.0
 
-[node name="MainRotorPos" type="Marker3D" parent="Helicopter0"]
+[node name="MainRotorPos" type="Marker3D" parent="RigidBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.339, 0)
 
-[node name="TailRotorPos" type="Marker3D" parent="Helicopter0"]
+[node name="TailRotorPos" type="Marker3D" parent="RigidBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.727, 0, -0.131)
 
-[node name="HelicopterPlaceholder1" type="MeshInstance3D" parent="Helicopter0"]
+[node name="HelicopterPlaceholder1" type="MeshInstance3D" parent="RigidBody3D"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.272, 0, 0)
 mesh = ExtResource("2_2hdk4")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_6e08a")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Helicopter0"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.272, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_t65l7")
-disabled = true
 
-[node name="markers" type="Node3D" parent="Helicopter0"]
+[node name="markers" type="Node3D" parent="RigidBody3D"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Helicopter0/markers"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D/markers"]
 mesh = SubResource("SphereMesh_knjux")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_74ot3")
 
-[node name="MainRotorThrustMarker" type="Node3D" parent="Helicopter0/markers"]
+[node name="MainRotorThrustMarker" type="Node3D" parent="RigidBody3D/markers"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.339, 0)
 top_level = true
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Helicopter0/markers/MainRotorThrustMarker"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="RigidBody3D/markers/MainRotorThrustMarker"]
 transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 1, 0, 1.011, 0)
 mesh = SubResource("CylinderMesh_hhhxb")
 skeleton = NodePath("../../../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_i046w")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Helicopter0/markers/MainRotorThrustMarker"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D/markers/MainRotorThrustMarker"]
 mesh = SubResource("SphereMesh_nxh01")
 surface_material_override/0 = SubResource("StandardMaterial3D_yh7ry")
 

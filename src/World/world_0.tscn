@@ -95,7 +95,6 @@ disabled = true
 [node name="markers" type="Node3D" parent="Helicopter0"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Helicopter0/markers"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("SphereMesh_knjux")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_74ot3")

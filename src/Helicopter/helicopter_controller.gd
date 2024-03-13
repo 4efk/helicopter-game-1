@@ -42,9 +42,9 @@ func _physics_process(_delta):
 	
 	cyclic = Input.get_vector("cyclic_backward", "cyclic_forward", "cyclic_left", "cyclic_right")
 	
-	print(cyclic)
-	
-	
+	#print(cyclic)
+	print(rotation.normalized())
+	print(quaternion.normalized())
 	#the direction doesn't take y rotation into account so that's why it's offset and broken
 	
 	var main_rotor_thrust_direction = transform.basis.y.rotated(Vector3(1, 0, 0), cyclic.x * PI/30).rotated(Vector3(0, 0, 1), cyclic.y * PI/30)

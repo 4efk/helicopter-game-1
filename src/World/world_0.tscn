@@ -65,9 +65,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 1, -12)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 15)
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.08351, 0)
+transform = Transform3D(0.782167, -0.601143, -0.163837, 0.557208, 0.557208, 0.615662, -0.27881, -0.572841, 0.770791, 0, 5.08351, 0)
 mass = 500.0
 center_of_mass_mode = 1
+angular_damp = 5.0
 script = ExtResource("1_qcidy")
 
 [node name="Camera3D" type="Camera3D" parent="RigidBody3D"]
@@ -100,7 +101,6 @@ surface_material_override/0 = SubResource("StandardMaterial3D_74ot3")
 
 [node name="MainRotorThrustMarker" type="Node3D" parent="RigidBody3D/markers"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.339, 0)
-top_level = true
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="RigidBody3D/markers/MainRotorThrustMarker"]
 transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 1, 0, 1.011, 0)

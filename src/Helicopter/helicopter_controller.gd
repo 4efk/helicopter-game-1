@@ -30,10 +30,12 @@ func _process(delta):
 	
 func _physics_process(_delta):
 	
+	
+	$MainRotorPos.global_position = $markers/MainRotorThrustMarker.global_position
 	main_rotor_pos = $MainRotorPos.global_position
 	tail_rotor_pos = $TailRotorPos.global_position
 	
-	
+	$MainRotorPos.global_position = $markers/MainRotorThrustMarker.global_position
 	
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_collective_pitch * 0.001
 	#print(main_rotor_thrust_force)
@@ -42,25 +44,33 @@ func _physics_process(_delta):
 	
 	cyclic = Input.get_vector("cyclic_backward", "cyclic_forward", "cyclic_left", "cyclic_right")
 	
-	#print(cyclic)
+	print(cyclic)
 	#print(rotation.normalized())
 	#print(quaternion.normalized())
 	#the direction doesn't take y rotation into account so that's why it's offset and broken
 	
-	var main_rotor_thrust_direction = transform.basis.y.rotated(Vector3(1, 0, 0), cyclic.x * PI/30).rotated(Vector3(0, 0, 1), cyclic.y * PI/30)
-	main_rotor_thrust_direction = Vector3(0, transform.basis.y.y, 0).rotated(Vector3(1, 0, 0), cyclic.x * PI/30).rotated(Vector3(0, 0, 1), cyclic.y * PI/30)
 	
-	$markers/MainRotorThrustMarker.rotation = Vector3(main_rotor_thrust_direction.x, 0, main_rotor_thrust_direction.z)
-	$markers/MainRotorThrustMarker.global_position = main_rotor_pos
+	#var main_rotor_thrust_direction = transform.basis.y.rotated(Vector3(1, 0, 0), cyclic.x * PI/30).rotated(Vector3(0, 0, 1), cyclic.y * PI/30)
+	#main_rotor_thrust_direction = Vector3(0, transform.basis.y.y, 0).rotated(Vector3(1, 0, 0), cyclic.x * PI/30).rotated(Vector3(0, 0, 1), cyclic.y * PI/30)
+	
+	var main_rotor_thrust_direction = transform.basis.y
+	main_rotor_pos += Vector3(cyclic.x * main_rotor_radius/2, 0, cyclic.y * main_rotor_radius/2)
+
+	
+	#$markers/MainRotorThrustMarker.rotation = main_rotor_thrust_direction
+	$markers/MainRotorThrustMarker.position = Vector3(cyclic.x * main_rotor_radius/2, 0, cyclic.y * main_rotor_radius/2)
+	$markers/MainRotorThrustMarker.position.y = 1.339
 	#print(main_rotor_thrust_direction)
 	#print(main_rotor_pos - global_position)
 	#print(main_rotor_thrust_direction)
 	
-	print(transform.basis.y)
+	#print(transform.basis.y)
+	print(main_rotor_thrust_direction)
 	
-	#apply_force(Vector3(0, 1, 0) * 5000, main_rotor_pos)
+	#apply_force(Vector3(0, 1, 0) * 500 * 9.8, $markers/MainRotorThrustMarker.global_position)
+	apply_force(transform.basis.y * main_rotor_thrust_force, $markers/MainRotorThrustMarker.global_position)
 	#apply_central_force(main_rotor_thrust_direction * main_rotor_thrust_force)
-	apply_force(main_rotor_thrust_direction * main_rotor_thrust_force, main_rotor_pos)
+	#apply_force(main_rotor_thrust_direction * main_rotor_thrust_force, main_rotor_pos)
 	
 	#apply_force(Vector3(0, 500 * 9.8, 0), main_rotor_pos)
 	

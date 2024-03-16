@@ -18,10 +18,10 @@ func _physics_process(delta):
 	transform = transform.orthonormalized()
 	
 	apply_force(transform.basis.y.normalized() * 5, $MainRotor.global_position - global_position)#$MainRotor.global_position)
-	print($MainRotor.position)
+	#print($MainRotor.position)
 	
 	$RayCast3D.target_position = transform.basis.y.normalized() * 5
 	$RayCast3D.global_position = global_position + ($MainRotor.global_position - global_position)
 	
 	
-	print(transform.basis.y)
+	#print(transform.basis.y)

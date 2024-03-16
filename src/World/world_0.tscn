@@ -75,9 +75,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 15)
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14.7997, 0)
-axis_lock_linear_x = true
-axis_lock_linear_y = true
-axis_lock_linear_z = true
 mass = 500.0
 center_of_mass_mode = 1
 angular_damp = 3.0
@@ -132,6 +129,7 @@ current = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.32844, 0)
 mass = 500.0
 gravity_scale = 0.0
+center_of_mass_mode = 1
 script = ExtResource("3_ovnsu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D2"]
@@ -146,4 +144,5 @@ mesh = SubResource("SphereMesh_rs8xo")
 skeleton = NodePath("../..")
 
 [node name="RayCast3D" type="RayCast3D" parent="RigidBody3D2"]
+top_level = true
 target_position = Vector3(0, 0, 0)

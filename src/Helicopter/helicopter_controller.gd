@@ -68,7 +68,7 @@ func _physics_process(_delta):
 	#print(main_rotor_thrust_direction)
 	
 	#apply_force(Vector3(0, 1, 0) * 500 * 9.8, $markers/MainRotorThrustMarker.global_position)
-	apply_force(transform.basis.y * 500000, $markers/MainRotorThrustMarker.global_position + Vector3(1, 0, 0))
+	apply_force(transform.basis.y * main_rotor_thrust_force, $markers/MainRotorThrustMarker.global_position - global_position)
 	#print(transform.basis.y * 500000)
 	#apply_central_force(main_rotor_thrust_direction * main_rotor_thrust_force)
 	#apply_force(main_rotor_thrust_direction * main_rotor_thrust_force, main_rotor_pos)

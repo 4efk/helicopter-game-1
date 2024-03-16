@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://bmka3hhlv6i10"]
+[gd_scene load_steps=17 format=3 uid="uid://bmka3hhlv6i10"]
 
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_qcidy"]
 [ext_resource type="ArrayMesh" uid="uid://c7ot7gqxgy1ov" path="res://Helicopter/Helicopter0/helicopter_placeholder1.obj" id="2_2hdk4"]
+[ext_resource type="Script" path="res://Helicopter/helicopter_controller_test.gd" id="3_ovnsu"]
 
 [sub_resource type="Environment" id="Environment_6co3w"]
 
@@ -40,6 +41,14 @@ height = 0.5
 shading_mode = 0
 albedo_color = Color(0, 1, 0, 1)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_0w6dd"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_6ps0e"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_rs8xo"]
+radius = 0.25
+height = 0.5
+
 [node name="world0" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -65,10 +74,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 1, -12)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 15)
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
-transform = Transform3D(0.782167, -0.601143, -0.163837, 0.557208, 0.557208, 0.615662, -0.27881, -0.572841, 0.770791, 0, 5.08351, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14.7997, 0)
+axis_lock_linear_x = true
+axis_lock_linear_y = true
+axis_lock_linear_z = true
 mass = 500.0
 center_of_mass_mode = 1
-angular_damp = 5.0
+angular_damp = 3.0
 script = ExtResource("1_qcidy")
 
 [node name="Camera3D" type="Camera3D" parent="RigidBody3D"]
@@ -115,3 +127,23 @@ surface_material_override/0 = SubResource("StandardMaterial3D_yh7ry")
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55358, 12.7278)
 current = true
+
+[node name="RigidBody3D2" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.32844, 0)
+mass = 500.0
+gravity_scale = 0.0
+script = ExtResource("3_ovnsu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D2"]
+shape = SubResource("BoxShape3D_0w6dd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D2"]
+mesh = SubResource("BoxMesh_6ps0e")
+
+[node name="MainRotor" type="MeshInstance3D" parent="RigidBody3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("SphereMesh_rs8xo")
+skeleton = NodePath("../..")
+
+[node name="RayCast3D" type="RayCast3D" parent="RigidBody3D2"]
+target_position = Vector3(0, 0, 0)

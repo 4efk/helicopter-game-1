@@ -1,21 +1,23 @@
-[gd_scene load_steps=17 format=3 uid="uid://bmka3hhlv6i10"]
+[gd_scene load_steps=21 format=3 uid="uid://bmka3hhlv6i10"]
 
+[ext_resource type="Texture2D" uid="uid://spfbipkih55h" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="1_jqykm"]
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_qcidy"]
 [ext_resource type="ArrayMesh" uid="uid://c7ot7gqxgy1ov" path="res://Helicopter/Helicopter0/helicopter_placeholder1.obj" id="2_2hdk4"]
+[ext_resource type="Texture2D" uid="uid://cc10mt8eel70i" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_AmbientOcclusion.jpg" id="2_bpyab"]
+[ext_resource type="Texture2D" uid="uid://dben3xqr5cxlf" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_NormalGL.jpg" id="3_0wg8k"]
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller_test.gd" id="3_ovnsu"]
+[ext_resource type="Texture2D" uid="uid://6kgju6mj2ps8" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Roughness.jpg" id="4_f7olb"]
 
 [sub_resource type="Environment" id="Environment_6co3w"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3lkrr"]
-specular_mode = 1
-albedo_color = Color(0.160784, 0.372549, 0.141176, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6e08a"]
-transparency = 1
-albedo_color = Color(1, 1, 1, 0.498039)
-
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_t65l7"]
-points = PackedVector3Array(-0.559, -0.747258, -1.01579, -0.559, 0.615944, -1.01579, -0.0726656, 0.616337, -4.74414, 0.559, -0.747258, -1.01579, -0.559, -0.747258, 1.33064, -0.0726656, 0.76099, -4.73106, -0.559, 0.615944, 1.33064, -0.22314, 1.2604, -0.49667, 0.0725562, 0.616337, -4.74414, 0.559, 0.615944, -1.01579, 0.559, -0.747258, 1.33064, 0.0725562, 0.76099, -4.73106, 0.559, 0.615944, 1.33064, -0.22314, 1.2604, -0.0506945, 0.223031, 1.2604, -0.49667, 0.223031, 1.2604, -0.0506945)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xqaf1"]
+albedo_texture = ExtResource("1_jqykm")
+roughness_texture = ExtResource("4_f7olb")
+normal_enabled = true
+normal_texture = ExtResource("3_0wg8k")
+ao_enabled = true
+ao_texture = ExtResource("2_bpyab")
+uv1_scale = Vector3(40, 40, 40)
 
 [sub_resource type="SphereMesh" id="SphereMesh_knjux"]
 radius = 0.25
@@ -41,6 +43,13 @@ height = 0.5
 shading_mode = 0
 albedo_color = Color(0, 1, 0, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6e08a"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.498039)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_t65l7"]
+points = PackedVector3Array(-0.559, -0.747258, -1.01579, -0.559, 0.615944, -1.01579, -0.0726656, 0.616337, -4.74414, 0.559, -0.747258, -1.01579, -0.559, -0.747258, 1.33064, -0.0726656, 0.76099, -4.73106, -0.559, 0.615944, 1.33064, -0.22314, 1.2604, -0.49667, 0.0725562, 0.616337, -4.74414, 0.559, 0.615944, -1.01579, 0.559, -0.747258, 1.33064, 0.0725562, 0.76099, -4.73106, 0.559, 0.615944, 1.33064, -0.22314, 1.2604, -0.0506945, 0.223031, 1.2604, -0.49667, 0.223031, 1.2604, -0.0506945)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_0w6dd"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_6ps0e"]
@@ -61,8 +70,8 @@ environment = SubResource("Environment_6co3w")
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 use_collision = true
-size = Vector3(50, 1, 50)
-material = SubResource("StandardMaterial3D_3lkrr")
+size = Vector3(500, 1, 500)
+material = SubResource("StandardMaterial3D_xqaf1")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.498345, 0)
@@ -79,27 +88,6 @@ mass = 500.0
 center_of_mass_mode = 1
 angular_damp = 1.0
 script = ExtResource("1_qcidy")
-
-[node name="Camera3D" type="Camera3D" parent="Helicopter0"]
-transform = Transform3D(-4.37114e-08, 0.5, -0.866025, 0, 0.866025, 0.5, 1, 2.18557e-08, -3.78552e-08, -9, 5, -2)
-current = true
-fov = 61.0
-
-[node name="MainRotorPosInd" type="Marker3D" parent="Helicopter0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.339, 0)
-
-[node name="TailRotorPosInd" type="Marker3D" parent="Helicopter0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.727, 0, -0.131)
-
-[node name="HelicopterPlaceholder1" type="MeshInstance3D" parent="Helicopter0"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.272, 0, 0)
-mesh = ExtResource("2_2hdk4")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_6e08a")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Helicopter0"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.272, 0, 0)
-shape = SubResource("ConvexPolygonShape3D_t65l7")
 
 [node name="markers" type="Node3D" parent="Helicopter0"]
 
@@ -120,6 +108,50 @@ surface_material_override/0 = SubResource("StandardMaterial3D_i046w")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Helicopter0/markers/MainRotorThrustMarker"]
 mesh = SubResource("SphereMesh_nxh01")
 surface_material_override/0 = SubResource("StandardMaterial3D_yh7ry")
+
+[node name="MainRotorPosInd" type="Marker3D" parent="Helicopter0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.339, 0)
+
+[node name="TailRotorPosInd" type="Marker3D" parent="Helicopter0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.727, 0, -0.131)
+
+[node name="Camera3D" type="Camera3D" parent="Helicopter0"]
+transform = Transform3D(-4.37114e-08, 0.601815, -0.798636, 0, 0.798636, 0.601815, 1, 2.63062e-08, -3.49095e-08, -6.595, 4.565, 0)
+current = true
+fov = 90.0
+
+[node name="HelicopterPlaceholder1" type="MeshInstance3D" parent="Helicopter0"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.272, 0, 0)
+mesh = ExtResource("2_2hdk4")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_6e08a")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Helicopter0"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.272, 0, 0)
+shape = SubResource("ConvexPolygonShape3D_t65l7")
+
+[node name="HUD" type="CanvasLayer" parent="Helicopter0"]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Helicopter0/HUD"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -192.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="Collective" type="Label" parent="Helicopter0/HUD/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "collective: 12 °"
+
+[node name="Cyclic" type="Label" parent="Helicopter0/HUD/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "cyclic: (0, 0)"
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55358, 12.7278)

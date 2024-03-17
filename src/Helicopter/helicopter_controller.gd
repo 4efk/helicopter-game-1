@@ -11,6 +11,9 @@ extends RigidBody3D
 @onready var main_rotor_pos_ind = $MainRotorPosInd
 @onready var tail_rotor_pos_ind = $TailRotorPosInd
 
+@onready var hud_collective = $HUD/HBoxContainer/Collective
+@onready var hud_cyclic = $HUD/HBoxContainer/Cyclic
+
 var main_rotor_omega =  55.50 # angular velocity [rad/s]
 
 var main_rotor_collective_pitch = 0.0
@@ -30,6 +33,10 @@ func _process(delta):
 	main_rotor_collective_pitch += Input.get_axis("collective_pitch_down", "collective_pitch_up") * delta * 10
 	main_rotor_collective_pitch = clamp(main_rotor_collective_pitch, main_rotor_collective_min, main_rotor_collective_max)
 	
+	#setting HUD values
+	hud_collective.text = 'collective: ' + str(main_rotor_collective_pitch) + ' °'
+	hud_cyclic.text = 'cyclic: ' + str(cyclic)
+	
 func _physics_process(_delta):
 	#kinda working cyclic control by offsetting the position of where the force is being applied along the rotor disc
 	#TODO TWEAK THE CYCLIC SENSITIVITY PREFERABLY BASED ON SOME REAL DATA
@@ -41,6 +48,7 @@ func _physics_process(_delta):
 	#TODO ALSO BASE THE FORCE ON SOME REAL DATA
 	apply_torque(Vector3(0, -256.45 , 0))
 	
+	#TODO tweak this userealdataandrealforces too
 	var tail_rotor_thrust_force = 64.47 + Input.get_axis("antitorque_right", "antitorque_left") * 400#2523.46
 	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
 	

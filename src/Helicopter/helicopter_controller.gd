@@ -8,8 +8,13 @@ extends RigidBody3D
 @export var main_rotor_collective_max = 12 # max/min angle of main rotor blades [°]; made up
 @export var main_rotor_collective_min = -12
 
+@export var camera_rotation_speed = 2
+
 @onready var main_rotor_pos_ind = $MainRotorPosInd
 @onready var tail_rotor_pos_ind = $TailRotorPosInd
+
+@onready var cam_pivot_y = $CamPivotY
+@onready var cam_pivot_z = $CamPivotY/CamPivotZ
 
 @onready var hud_collective = $HUD/HBoxContainer/Collective
 @onready var hud_cyclic = $HUD/HBoxContainer/Cyclic
@@ -23,6 +28,12 @@ func _ready():
 	pass
 
 func _process(delta):
+	#camera control
+	cam_pivot_y.global_position = global_position
+	
+	cam_pivot_y.rotation.y += Input.get_axis("camera_left", "camera_right")  * camera_rotation_speed * delta
+	cam_pivot_y.rotation.z += Input.get_axis("camera_up", "camera_down")  * camera_rotation_speed * delta
+	
 	if Input.is_action_just_pressed("start_engine"):
 		main_rotor_omega = 55.50
 	if Input.is_action_just_pressed("stop_engine"):

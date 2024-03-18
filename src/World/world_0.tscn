@@ -115,7 +115,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.339, 0)
 [node name="TailRotorPosInd" type="Marker3D" parent="Helicopter0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.727, 0, -0.131)
 
-[node name="Camera3D" type="Camera3D" parent="Helicopter0"]
+[node name="CamPivotY" type="Node3D" parent="Helicopter0"]
+top_level = true
+
+[node name="CamPivotZ" type="Node3D" parent="Helicopter0/CamPivotY"]
+
+[node name="Camera3D" type="Camera3D" parent="Helicopter0/CamPivotY/CamPivotZ"]
 transform = Transform3D(-4.37114e-08, 0.601815, -0.798636, 0, 0.798636, 0.601815, 1, 2.63062e-08, -3.49095e-08, -6.595, 4.565, 0)
 current = true
 fov = 90.0

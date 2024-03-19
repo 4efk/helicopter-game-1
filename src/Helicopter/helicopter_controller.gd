@@ -31,8 +31,9 @@ func _process(delta):
 	#camera control
 	cam_pivot_y.global_position = global_position
 	
-	cam_pivot_y.rotation.y += Input.get_axis("camera_left", "camera_right")  * camera_rotation_speed * delta
-	cam_pivot_y.rotation.z += Input.get_axis("camera_up", "camera_down")  * camera_rotation_speed * delta
+	cam_pivot_y.rotation.y += Input.get_axis("camera_right", "camera_left")  * camera_rotation_speed * delta
+	cam_pivot_z.rotation.z += Input.get_axis("camera_down", "camera_up")  * camera_rotation_speed * delta
+	cam_pivot_z.rotation.z = clamp(cam_pivot_z.rotation.z, -PI/2, PI/2)
 	
 	if Input.is_action_just_pressed("start_engine"):
 		main_rotor_omega = 55.50

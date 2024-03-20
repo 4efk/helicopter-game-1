@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bmka3hhlv6i10"]
+[gd_scene load_steps=22 format=3 uid="uid://bmka3hhlv6i10"]
 
 [ext_resource type="Texture2D" uid="uid://spfbipkih55h" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="1_jqykm"]
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_qcidy"]
@@ -7,8 +7,11 @@
 [ext_resource type="Texture2D" uid="uid://dben3xqr5cxlf" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_NormalGL.jpg" id="3_0wg8k"]
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller_test.gd" id="3_ovnsu"]
 [ext_resource type="Texture2D" uid="uid://6kgju6mj2ps8" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Roughness.jpg" id="4_f7olb"]
+[ext_resource type="PackedScene" uid="uid://dwux8oetsdhvi" path="res://World/Models/map_test1.glb" id="8_2wfh2"]
 
 [sub_resource type="Environment" id="Environment_6co3w"]
+fog_enabled = true
+fog_density = 0.003
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xqaf1"]
 albedo_texture = ExtResource("1_jqykm")
@@ -125,6 +128,7 @@ top_level = true
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -10, 0, 0)
 current = true
 fov = 90.0
+near = 0.5
 
 [node name="HelicopterPlaceholder1" type="MeshInstance3D" parent="Helicopter0"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.272, 0, 0)
@@ -184,3 +188,8 @@ skeleton = NodePath("../..")
 [node name="RayCast3D" type="RayCast3D" parent="RigidBody3D2"]
 top_level = true
 target_position = Vector3(0, 0, 0)
+
+[node name="map_test1" parent="." instance=ExtResource("8_2wfh2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 61.3829)
+
+[editable path="map_test1"]

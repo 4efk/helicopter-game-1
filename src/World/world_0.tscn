@@ -73,6 +73,7 @@ environment = SubResource("Environment_6co3w")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
 use_collision = true
 size = Vector3(2000, 1, 2000)
 material = SubResource("StandardMaterial3D_xqaf1")
@@ -162,6 +163,13 @@ text = "collective: 12 °"
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "cyclic: (0, 0)"
+
+[node name="FPSCounter" type="Label" parent="Helicopter0/HUD"]
+offset_right = 59.0
+offset_bottom = 45.0
+theme_override_font_sizes/font_size = 32
+text = "60"
+horizontal_alignment = 1
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55358, 12.7278)

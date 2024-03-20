@@ -19,6 +19,8 @@ extends RigidBody3D
 @onready var hud_collective = $HUD/HBoxContainer/Collective
 @onready var hud_cyclic = $HUD/HBoxContainer/Cyclic
 
+@onready var fps_counter = $HUD/FPSCounter
+
 var main_rotor_omega =  55.50 # angular velocity [rad/s]
 
 var main_rotor_collective_pitch = 0.0
@@ -46,6 +48,8 @@ func _process(delta):
 	main_rotor_collective_pitch = clamp(main_rotor_collective_pitch, main_rotor_collective_min, main_rotor_collective_max)
 	
 	#setting HUD values
+	fps_counter.text = str(Engine.get_frames_per_second())
+	
 	hud_collective.text = 'collective: ' + str(main_rotor_collective_pitch) + ' °'
 	hud_cyclic.text = 'cyclic: ' + str(cyclic)
 	

@@ -23,5 +23,6 @@ func _physics_process(delta):
 	$RayCast3D.target_position = transform.basis.y.normalized() * 5
 	$RayCast3D.global_position = global_position + ($MainRotor.global_position - global_position)
 	
+	apply_torque(transform.basis.y * 100)
 	
 	#print(transform.basis.y)

@@ -56,21 +56,21 @@ func _process(delta):
 func _physics_process(_delta):
 	#kinda working cyclic control by offsetting the position of where the force is being applied along the rotor disc
 	#TODO TWEAK THE CYCLIC SENSITIVITY PREFERABLY BASED ON SOME REAL DATA
-	var main_rotor_pos = to_global(Vector3(cyclic.x * main_rotor_radius/40, main_rotor_pos_ind.position.y, cyclic.y * main_rotor_radius/40)) - global_position
+	var main_rotor_pos = to_global(Vector3(cyclic.x * main_rotor_radius/30, main_rotor_pos_ind.position.y, cyclic.y * main_rotor_radius/30)) - global_position
 	var tail_rotor_pos = tail_rotor_pos_ind.global_position - global_position
 	
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_collective_pitch * 0.001
-	#apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
+	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
 	#TODO ALSO BASE THE FORCE ON SOME REAL DATA
 	#apply_torque(Vector3(0, -256.45 , 0))
-	#apply_torque(transform.basis.y * 100)
+	apply_torque(transform.basis.y * -256.45)
 	#constant_torque = transform.basis.y * 100
 	print(inertia)
 	
 	
 	#TODO tweak this userealdataandrealforces too
-	var tail_rotor_thrust_force = 64.47 + Input.get_axis("antitorque_right", "antitorque_left") * 400#2523.46
-	#apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
+	var tail_rotor_thrust_force = 54.25 + Input.get_axis("antitorque_right", "antitorque_left") * 80#2523.46
+	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
 	
 	#different visual markers
 	$markers/MeshInstance3D.global_position = global_position + tail_rotor_pos

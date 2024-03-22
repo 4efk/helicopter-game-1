@@ -62,13 +62,11 @@ func _physics_process(_delta):
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_collective_pitch * 0.001
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
 	#TODO ALSO BASE THE FORCE ON SOME REAL DATA
-	#apply_torque(Vector3(0, -256.45 , 0))
 	apply_torque(transform.basis.y * -256.45)
-	#constant_torque = transform.basis.y * 100
-	print(inertia)
-	
 	
 	#TODO tweak this userealdataandrealforces too
+	#currently this is set to exactly countertorque the main rotor (-256.45/-4.727 = ~54.25216839433044214089)
+	#the rest is random
 	var tail_rotor_thrust_force = 54.25 + Input.get_axis("antitorque_right", "antitorque_left") * 80#2523.46
 	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
 	

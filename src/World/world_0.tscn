@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://bmka3hhlv6i10"]
+[gd_scene load_steps=26 format=3 uid="uid://bmka3hhlv6i10"]
 
 [ext_resource type="Texture2D" uid="uid://spfbipkih55h" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="1_jqykm"]
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_qcidy"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://6kgju6mj2ps8" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Roughness.jpg" id="4_f7olb"]
 [ext_resource type="PackedScene" uid="uid://dwux8oetsdhvi" path="res://World/Models/map_test1.glb" id="8_2wfh2"]
 [ext_resource type="PackedScene" uid="uid://c84yt6w6d5vuf" path="res://World/Models/map_test2.glb" id="9_yhrom"]
+[ext_resource type="PackedScene" uid="uid://islgmpg71t3k" path="res://World/Models/map_test3.glb" id="10_uousu"]
 
 [sub_resource type="Environment" id="Environment_6co3w"]
 fog_enabled = true
@@ -86,7 +87,7 @@ size = Vector3(2000, 1, 2000)
 material = SubResource("StandardMaterial3D_xqaf1")
 
 [node name="Helicopter0" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.52526, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.52526, 10.4683)
 mass = 500.0
 center_of_mass_mode = 1
 script = ExtResource("1_qcidy")
@@ -229,5 +230,8 @@ visible = false
 disabled = true
 
 [node name="map_test2" parent="." instance=ExtResource("9_yhrom")]
+visible = false
+
+[node name="map_test3" parent="." instance=ExtResource("10_uousu")]
 
 [editable path="map_test1"]

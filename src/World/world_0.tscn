@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://bmka3hhlv6i10"]
+[gd_scene load_steps=25 format=3 uid="uid://bmka3hhlv6i10"]
 
 [ext_resource type="Texture2D" uid="uid://spfbipkih55h" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="1_jqykm"]
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_qcidy"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller_test.gd" id="3_ovnsu"]
 [ext_resource type="Texture2D" uid="uid://6kgju6mj2ps8" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Roughness.jpg" id="4_f7olb"]
 [ext_resource type="PackedScene" uid="uid://dwux8oetsdhvi" path="res://World/Models/map_test1.glb" id="8_2wfh2"]
+[ext_resource type="PackedScene" uid="uid://c84yt6w6d5vuf" path="res://World/Models/map_test2.glb" id="9_yhrom"]
 
 [sub_resource type="Environment" id="Environment_6co3w"]
 fog_enabled = true
@@ -79,6 +80,7 @@ environment = SubResource("Environment_6co3w")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
 use_collision = true
 size = Vector3(2000, 1, 2000)
 material = SubResource("StandardMaterial3D_xqaf1")
@@ -225,5 +227,7 @@ visible = false
 
 [node name="CollisionShape3D" parent="map_test1/Plane /StaticBody3D" index="0"]
 disabled = true
+
+[node name="map_test2" parent="." instance=ExtResource("9_yhrom")]
 
 [editable path="map_test1"]

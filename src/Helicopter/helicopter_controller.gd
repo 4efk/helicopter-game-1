@@ -16,6 +16,9 @@ extends RigidBody3D
 @onready var cam_pivot_y = $CamPivotY
 @onready var cam_pivot_z = $CamPivotY/CamPivotZ
 
+@onready var hook = $Rope/Hook
+@onready var hook_end_joint = $Rope/HookEndJoint
+
 @onready var hud_collective = $HUD/HBoxContainer/Collective
 @onready var hud_cyclic = $HUD/HBoxContainer/Cyclic
 
@@ -23,8 +26,10 @@ extends RigidBody3D
 
 var main_rotor_omega =  55.50 # angular velocity [rad/s]
 
-var main_rotor_collective_pitch = 0.0
+var main_rotor_collective_pitch = 4.0
 var cyclic = Vector2()
+
+var hooked_object = null
 
 func _ready():
 	pass
@@ -46,6 +51,13 @@ func _process(delta):
 	
 	main_rotor_collective_pitch += Input.get_axis("collective_pitch_down", "collective_pitch_up") * delta * 10
 	main_rotor_collective_pitch = clamp(main_rotor_collective_pitch, main_rotor_collective_min, main_rotor_collective_max)
+	
+	if Input.is_action_just_pressed("unhook_object") and hooked_object:
+		hook_end_joint.node_a = null
+		hook_end_joint.node_b = null
+		#hooked_object.freeze = false
+		#hooked_object.linear_velocity = linear_velocity
+		#hooked_object = null
 	
 	#setting HUD values
 	fps_counter.text = str(Engine.get_frames_per_second())
@@ -74,3 +86,16 @@ func _physics_process(_delta):
 	$markers/MeshInstance3D.global_position = global_position + tail_rotor_pos
 	$markers/MainRotorThrustMarker.global_position = global_position + main_rotor_pos
 	$markers/MeshInstance3D/RayCast3D.target_position = transform.basis.z * tail_rotor_thrust_force * .02
+	
+	#hooked object logic
+	if hooked_object:
+		pass
+		#hooked_object.global_position = hook.global_position
+
+func _on_hook_area_body_entered(body):
+	if body.is_in_group('pickable'):
+		hook_end_joint.node_a = hook.get_path()
+		hook_end_joint.node_b = body.get_path()
+		#print(1)
+		#body.freeze = true
+		#hooked_object = body

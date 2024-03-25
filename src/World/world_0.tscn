@@ -192,9 +192,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.765457, 0)
 [node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="Helicopter0/Rope"]
 node_a = NodePath("../..")
 node_b = NodePath("../RopeSegment0")
-angular_limit_x/enabled = false
-angular_limit_y/enabled = false
-angular_limit_z/enabled = false
 
 [node name="RopeSegment0" type="RigidBody3D" parent="Helicopter0/Rope"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.156672, 0)
@@ -207,9 +204,6 @@ shape = SubResource("SphereShape3D_81rme")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
 node_a = NodePath("../RopeSegment0")
 node_b = NodePath("../RopeSegment1")
-angular_limit_x/enabled = false
-angular_limit_y/enabled = false
-angular_limit_z/enabled = false
 
 [node name="RopeSegment1" type="RigidBody3D" parent="Helicopter0/Rope"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.457, 0)
@@ -222,9 +216,6 @@ shape = SubResource("SphereShape3D_81rme")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6, 0)
 node_a = NodePath("../RopeSegment1")
 node_b = NodePath("../RopeSegment2")
-angular_limit_x/enabled = false
-angular_limit_y/enabled = false
-angular_limit_z/enabled = false
 
 [node name="RopeSegment2" type="RigidBody3D" parent="Helicopter0/Rope"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.757, 0)
@@ -237,9 +228,6 @@ shape = SubResource("SphereShape3D_81rme")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9, 0)
 node_a = NodePath("../RopeSegment2")
 node_b = NodePath("../Hook")
-angular_limit_x/enabled = false
-angular_limit_y/enabled = false
-angular_limit_z/enabled = false
 
 [node name="Hook" type="RigidBody3D" parent="Helicopter0/Rope"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.057, 0)
@@ -255,9 +243,6 @@ shape = SubResource("SphereShape3D_tjr51")
 
 [node name="HookEndJoint" type="Generic6DOFJoint3D" parent="Helicopter0/Rope"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)
-angular_limit_x/enabled = false
-angular_limit_y/enabled = false
-angular_limit_z/enabled = false
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55358, 12.7278)

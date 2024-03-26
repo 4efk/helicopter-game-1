@@ -16,8 +16,7 @@ extends RigidBody3D
 @onready var cam_pivot_y = $CamPivotY
 @onready var cam_pivot_z = $CamPivotY/CamPivotZ
 
-@onready var hook = $Rope/Hook
-@onready var hook_end_joint = $Rope/HookEndJoint
+@onready var hook = $Rope/HookArea
 
 @onready var hud_collective = $HUD/HBoxContainer/Collective
 @onready var hud_cyclic = $HUD/HBoxContainer/Cyclic
@@ -26,10 +25,13 @@ extends RigidBody3D
 
 var main_rotor_omega =  55.50 # angular velocity [rad/s]
 
-var main_rotor_collective_pitch = 4.0
+var main_rotor_collective_pitch = 0.0
 var cyclic = Vector2()
 
 var hooked_object = null
+
+func die():
+	get_tree().change_scene_to_file("res://World/world_0.tscn")
 
 func _ready():
 	pass
@@ -49,15 +51,13 @@ func _process(delta):
 	
 	cyclic = Input.get_vector("cyclic_forward", "cyclic_backward", "cyclic_right", "cyclic_left")
 	
-	main_rotor_collective_pitch += Input.get_axis("collective_pitch_down", "collective_pitch_up") * delta * 10
+	main_rotor_collective_pitch += Input.get_axis("collective_pitch_down", "collective_pitch_up") * delta * 15
 	main_rotor_collective_pitch = clamp(main_rotor_collective_pitch, main_rotor_collective_min, main_rotor_collective_max)
 	
 	if Input.is_action_just_pressed("unhook_object") and hooked_object:
-		hook_end_joint.node_a = null
-		hook_end_joint.node_b = null
-		#hooked_object.freeze = false
-		#hooked_object.linear_velocity = linear_velocity
-		#hooked_object = null
+		hooked_object.freeze = false
+		hooked_object.linear_velocity = linear_velocity
+		hooked_object = null
 	
 	#setting HUD values
 	fps_counter.text = str(Engine.get_frames_per_second())
@@ -89,13 +89,14 @@ func _physics_process(_delta):
 	
 	#hooked object logic
 	if hooked_object:
-		pass
-		#hooked_object.global_position = hook.global_position
+		hooked_object.global_position = hook.global_position
+
+#main rotor collision (bad for a helicopter)
+func _on_main_rotor_area_body_entered(body):
+	die()
 
 func _on_hook_area_body_entered(body):
-	if body.is_in_group('pickable'):
-		hook_end_joint.node_a = hook.get_path()
-		hook_end_joint.node_b = body.get_path()
-		#print(1)
-		#body.freeze = true
-		#hooked_object = body
+	if body.is_in_group('pickable') and !hooked_object:
+		body.freeze = true
+		hooked_object = body
+

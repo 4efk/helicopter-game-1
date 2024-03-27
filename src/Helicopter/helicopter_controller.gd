@@ -6,7 +6,7 @@ extends RigidBody3D
 @export var second_rotor_radius = 0.0
 
 @export var main_rotor_collective_max = 12 # max/min angle of main rotor blades [°]; made up
-@export var main_rotor_collective_min = -12
+@export var main_rotor_collective_min = -4
 
 @export var camera_rotation_speed = 2
 

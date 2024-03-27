@@ -1,7 +1,8 @@
-[gd_scene load_steps=44 format=3 uid="uid://bmka3hhlv6i10"]
+[gd_scene load_steps=45 format=3 uid="uid://bmka3hhlv6i10"]
 
 [ext_resource type="Texture2D" uid="uid://spfbipkih55h" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="1_jqykm"]
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_qcidy"]
+[ext_resource type="Script" path="res://World/world_0.gd" id="1_td4ld"]
 [ext_resource type="ArrayMesh" uid="uid://c7ot7gqxgy1ov" path="res://Helicopter/Helicopter0/helicopter_placeholder1.obj" id="2_2hdk4"]
 [ext_resource type="Texture2D" uid="uid://cc10mt8eel70i" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_AmbientOcclusion.jpg" id="2_bpyab"]
 [ext_resource type="Texture2D" uid="uid://dben3xqr5cxlf" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_NormalGL.jpg" id="3_0wg8k"]
@@ -146,6 +147,18 @@ bottom_radius = 1.5
 height = 0.1
 
 [node name="world0" type="Node3D"]
+script = ExtResource("1_td4ld")
+
+[node name="WorldHUD" type="CanvasLayer" parent="."]
+
+[node name="HintText" type="Label" parent="WorldHUD"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 185.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.965926, -0.224144, 0.12941, 0, 0.5, 0.866025, -0.258819, -0.836516, 0.482963, 0, 9.63503, 0)

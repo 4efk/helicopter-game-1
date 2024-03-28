@@ -1,9 +1,10 @@
 extends RigidBody3D
 
-@export var thrust_coefficient = 0.0
-@export var main_rotor_blades_n = 2
 @export var main_rotor_radius = 3.835 # radius of the main rotor disc [m]
-@export var second_rotor_radius = 0.0
+@export var main_rotor_blades_n = 2
+@export var main_rotor_thrust_coefficient = 0.0
+@export var main_rotor_drag_coefficient = 0.0
+@export var tail_rotor_radius = 0.0
 
 @export var main_rotor_collective_max = 12 # max/min angle of main rotor blades [°]; made up
 @export var main_rotor_collective_min = -4
@@ -71,10 +72,13 @@ func _physics_process(_delta):
 	var main_rotor_pos = to_global(Vector3(cyclic.x * main_rotor_radius/30, main_rotor_pos_ind.position.y, cyclic.y * main_rotor_radius/30)) - global_position
 	var tail_rotor_pos = tail_rotor_pos_ind.global_position - global_position
 	
-	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_collective_pitch * 0.001
+	main_rotor_thrust_coefficient = main_rotor_collective_pitch * 0.001
+	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_thrust_coefficient
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
 	#TODO ALSO BASE THE FORCE ON SOME REAL DATA
 	apply_torque(transform.basis.y * -256.45)
+	
+	print(linear_velocity)
 	
 	#TODO tweak this userealdataandrealforces too
 	#currently this is set to exactly countertorque the main rotor (-256.45/-4.727 = ~54.25216839433044214089)

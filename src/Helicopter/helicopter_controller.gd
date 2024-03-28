@@ -3,11 +3,12 @@ extends RigidBody3D
 @export var main_rotor_radius = 3.835 # radius of the main rotor disc [m]
 @export var main_rotor_blades_n = 2
 @export var main_rotor_thrust_coefficient = 0.0
-@export var main_rotor_drag_coefficient = 0.0
-@export var tail_rotor_radius = 0.0
-
 @export var main_rotor_collective_max = 12 # max/min angle of main rotor blades [°]; made up
 @export var main_rotor_collective_min = -4
+
+@export var tail_rotor_radius = 0.0
+
+@export var drag_coefficient = 0.36
 
 @export var camera_rotation_speed = 2
 
@@ -74,9 +75,15 @@ func _physics_process(_delta):
 	
 	main_rotor_thrust_coefficient = main_rotor_collective_pitch * 0.001
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_thrust_coefficient
+	
+	print(main_rotor_thrust_force)
+	#main_rotor_thrust_force = 000
+	
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
 	#TODO ALSO BASE THE FORCE ON SOME REAL DATA
 	apply_torque(transform.basis.y * -256.45)
+	
+	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * drag_coefficient * 5)
 	
 	print(linear_velocity)
 	

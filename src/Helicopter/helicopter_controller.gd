@@ -4,7 +4,7 @@ extends RigidBody3D
 @export var main_rotor_blades_n = 2
 @export var main_rotor_thrust_coefficient = 0.0
 @export var main_rotor_collective_max = 12 # max/min angle of main rotor blades [°]; made up
-@export var main_rotor_collective_min = -4
+@export var main_rotor_collective_min = -2
 
 @export var tail_rotor_radius = 0.0
 

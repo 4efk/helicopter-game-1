@@ -1,6 +1,6 @@
 extends Node3D
 
-var text_to_type = 'do not crash and fly well and dont crash and also fly well and ................................'
+var text_to_type = 'test'
 var typing_delay = 0.1
 @onready var hint_text = $WorldHUD/HintText
 

@@ -73,11 +73,12 @@ func _physics_process(_delta):
 	var main_rotor_pos = to_global(Vector3(cyclic.x * main_rotor_radius/30, main_rotor_pos_ind.position.y, cyclic.y * main_rotor_radius/30)) - global_position
 	var tail_rotor_pos = tail_rotor_pos_ind.global_position - global_position
 	
-	main_rotor_thrust_coefficient = main_rotor_collective_pitch * 0.001
+	#0.006 at max collective
+	main_rotor_thrust_coefficient = main_rotor_collective_pitch * 0.0005
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_thrust_coefficient
 	
 	print(main_rotor_thrust_force)
-	#main_rotor_thrust_force = 000
+	#main_rotor_thrust_force = 8040
 	
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
 	#TODO ALSO BASE THE FORCE ON SOME REAL DATA

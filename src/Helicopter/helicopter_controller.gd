@@ -11,6 +11,7 @@ extends RigidBody3D
 @export var drag_coefficient = 0.36
 
 @export var camera_rotation_speed = 2
+@export var mouse_sensitivity = 0.005
 
 @onready var main_rotor_pos_ind = $MainRotorPosInd
 @onready var tail_rotor_pos_ind = $TailRotorPosInd
@@ -36,7 +37,13 @@ func die():
 	get_tree().change_scene_to_file("res://World/world_0.tscn")
 
 func _ready():
-	pass
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+func _input(event):
+	if event is InputEventMouseMotion:
+		cam_pivot_y.rotate_y(-event.relative.x * mouse_sensitivity) 
+		cam_pivot_z.rotate_z(-event.relative.y * mouse_sensitivity) 
+		cam_pivot_z.rotation.z = clamp(cam_pivot_z.rotation.z, -PI/2, PI/2)
 
 func _process(delta):
 	#camera control

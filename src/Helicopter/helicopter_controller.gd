@@ -85,13 +85,13 @@ func _physics_process(_delta):
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_thrust_coefficient
 	
 	print(main_rotor_thrust_force)
-	main_rotor_thrust_force = 4917
+	#main_rotor_thrust_force = 4917
 	
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
 	#TODO ALSO BASE THE FORCE ON SOME REAL DATA
 	apply_torque(transform.basis.y * -256.45)
 	
-	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * 131.63)#drag_coefficient * 5)
+	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * 0.36 * 1.5)#drag_coefficient * 5)
 	
 	print(linear_velocity)
 	

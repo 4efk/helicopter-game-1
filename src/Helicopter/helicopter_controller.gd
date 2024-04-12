@@ -89,7 +89,7 @@ func _physics_process(_delta):
 	
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
 	#TODO ALSO BASE THE FORCE ON SOME REAL DATA
-	apply_torque(transform.basis.y * 1666.0684)# -256.45)
+	apply_torque(transform.basis.y * -1666.0684)# -256.45)
 	
 	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * 0.36 * 1.5)#drag_coefficient * 5)
 	
@@ -99,7 +99,8 @@ func _physics_process(_delta):
 	#currently this is set to exactly countertorque the main rotor (-256.45/-4.727 = ~54.25216839433044214089)
 	#the rest is random
 	var tail_rotor_thrust_force = 54.25 + Input.get_axis("antitorque_right", "antitorque_left") * 80#2523.46
-	#apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
+	tail_rotor_thrust_force = 352.4577 + Input.get_axis("antitorque_right", "antitorque_left") * 80
+	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
 	
 	#different visual markers
 	$markers/MeshInstance3D.global_position = global_position + tail_rotor_pos

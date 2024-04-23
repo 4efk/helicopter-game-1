@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://bmka3hhlv6i10"]
+[gd_scene load_steps=50 format=3 uid="uid://bmka3hhlv6i10"]
 
 [ext_resource type="Texture2D" uid="uid://spfbipkih55h" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="1_jqykm"]
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_qcidy"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://c84yt6w6d5vuf" path="res://World/Models/map_test2.glb" id="9_yhrom"]
 [ext_resource type="PackedScene" uid="uid://islgmpg71t3k" path="res://World/Models/map_test3.glb" id="10_uousu"]
 [ext_resource type="Script" path="res://World/Props/dropoff_place.gd" id="11_2oswa"]
+[ext_resource type="Script" path="res://Helicopter/separate_rotor_test.gd" id="13_x7vw3"]
 
 [sub_resource type="Environment" id="Environment_6co3w"]
 fog_enabled = true
@@ -146,6 +147,21 @@ top_radius = 1.5
 bottom_radius = 1.5
 height = 0.1
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_n4sg1"]
+size = Vector3(5, 1, 1.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7w5db"]
+size = Vector3(5, 1, 1.5)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_te0ce"]
+height = 0.055
+radius = 3.835
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wq7i4"]
+top_radius = 3.835
+bottom_radius = 3.835
+height = 0.055
+
 [node name="world0" type="Node3D"]
 script = ExtResource("1_td4ld")
 
@@ -218,7 +234,6 @@ top_level = true
 
 [node name="Camera3D" type="Camera3D" parent="Helicopter0/CamPivotY/CamPivotZ"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -10, 0, 0)
-current = true
 fov = 90.0
 near = 0.5
 
@@ -505,6 +520,44 @@ shape = SubResource("CylinderShape3D_5alok")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="DropoffPlace3"]
 mesh = SubResource("CylinderMesh_viu05")
+
+[node name="SeparateRotorTest" type="Node" parent="."]
+script = ExtResource("13_x7vw3")
+
+[node name="HeliBody" type="RigidBody3D" parent="SeparateRotorTest"]
+transform = Transform3D(0.997316, -0.0732208, 0, 0.0732208, 0.997316, 0, 0, 0, 1, -12.1724, 5.32714, -4.87314)
+mass = 500.0
+center_of_mass_mode = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SeparateRotorTest/HeliBody"]
+shape = SubResource("BoxShape3D_n4sg1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SeparateRotorTest/HeliBody"]
+mesh = SubResource("BoxMesh_7w5db")
+
+[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="SeparateRotorTest"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.1724, 3.09123, -4.87314)
+node_a = NodePath("../HeliBody")
+node_b = NodePath("../Rotor")
+angular_limit_x/upper_angle = 0.20944
+angular_limit_y/enabled = false
+angular_limit_y/upper_angle = 0.20944
+angular_limit_z/enabled = false
+angular_limit_z/upper_angle = 0.20944
+
+[node name="Rotor" type="RigidBody3D" parent="SeparateRotorTest"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.1724, 6.37556, -4.87314)
+center_of_mass_mode = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SeparateRotorTest/Rotor"]
+shape = SubResource("CylinderShape3D_te0ce")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SeparateRotorTest/Rotor"]
+mesh = SubResource("CylinderMesh_wq7i4")
+
+[node name="Camera3D2" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.988764, 0.149484, 0, -0.149484, 0.988764, -13.111, 2.108, 4.125)
+current = true
 
 [connection signal="body_entered" from="Helicopter0/MainRotorArea" to="Helicopter0" method="_on_main_rotor_area_body_entered"]
 [connection signal="body_entered" from="Helicopter0/Rope/HookArea" to="Helicopter0" method="_on_hook_area_body_entered"]

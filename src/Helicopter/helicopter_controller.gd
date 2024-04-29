@@ -13,20 +13,21 @@ extends RigidBody3D
 @export var camera_rotation_speed = 2
 @export var mouse_sensitivity = 0.005
 
-@onready var main_rotor_pos_ind = $MainRotorPosInd
-@onready var tail_rotor_pos_ind = $TailRotorPosInd
+@onready var main_rotor_pos_ind = $helicopter0_model_test2/MainRotorPosInd
+@onready var tail_rotor_pos_ind = $helicopter0_model_test2/TailRotorPosInd
+
+@onready var moving_main_rotor_part = $helicopter0_model_test2/MovingMainRotorPart
+@onready var moving_tail_rotor_part = $helicopter0_model_test2/MovingTailRotorPart
 
 @onready var cam_pivot_y = $CamPivotY
 @onready var cam_pivot_z = $CamPivotY/CamPivotZ
-
-@onready var hook = $Rope/HookArea
 
 @onready var hud_collective = $HUD/HBoxContainer/Collective
 @onready var hud_cyclic = $HUD/HBoxContainer/Cyclic
 
 @onready var fps_counter = $HUD/FPSCounter
 
-var main_rotor_omega =  55.50 # angular velocity [rad/s]
+var main_rotor_omega =  0 #55.50 # angular velocity [rad/s]
 
 var main_rotor_collective_pitch = 0.0
 var cyclic = Vector2()
@@ -74,6 +75,11 @@ func _process(delta):
 	hud_collective.text = 'collective: ' + str(main_rotor_collective_pitch) + ' °'
 	hud_cyclic.text = 'cyclic: ' + str(cyclic)
 	
+	if main_rotor_omega < 55.5:
+		main_rotor_omega += delta
+	elif main_rotor_omega > 55.5:
+		main_rotor_omega = 55.5
+
 func _physics_process(_delta):
 	#kinda working cyclic control by offsetting the position of where the force is being applied along the rotor disc
 	#TODO TWEAK THE CYCLIC SENSITIVITY PREFERABLY BASED ON SOME REAL DATA
@@ -102,21 +108,8 @@ func _physics_process(_delta):
 	tail_rotor_thrust_force = 352.4577 + Input.get_axis("antitorque_right", "antitorque_left") * 80
 	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
 	
-	#different visual markers
-	$markers/MeshInstance3D.global_position = global_position + tail_rotor_pos
-	$markers/MainRotorThrustMarker.global_position = global_position + main_rotor_pos
-	$markers/MeshInstance3D/RayCast3D.target_position = transform.basis.z * tail_rotor_thrust_force * .02
-	
-	#hooked object logic
-	if hooked_object:
-		hooked_object.global_position = hook.global_position
-
-#main rotor collision (bad for a helicopter)
-func _on_main_rotor_area_body_entered(body):
-	die()
-
-func _on_hook_area_body_entered(body):
-	if body.is_in_group('pickable') and !hooked_object:
-		body.freeze = true
-		hooked_object = body
-
+	#visual stuff
+	moving_main_rotor_part.quaternion *= Quaternion(0.0471064507, 0.99888987496, 0, main_rotor_omega/60) #0.10471975511963333333
+	var tail_rotor_omega = 355.62828798/55.5 * main_rotor_omega
+	print([main_rotor_omega, tail_rotor_omega])
+	moving_tail_rotor_part.quaternion *= Quaternion(0, 0, PI/2, tail_rotor_omega/60)

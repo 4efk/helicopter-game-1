@@ -6,4 +6,4 @@ func _ready():
 	pass
 
 func _physics_process(delta):
-	rotor.apply_force(Vector3(0, 4000, 0))
+	rotor.apply_force(Vector3(0, 5000, 0))

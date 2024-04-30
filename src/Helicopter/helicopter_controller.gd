@@ -4,9 +4,11 @@ extends RigidBody3D
 @export var main_rotor_blades_n = 2
 @export var main_rotor_thrust_coefficient = 0.0
 @export var main_rotor_collective_max = 12 # max/min angle of main rotor blades [°]; made up
-@export var main_rotor_collective_min = -2
+@export var main_rotor_collective_min = 0
 
-@export var tail_rotor_radius = 0.0
+@export var tail_rotor_radius = 0.535
+@export var tail_rotor_collective_max = 15 # max/min angle of main rotor blades [°]; made up
+@export var tail_rotor_collective_min = -15
 
 @export var drag_coefficient = 0.36
 
@@ -27,12 +29,13 @@ extends RigidBody3D
 
 @onready var fps_counter = $HUD/FPSCounter
 
-var main_rotor_omega =  0 #55.50 # angular velocity [rad/s]
+var engine_on = false
+
+var main_rotor_omega = 55.5 #55.50 # angular velocity [rad/s]
+var tail_rotor_omega = 355.62828798 #355.62828798
 
 var main_rotor_collective_pitch = 0.0
 var cyclic = Vector2()
-
-var hooked_object = null
 
 func die():
 	get_tree().change_scene_to_file("res://World/world_0.tscn")
@@ -54,62 +57,55 @@ func _process(delta):
 	cam_pivot_z.rotation.z += Input.get_axis("camera_down", "camera_up")  * camera_rotation_speed * delta
 	cam_pivot_z.rotation.z = clamp(cam_pivot_z.rotation.z, -PI/2, PI/2)
 	
+	#helicopter control
 	if Input.is_action_just_pressed("start_engine"):
-		main_rotor_omega = 55.50
+		engine_on = true
 	if Input.is_action_just_pressed("stop_engine"):
-		main_rotor_omega = 0
+		engine_on = false
 	
 	cyclic = Input.get_vector("cyclic_forward", "cyclic_backward", "cyclic_right", "cyclic_left")
 	
 	main_rotor_collective_pitch += Input.get_axis("collective_pitch_down", "collective_pitch_up") * delta * 15
 	main_rotor_collective_pitch = clamp(main_rotor_collective_pitch, main_rotor_collective_min, main_rotor_collective_max)
 	
-	if Input.is_action_just_pressed("unhook_object") and hooked_object:
-		hooked_object.freeze = false
-		hooked_object.linear_velocity = linear_velocity
-		hooked_object = null
-	
 	#setting HUD values
 	fps_counter.text = str(Engine.get_frames_per_second())
 	
 	hud_collective.text = 'collective: ' + str(main_rotor_collective_pitch) + ' °'
 	hud_cyclic.text = 'cyclic: ' + str(cyclic)
-	
-	if main_rotor_omega < 55.5:
-		main_rotor_omega += delta
-	elif main_rotor_omega > 55.5:
-		main_rotor_omega = 55.5
 
 func _physics_process(_delta):
 	#kinda working cyclic control by offsetting the position of where the force is being applied along the rotor disc
-	#TODO TWEAK THE CYCLIC SENSITIVITY PREFERABLY BASED ON SOME REAL DATA
-	var main_rotor_pos = to_global(Vector3(cyclic.x * main_rotor_radius/30, main_rotor_pos_ind.position.y, cyclic.y * main_rotor_radius/30)) - global_position
+	#the offset is just made up in terms of how it feels, based on nothing at all
+	var main_rotor_pos = to_global(Vector3(cyclic.x * main_rotor_radius/20, main_rotor_pos_ind.position.y, cyclic.y * main_rotor_radius/20)) - global_position
 	var tail_rotor_pos = tail_rotor_pos_ind.global_position - global_position
 	
 	#0.006 at max collective
+	#this is mostly made up, but in such a way that the maximum main rotor thrust is about 8000 N, which some random hp-to-thrust calculator spat at me and i just went with it
 	main_rotor_thrust_coefficient = main_rotor_collective_pitch * 0.0005
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_thrust_coefficient
-	
-	print(main_rotor_thrust_force)
-	#main_rotor_thrust_force = 4917
-	
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
-	#TODO ALSO BASE THE FORCE ON SOME REAL DATA
-	apply_torque(transform.basis.y * -1666.0684)# -256.45)
+	#calculated from the engine hp and angular velocity: 92466.8 / 55.50 = 1666.0684
+	apply_torque(transform.basis.y * -92466.8 / main_rotor_omega)
+	#apply_torque(transform.basis.y * -1666.0684)
 	
+	#drag
 	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * 0.36 * 1.5)#drag_coefficient * 5)
 	
-	print(linear_velocity)
-	
-	#TODO tweak this userealdataandrealforces too
-	#currently this is set to exactly countertorque the main rotor (-256.45/-4.727 = ~54.25216839433044214089)
-	#the rest is random
-	var tail_rotor_thrust_force = 54.25 + Input.get_axis("antitorque_right", "antitorque_left") * 80#2523.46
-	tail_rotor_thrust_force = 352.4577 + Input.get_axis("antitorque_right", "antitorque_left") * 80
+	#set to exactly countertorque the main rotor with some random control values
+	var tail_rotor_thrust_coefficient = 0.01566371280090329171 + Input.get_axis("antitorque_right", "antitorque_left") * 0.01
+	var tail_rotor_thrust_force = 0.5 * 1.225 * pow(tail_rotor_omega * tail_rotor_radius, 2) * PI * pow(tail_rotor_radius, 2) * tail_rotor_thrust_coefficient
 	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
 	
 	#visual stuff
-	moving_main_rotor_part.quaternion *= Quaternion(0.0471064507, 0.99888987496, 0, main_rotor_omega/60) #0.10471975511963333333
+	#print(Quaternion(0, 0, 1, 0))
+	print(Quaternion(0, 0, 1, 0) * Quaternion(0, 0, 1, 0.1))
+	
+	print(moving_tail_rotor_part.quaternion)
+	
+	moving_main_rotor_part.quaternion *= Quaternion(0.0033, 0.0707, 0, 0.01) #0.10471975511963333333
+	#moving_main_rotor_part.quaternion *= Quaternion(0.0471064507, 0.99888987496, 0, main_rotor_omega/60) #0.10471975511963333333
 	var tail_rotor_omega = 355.62828798/55.5 * main_rotor_omega
 	print([main_rotor_omega, tail_rotor_omega])
-	moving_tail_rotor_part.quaternion *= Quaternion(0, 0, PI/2, tail_rotor_omega/60)
+	moving_tail_rotor_part.quaternion *= Quaternion(0, 0, .05, 0.95)
+	#moving_tail_rotor_part.rotate_z(.1)

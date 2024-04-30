@@ -3654,6 +3654,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.33492, 0, -0.131001)
 
 [node name="MovingMainRotorPart" type="Node3D" parent="Helicopter0_1/helicopter0_model_test2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.426343, 1.60823, 0)
+rotation_edit_mode = 1
 
 [node name="Cylinder_026" type="MeshInstance3D" parent="Helicopter0_1/helicopter0_model_test2/MovingMainRotorPart"]
 mesh = SubResource("ArrayMesh_cprxd")
@@ -3741,6 +3742,7 @@ skeleton = NodePath("")
 
 [node name="MovingTailRotorPart" type="Node3D" parent="Helicopter0_1/helicopter0_model_test2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.33261, 0.887808, -0.178905)
+rotation_edit_mode = 1
 
 [node name="TailRotorShaft" type="MeshInstance3D" parent="Helicopter0_1/helicopter0_model_test2/MovingTailRotorPart"]
 transform = Transform3D(1.00002, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)

@@ -68,6 +68,12 @@ func _process(delta):
 	main_rotor_collective_pitch += Input.get_axis("collective_pitch_down", "collective_pitch_up") * delta * 15
 	main_rotor_collective_pitch = clamp(main_rotor_collective_pitch, main_rotor_collective_min, main_rotor_collective_max)
 	
+	tail_rotor_omega = 355.62828798/55.5 * main_rotor_omega
+	
+	#visual stuff
+	moving_main_rotor_part.quaternion *= Quaternion(Vector3(0.0471064507, 0.99888987496, 0), main_rotor_omega * delta)
+	moving_tail_rotor_part.quaternion *= Quaternion(Vector3(0, 0, 1), tail_rotor_omega * delta)
+	
 	#setting HUD values
 	fps_counter.text = str(Engine.get_frames_per_second())
 	
@@ -85,9 +91,8 @@ func _physics_process(_delta):
 	main_rotor_thrust_coefficient = main_rotor_collective_pitch * 0.0005
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_thrust_coefficient
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
-	#calculated from the engine hp and angular velocity: 92466.8 / 55.50 = 1666.0684
-	apply_torque(transform.basis.y * -92466.8 / main_rotor_omega)
-	#apply_torque(transform.basis.y * -1666.0684)
+	#calculated from the engine hp and angular velocity
+	apply_torque(transform.basis.y * -92466.8 / 55.5) # main_rotor_omega)
 	
 	#drag
 	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * 0.36 * 1.5)#drag_coefficient * 5)
@@ -96,16 +101,3 @@ func _physics_process(_delta):
 	var tail_rotor_thrust_coefficient = 0.01566371280090329171 + Input.get_axis("antitorque_right", "antitorque_left") * 0.01
 	var tail_rotor_thrust_force = 0.5 * 1.225 * pow(tail_rotor_omega * tail_rotor_radius, 2) * PI * pow(tail_rotor_radius, 2) * tail_rotor_thrust_coefficient
 	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
-	
-	#visual stuff
-	#print(Quaternion(0, 0, 1, 0))
-	print(Quaternion(0, 0, 1, 0) * Quaternion(0, 0, 1, 0.1))
-	
-	print(moving_tail_rotor_part.quaternion)
-	
-	moving_main_rotor_part.quaternion *= Quaternion(0.0033, 0.0707, 0, 0.01) #0.10471975511963333333
-	#moving_main_rotor_part.quaternion *= Quaternion(0.0471064507, 0.99888987496, 0, main_rotor_omega/60) #0.10471975511963333333
-	var tail_rotor_omega = 355.62828798/55.5 * main_rotor_omega
-	print([main_rotor_omega, tail_rotor_omega])
-	moving_tail_rotor_part.quaternion *= Quaternion(0, 0, .05, 0.95)
-	#moving_tail_rotor_part.rotate_z(.1)

@@ -3653,7 +3653,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.426343, 1.60823, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.33492, 0, -0.131001)
 
 [node name="MovingMainRotorPart" type="Node3D" parent="Helicopter0_1/helicopter0_model_test2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.426343, 1.60823, 0)
+transform = Transform3D(-0.997684, 0.0679893, 0.00199968, 0.0679893, 0.997686, -6.80573e-05, -0.00199968, 6.80573e-05, -0.999998, -0.426343, 1.60823, 0)
 rotation_edit_mode = 1
 
 [node name="Cylinder_026" type="MeshInstance3D" parent="Helicopter0_1/helicopter0_model_test2/MovingMainRotorPart"]

@@ -2,12 +2,11 @@ extends RigidBody3D
 
 @export var main_rotor_radius = 3.835 # radius of the main rotor disc [m]
 @export var main_rotor_blades_n = 2
-@export var main_rotor_thrust_coefficient = 0.0
-@export var main_rotor_collective_max = 12 # max/min angle of main rotor blades [°]; made up
+@export var main_rotor_collective_max = 12 # max/min angle of main rotor blades [°]; kinda made up
 @export var main_rotor_collective_min = 0
 
 @export var tail_rotor_radius = 0.535
-@export var tail_rotor_collective_max = 15 # max/min angle of main rotor blades [°]; made up
+@export var tail_rotor_collective_max = 15 # max/min angle of tail rotor blades [°]; kinda extracted from the airfoil AOA/lift coefficient graph
 @export var tail_rotor_collective_min = -15
 
 @export var drag_coefficient = 0.36
@@ -32,7 +31,7 @@ extends RigidBody3D
 var engine_on = false
 
 var main_rotor_omega = 55.5 #55.50 # angular velocity [rad/s]
-var tail_rotor_omega = 355.62828798 #355.62828798
+var tail_rotor_omega = 355.62828798 #355.62828798 # angular velocity [rad/s]
 
 var main_rotor_collective_pitch = 0.0
 var cyclic = Vector2()
@@ -88,7 +87,7 @@ func _physics_process(_delta):
 	
 	#0.006 at max collective
 	#this is mostly made up, but in such a way that the maximum main rotor thrust is about 8000 N, which some random hp-to-thrust calculator spat at me and i just went with it
-	main_rotor_thrust_coefficient = main_rotor_collective_pitch * 0.0005
+	var main_rotor_thrust_coefficient = main_rotor_collective_pitch * 0.0005
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_thrust_coefficient
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
 	#calculated from the engine hp and angular velocity

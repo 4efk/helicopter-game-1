@@ -1,4 +1,4 @@
-[gd_scene load_steps=258 format=3 uid="uid://bmka3hhlv6i10"]
+[gd_scene load_steps=260 format=3 uid="uid://bmka3hhlv6i10"]
 
 [ext_resource type="Texture2D" uid="uid://spfbipkih55h" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="1_jqykm"]
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_qcidy"]
@@ -3372,6 +3372,14 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_3ldy4")
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_imgra"]
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ko5jw"]
+material = SubResource("StandardMaterial3D_imgra")
+radius = 0.25
+height = 0.5
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_dlufu"]
 size = Vector3(1, 1, 2)
 
@@ -4125,6 +4133,9 @@ skeleton = NodePath("")
 [node name="BodyMetalCon1" type="MeshInstance3D" parent="Helicopter0_1/helicopter0_model_test2/Other"]
 mesh = SubResource("ArrayMesh_npkic")
 skeleton = NodePath("")
+
+[node name="MainRotorThrustVectorInd" type="MeshInstance3D" parent="Helicopter0_1"]
+mesh = SubResource("SphereMesh_ko5jw")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.875532, 0.48316, 0, -0.48316, 0.875532, 0, 8.2787, 25.4668)

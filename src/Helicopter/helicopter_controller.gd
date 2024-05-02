@@ -82,8 +82,11 @@ func _process(delta):
 func _physics_process(_delta):
 	#kinda working cyclic control by offsetting the position of where the force is being applied along the rotor disc
 	#the offset is just made up in terms of how it feels, based on nothing at all
-	var main_rotor_pos = to_global(Vector3(cyclic.x * main_rotor_radius/20, main_rotor_pos_ind.position.y, cyclic.y * main_rotor_radius/20)) - global_position
+	var main_rotor_pos = to_global(Vector3(main_rotor_pos_ind.position.x + cyclic.x * main_rotor_radius/20, main_rotor_pos_ind.position.y, main_rotor_pos_ind.position.z + cyclic.y * main_rotor_radius/20)) - global_position
 	var tail_rotor_pos = tail_rotor_pos_ind.global_position - global_position
+	
+	print(main_rotor_pos)
+	$MainRotorThrustVectorInd.global_position = global_position + main_rotor_pos
 	
 	#0.006 at max collective
 	#this is mostly made up, but in such a way that the maximum main rotor thrust is about 8000 N, which some random hp-to-thrust calculator spat at me and i just went with it

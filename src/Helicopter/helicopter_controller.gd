@@ -104,6 +104,6 @@ func _physics_process(_delta):
 	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * 0.36 * 1.5)#drag_coefficient * 5)
 	
 	#set to exactly countertorque the main rotor with some random control values
-	var tail_rotor_thrust_coefficient = 0.01566371280090329171 + Input.get_axis("antitorque_right", "antitorque_left") * 0.01
+	var tail_rotor_thrust_coefficient = 92466.8 / 55.5 / (tail_rotor_pos_ind.position.x + helicopter_form.position.x) / -19937.17825851426525086220 + Input.get_axis("antitorque_right", "antitorque_left") * 0.01
 	var tail_rotor_thrust_force = 0.5 * 1.225 * pow(tail_rotor_omega * tail_rotor_radius, 2) * PI * pow(tail_rotor_radius, 2) * tail_rotor_thrust_coefficient
 	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)

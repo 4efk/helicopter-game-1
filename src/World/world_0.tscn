@@ -3659,7 +3659,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.426, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.426343, 1.60823, 0)
 
 [node name="TailRotorPosInd" type="Marker3D" parent="Helicopter0_1/helicopter0_model_test2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.33261, 0.887808, -0.178905)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.333, 0, -0.179)
 
 [node name="MovingMainRotorPart" type="Node3D" parent="Helicopter0_1/helicopter0_model_test2"]
 transform = Transform3D(-0.997684, 0.0679893, 0.00199968, 0.0679893, 0.997686, -6.80573e-05, -0.00199968, 6.80573e-05, -0.999998, -0.426343, 1.60823, 0)

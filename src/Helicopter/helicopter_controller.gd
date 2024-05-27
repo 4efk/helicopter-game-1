@@ -26,6 +26,8 @@ extends RigidBody3D
 
 @onready var hud_collective = $HUD/HBoxContainer/Collective
 @onready var hud_cyclic = $HUD/HBoxContainer/Cyclic
+@onready var hud_rotor_rpm = $HUD/HBoxContainer/RPM
+@onready var hud_engine = $HUD/HBoxContainer/Engine
 
 @onready var fps_counter = $HUD/FPSCounter
 
@@ -79,16 +81,17 @@ func _process(delta):
 	
 	hud_collective.text = 'collective: ' + str(main_rotor_collective_pitch) + ' °'
 	hud_cyclic.text = 'cyclic: ' + str(cyclic)
+	hud_engine.text = ['engine off', 'engine on'][int(engine_on)]
+	hud_rotor_rpm.text = 'rpm: ' + str(main_rotor_omega * 9.549297)
 
 func _physics_process(_delta):
 	#kinda working cyclic control by offsetting the position of where the force is being applied along the rotor disc
 	#the offset is just made up in terms of how it feels, based on nothing at all
 	#cyclic += Vector2(main_rotor_pos_ind.position.x + helicopter_form.position.x, main_rotor_pos_ind.position.z + helicopter_form.position.z)
-	print(cyclic)
+
 	var main_rotor_pos = to_global(Vector3(cyclic.x * main_rotor_radius/20 + main_rotor_pos_ind.position.x + helicopter_form.position.x, main_rotor_pos_ind.position.y, cyclic.y * main_rotor_radius/20 + main_rotor_pos_ind.position.z + helicopter_form.position.z)) - global_position
 	var tail_rotor_pos = tail_rotor_pos_ind.global_position - global_position
 	
-	print(main_rotor_pos)
 	#main_rotor_pos += Vector3(main_rotor_pos_ind.global_position.x-global_position.x, 0, main_rotor_pos_ind.global_position.z-global_position.z)
 	$MainRotorThrustVectorInd.global_position = global_position + main_rotor_pos
 	
@@ -100,8 +103,10 @@ func _physics_process(_delta):
 	#calculated from the engine hp and angular velocity
 	apply_torque(transform.basis.y * -92466.8 / 55.5) # main_rotor_omega)
 	
-	#drag
-	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * 0.36 * 1.5)#drag_coefficient * 5)
+	#drag - good for now ok
+	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * 0.36 * 6)#drag_coefficient * 5)
+	
+	print(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * 0.36 * 6)#drag_coefficient * 5)
 	
 	#set to exactly countertorque the main rotor with some random control values
 	var tail_rotor_thrust_coefficient = 92466.8 / 55.5 / (tail_rotor_pos_ind.position.x + helicopter_form.position.x) / -19937.17825851426525086220 + Input.get_axis("antitorque_right", "antitorque_left") * 0.015

@@ -33,8 +33,9 @@ extends RigidBody3D
 
 var engine_on = false
 
-var main_rotor_omega = 55.5 #55.50 # angular velocity [rad/s]
-var tail_rotor_omega = 355.62828798 #355.62828798 # angular velocity [rad/s]
+var main_rotor_omega = 55.5 # max 55.50 # angular velocity [rad/s]
+var tail_rotor_omega = 0.0 #max 355.62828798 # angular velocity [rad/s]
+var rotor_drag = 0.0
 
 var main_rotor_collective_pitch = 0.0
 var cyclic = Vector2()
@@ -70,8 +71,6 @@ func _process(delta):
 	main_rotor_collective_pitch += Input.get_axis("collective_pitch_down", "collective_pitch_up") * delta * 15
 	main_rotor_collective_pitch = clamp(main_rotor_collective_pitch, main_rotor_collective_min, main_rotor_collective_max)
 	
-	tail_rotor_omega = 355.62828798/55.5 * main_rotor_omega
-	
 	#visual stuff
 	moving_main_rotor_part.quaternion *= Quaternion(Vector3(0.0471064507, 0.99888987496, 0), main_rotor_omega * delta)
 	moving_tail_rotor_part.quaternion *= Quaternion(Vector3(0, 0, 1), tail_rotor_omega * delta)
@@ -101,7 +100,7 @@ func _physics_process(_delta):
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_thrust_coefficient
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
 	#calculated from the engine hp and angular velocity
-	apply_torque(transform.basis.y * -92466.8 / 55.5) # main_rotor_omega)
+	apply_torque(transform.basis.y * -92466.8 / 55.5 * (rotor_drag/0.01424075)) # main_rotor_omega)
 	
 	#drag - good for now ok
 	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * 0.36 * 6)#drag_coefficient * 5)
@@ -112,3 +111,14 @@ func _physics_process(_delta):
 	var tail_rotor_thrust_coefficient = 92466.8 / 55.5 / (tail_rotor_pos_ind.position.x + helicopter_form.position.x) / -19937.17825851426525086220 + Input.get_axis("antitorque_right", "antitorque_left") * 0.015
 	var tail_rotor_thrust_force = 0.5 * 1.225 * pow(tail_rotor_omega * tail_rotor_radius, 2) * PI * pow(tail_rotor_radius, 2) * tail_rotor_thrust_coefficient
 	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
+	
+	### rotors rotating
+	#made up so the rotor gets to max speed in about a minute
+	main_rotor_omega += 0.015 * float(engine_on)
+	#rotor profile drag; totally made up based on feel
+	rotor_drag = 0.005 + main_rotor_collective_pitch * pow(main_rotor_omega, 2) * 0.00000025
+	main_rotor_omega -= rotor_drag
+	print(rotor_drag)
+	
+	main_rotor_omega = clamp(main_rotor_omega, 0, 55.5)
+	tail_rotor_omega = 355.62828798/55.5 * main_rotor_omega

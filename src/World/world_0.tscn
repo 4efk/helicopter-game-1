@@ -3616,25 +3616,36 @@ grow_vertical = 0
 theme_override_constants/separation = 100
 alignment = 1
 
-[node name="Collective" type="Label" parent="Helicopter0_1/HUD/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Helicopter0_1/HUD/HBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "collective: 12 °"
 
-[node name="Cyclic" type="Label" parent="Helicopter0_1/HUD/HBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "cyclic: (0, 0)"
-
-[node name="Engine" type="Label" parent="Helicopter0_1/HUD/HBoxContainer"]
+[node name="Engine" type="Label" parent="Helicopter0_1/HUD/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "engine: off"
 
-[node name="RPM" type="Label" parent="Helicopter0_1/HUD/HBoxContainer"]
+[node name="RPM" type="Label" parent="Helicopter0_1/HUD/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "rpm: 0 %"
+
+[node name="EngineRPM" type="Label" parent="Helicopter0_1/HUD/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "rpm: 0 %"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Helicopter0_1/HUD/HBoxContainer"]
+layout_mode = 2
+
+[node name="Collective" type="Label" parent="Helicopter0_1/HUD/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "collective: 12 °"
+
+[node name="Cyclic" type="Label" parent="Helicopter0_1/HUD/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "cyclic: (0, 0)"
 
 [node name="FPSCounter" type="Label" parent="Helicopter0_1/HUD"]
 offset_right = 59.0

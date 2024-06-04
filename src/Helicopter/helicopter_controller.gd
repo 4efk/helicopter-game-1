@@ -24,14 +24,17 @@ extends RigidBody3D
 @onready var cam_pivot_y = $CamPivotY
 @onready var cam_pivot_z = $CamPivotY/CamPivotZ
 
-@onready var hud_collective = $HUD/HBoxContainer/Collective
-@onready var hud_cyclic = $HUD/HBoxContainer/Cyclic
-@onready var hud_rotor_rpm = $HUD/HBoxContainer/RPM
-@onready var hud_engine = $HUD/HBoxContainer/Engine
+@onready var hud_collective = $HUD/HBoxContainer/VBoxContainer2/Collective
+@onready var hud_cyclic = $HUD/HBoxContainer/VBoxContainer2/Cyclic
+@onready var hud_rotor_rpm = $HUD/HBoxContainer/VBoxContainer/RPM
+@onready var hud_engine = $HUD/HBoxContainer/VBoxContainer/Engine
+@onready var hud_engine_rpm = $HUD/HBoxContainer/VBoxContainer/EngineRPM
 
 @onready var fps_counter = $HUD/FPSCounter
 
 var engine_on = false
+var engine_omega = 0.0 # max 282,74 [rad/s] = 2700 rpm
+var belt_tension = 0.0 #max 1.0 (fraction)
 
 var main_rotor_omega = 55.5 # max 55.50 # angular velocity [rad/s]
 var tail_rotor_omega = 0.0 #max 355.62828798 # angular velocity [rad/s]
@@ -62,9 +65,8 @@ func _process(delta):
 	
 	#helicopter control
 	if Input.is_action_just_pressed("start_engine"):
-		engine_on = true
-	if Input.is_action_just_pressed("stop_engine"):
-		engine_on = false
+		engine_on = !engine_on
+	engine_omega = 282.74 * int(engine_on)
 	
 	cyclic = Input.get_vector("cyclic_forward", "cyclic_backward", "cyclic_right", "cyclic_left")
 	
@@ -82,6 +84,7 @@ func _process(delta):
 	hud_cyclic.text = 'cyclic: ' + str(cyclic)
 	hud_engine.text = ['engine off', 'engine on'][int(engine_on)]
 	hud_rotor_rpm.text = 'rpm: ' + str(main_rotor_omega * 9.549297)
+	hud_engine_rpm = 'rpm: ' + str(engine_omega * 9.549297)
 
 func _physics_process(_delta):
 	#kinda working cyclic control by offsetting the position of where the force is being applied along the rotor disc
@@ -99,7 +102,7 @@ func _physics_process(_delta):
 	var main_rotor_thrust_coefficient = main_rotor_collective_pitch * 0.0005
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_thrust_coefficient
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
-	#calculated from the engine hp and angular velocity
+	#uhh make this make sense i guess
 	apply_torque(transform.basis.y * -92466.8 / 55.5 * (rotor_drag/0.01424075)) # main_rotor_omega)
 	
 	#drag - good for now ok
@@ -113,8 +116,8 @@ func _physics_process(_delta):
 	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
 	
 	### rotors rotating
-	#made up so the rotor gets to max speed in about a minute
-	main_rotor_omega += 0.015 * float(engine_on)
+	#
+	main_rotor_omega = engine_omega * (55.5/282.74)
 	#rotor profile drag; totally made up based on feel
 	rotor_drag = 0.005 + main_rotor_collective_pitch * pow(main_rotor_omega, 2) * 0.00000025
 	main_rotor_omega -= rotor_drag

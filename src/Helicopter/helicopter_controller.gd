@@ -34,6 +34,7 @@ extends RigidBody3D
 
 var engine_on = false
 var engine_omega = 0.0 # max 282,74 [rad/s] = 2700 rpm
+var clutch_engaged = false
 var belt_tension = 0.0 #max 1.0 (fraction)
 
 var main_rotor_omega = 55.5 # max 55.50 # angular velocity [rad/s]
@@ -67,7 +68,10 @@ func _process(delta):
 	if Input.is_action_just_pressed("start_engine"):
 		engine_on = !engine_on
 	engine_omega = 282.74 * int(engine_on)
-	
+	if Input.is_action_just_pressed('engage_clutch'):
+		clutch_engaged = true
+	belt_tension += delta/10 * int(clutch_engaged)
+	belt_tension = clampf(belt_tension, 0.1, 1.0)
 	cyclic = Input.get_vector("cyclic_forward", "cyclic_backward", "cyclic_right", "cyclic_left")
 	
 	main_rotor_collective_pitch += Input.get_axis("collective_pitch_down", "collective_pitch_up") * delta * 15
@@ -83,8 +87,8 @@ func _process(delta):
 	hud_collective.text = 'collective: ' + str(main_rotor_collective_pitch) + ' °'
 	hud_cyclic.text = 'cyclic: ' + str(cyclic)
 	hud_engine.text = ['engine off', 'engine on'][int(engine_on)]
-	hud_rotor_rpm.text = 'rpm: ' + str(main_rotor_omega * 9.549297)
-	hud_engine_rpm = 'rpm: ' + str(engine_omega * 9.549297)
+	hud_rotor_rpm.text = 'rotor rpm: ' + str(main_rotor_omega * 9.549297)
+	hud_engine_rpm.text = 'engine rpm: ' + str(engine_omega * 9.549297)
 
 func _physics_process(_delta):
 	#kinda working cyclic control by offsetting the position of where the force is being applied along the rotor disc
@@ -117,7 +121,7 @@ func _physics_process(_delta):
 	
 	### rotors rotating
 	#
-	main_rotor_omega = engine_omega * (55.5/282.74)
+	main_rotor_omega = engine_omega * (55.5/282.74) * belt_tension
 	#rotor profile drag; totally made up based on feel
 	rotor_drag = 0.005 + main_rotor_collective_pitch * pow(main_rotor_omega, 2) * 0.00000025
 	main_rotor_omega -= rotor_drag

@@ -112,7 +112,7 @@ func _physics_process(_delta):
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_thrust_coefficient
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
 	#uhh make this make sense i guess
-	apply_torque(transform.basis.y * -92466.8 / 55.5 * (rotor_drag/0.01424075)) # main_rotor_omega)
+	apply_torque(transform.basis.y * rotor_drag) # main_rotor_omega)
 	
 	#drag - good for now ok
 	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * drag_coefficient * 6)#drag_coefficient * 5)
@@ -140,11 +140,14 @@ func _physics_process(_delta):
 	main_rotor_alpha
 	
 	#rotor_drag = 0.005 + main_rotor_collective_pitch * pow(main_rotor_omega, 2) * 0.00000025
-	rotor_drag = 0.5 * 1.225 * pow(main_rotor_radius/2 * main_rotor_omega, 2) * (0.04 * main_rotor_collective_pitch/12 + 0.001) * 21.15
+	rotor_drag = 2 * 0.5 * 1.225 * pow(main_rotor_radius/2 * main_rotor_omega, 2) * (0.04 * main_rotor_collective_pitch/12 + 0.001) * 0.2014
 	main_rotor_alpha = rotor_drag * main_rotor_radius/2 / main_rotor_inertia
 	
 	main_rotor_omega -= main_rotor_alpha  / 60
 	print(rotor_drag * main_rotor_radius/2)
+	print(0.04 * main_rotor_collective_pitch/12 + 0.001)
+	
+	rotor_drag = rotor_drag * main_rotor_radius/2
 	
 	main_rotor_omega = clamp(main_rotor_omega, 0, 55.5)
 	tail_rotor_omega = 355.62828798/55.5 * main_rotor_omega

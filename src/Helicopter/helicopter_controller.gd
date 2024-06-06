@@ -11,6 +11,8 @@ extends RigidBody3D
 
 @export var drag_coefficient = 0.36
 
+@export var engine_power_curve = Curve.new()
+
 @export var camera_rotation_speed = 2
 @export var mouse_sensitivity = 0.005
 
@@ -33,7 +35,7 @@ extends RigidBody3D
 @onready var fps_counter = $HUD/FPSCounter
 
 var engine_on = false
-var engine_omega = 0.0 # max 282,74 [rad/s] = 2700 rpm
+var engine_omega = 0.0 # max 282.74 [rad/s] = 2700 rpm
 var clutch_engaged = false
 var belt_tension = 0.05 #max 1.0 (fraction)
 
@@ -49,6 +51,8 @@ func die():
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	
+	print(engine_power_curve.sample(1))
 
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -111,9 +115,9 @@ func _physics_process(_delta):
 	apply_torque(transform.basis.y * -92466.8 / 55.5 * (rotor_drag/0.01424075)) # main_rotor_omega)
 	
 	#drag - good for now ok
-	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * 0.36 * 6)#drag_coefficient * 5)
+	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * drag_coefficient * 6)#drag_coefficient * 5)
 	
-	print(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * 0.36 * 6)#drag_coefficient * 5)
+	print(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * drag_coefficient * 6)#drag_coefficient * 5)
 	
 	#set to exactly countertorque the main rotor with some random control values
 	var tail_rotor_thrust_coefficient = 92466.8 / 55.5 / (tail_rotor_pos_ind.position.x + helicopter_form.position.x) / -19937.17825851426525086220 + Input.get_axis("antitorque_right", "antitorque_left") * 0.015
@@ -125,16 +129,22 @@ func _physics_process(_delta):
 	var main_rotor_inertia = 0.5 * 2 * 12 * pow(main_rotor_radius, 2)
 	var main_rotor_alpha = 0.0
 	if engine_omega > 0:
-		main_rotor_alpha = 92466.8 / (engine_omega * (55.5 / 282.7433)) / main_rotor_inertia * int(engine_on)
+		main_rotor_alpha = engine_power_curve.sample(engine_omega/282.74) * 745.7 / engine_omega * (282.7433 / 55.5) / main_rotor_inertia * int(engine_on)
+		print(engine_power_curve.sample(engine_omega/282.74) * 745.7 / engine_omega * (282.7433 / 55.5))
 	
 	print(belt_tension)
 	main_rotor_omega += main_rotor_alpha / 60 * belt_tension
 	
 	#main_rotor_omega = engine_omega * (55.5/282.74) * belt_tension
-	#rotor profile drag; totally made up based on feel
-	rotor_drag = 0.005 + main_rotor_collective_pitch * pow(main_rotor_omega, 2) * 0.00000025
-	main_rotor_omega -= rotor_drag
-	print(rotor_drag)
+	#rotor profile drag; this will apply some torque somehow ok
+	main_rotor_alpha
+	
+	#rotor_drag = 0.005 + main_rotor_collective_pitch * pow(main_rotor_omega, 2) * 0.00000025
+	rotor_drag = 0.5 * 1.225 * pow(main_rotor_radius/2 * main_rotor_omega, 2) * (0.04 * main_rotor_collective_pitch/12 + 0.001) * 21.15
+	main_rotor_alpha = rotor_drag * main_rotor_radius/2 / main_rotor_inertia
+	
+	main_rotor_omega -= main_rotor_alpha  / 60
+	print(rotor_drag * main_rotor_radius/2)
 	
 	main_rotor_omega = clamp(main_rotor_omega, 0, 55.5)
 	tail_rotor_omega = 355.62828798/55.5 * main_rotor_omega

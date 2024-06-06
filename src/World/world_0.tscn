@@ -1,4 +1,4 @@
-[gd_scene load_steps=260 format=3 uid="uid://bmka3hhlv6i10"]
+[gd_scene load_steps=261 format=3 uid="uid://bmka3hhlv6i10"]
 
 [ext_resource type="Texture2D" uid="uid://spfbipkih55h" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="1_jqykm"]
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_qcidy"]
@@ -113,6 +113,11 @@ shading_mode = 0
 albedo_color = Color(0, 1, 0, 1)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_tjr51"]
+
+[sub_resource type="Curve" id="Curve_xwg30"]
+max_value = 124.0
+_data = [Vector2(0, 0), 0.0, 29.8295, 0, 1, Vector2(0.704, 21), 29.8295, 216.216, 1, 1, Vector2(0.741, 29), 216.216, 324.324, 1, 1, Vector2(0.889, 77), 324.324, 423.423, 1, 1, Vector2(1, 124), 423.423, nan, 1, 1, Vector2(1, 124), nan, nan, 1, 1]
+point_count = 6
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ncwbj"]
 size = Vector3(2.71768, 2.59631, 2.0022)
@@ -3602,6 +3607,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.50076, 36.9201)
 mass = 500.0
 center_of_mass_mode = 1
 script = ExtResource("1_qcidy")
+engine_power_curve = SubResource("Curve_xwg30")
 
 [node name="HUD" type="CanvasLayer" parent="Helicopter0_1"]
 
@@ -4157,6 +4163,7 @@ mesh = SubResource("ArrayMesh_npkic")
 skeleton = NodePath("")
 
 [node name="MainRotorThrustVectorInd" type="MeshInstance3D" parent="Helicopter0_1"]
+visible = false
 mesh = SubResource("SphereMesh_ko5jw")
 
 [node name="Camera3D" type="Camera3D" parent="."]

@@ -42,6 +42,7 @@ var belt_tension = 0.05 #max 1.0 (fraction)
 var main_rotor_omega = 0.0 # max 55.50 # angular velocity [rad/s]
 var tail_rotor_omega = 0.0 #max 355.62828798 # angular velocity [rad/s]
 var rotor_drag = 0.0
+var main_rotor_alpha = 0.0 # [rad/s^2]
 
 var main_rotor_collective_pitch = 0.0
 var cyclic = Vector2()
@@ -112,7 +113,7 @@ func _physics_process(_delta):
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_thrust_coefficient
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
 	#uhh make this make sense i guess
-	apply_torque(transform.basis.y * rotor_drag) # main_rotor_omega)
+	apply_torque(transform.basis.y * -(main_rotor_alpha * 0.5 * 2 * 12 * pow(main_rotor_radius, 2) + rotor_drag)) # main_rotor_omega)
 	
 	#drag - good for now ok
 	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * drag_coefficient * 6)#drag_coefficient * 5)
@@ -124,10 +125,12 @@ func _physics_process(_delta):
 	var tail_rotor_thrust_force = 0.5 * 1.225 * pow(tail_rotor_omega * tail_rotor_radius, 2) * PI * pow(tail_rotor_radius, 2) * tail_rotor_thrust_coefficient
 	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
 	
+	print(tail_rotor_thrust_coefficient)
+	
 	### rotors rotating
 	#
 	var main_rotor_inertia = 0.5 * 2 * 12 * pow(main_rotor_radius, 2)
-	var main_rotor_alpha = 0.0
+	main_rotor_alpha = 0.0
 	if engine_omega > 0:
 		main_rotor_alpha = engine_power_curve.sample(engine_omega/282.74) * 745.7 / engine_omega * (282.7433 / 55.5) / main_rotor_inertia * int(engine_on)
 		print(engine_power_curve.sample(engine_omega/282.74) * 745.7 / engine_omega * (282.7433 / 55.5))
@@ -140,10 +143,12 @@ func _physics_process(_delta):
 	main_rotor_alpha
 	
 	#rotor_drag = 0.005 + main_rotor_collective_pitch * pow(main_rotor_omega, 2) * 0.00000025
-	rotor_drag = 2 * 0.5 * 1.225 * pow(main_rotor_radius/2 * main_rotor_omega, 2) * (0.04 * main_rotor_collective_pitch/12 + 0.001) * 0.2014
+	
+	#rotor_drag = drag + friction
+	rotor_drag = 2 * 0.5 * 1.225 * pow(main_rotor_radius / 1 * main_rotor_omega, 2) * (0.04 * main_rotor_collective_pitch/12 + 0.005) * 0.2014 + 0.02 * 24 * 9.81
 	main_rotor_alpha = rotor_drag * main_rotor_radius/2 / main_rotor_inertia
 	
-	main_rotor_omega -= main_rotor_alpha  / 60
+	main_rotor_omega -= main_rotor_alpha / 60
 	print(rotor_drag * main_rotor_radius/2)
 	print(0.04 * main_rotor_collective_pitch/12 + 0.001)
 	

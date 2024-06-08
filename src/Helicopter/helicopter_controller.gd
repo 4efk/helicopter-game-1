@@ -6,8 +6,8 @@ extends RigidBody3D
 @export var main_rotor_collective_min = 0
 
 @export var tail_rotor_radius = 0.535
-@export var tail_rotor_collective_max = 15 # max/min angle of tail rotor blades [°]; kinda extracted from the airfoil AOA/lift coefficient graph
-@export var tail_rotor_collective_min = -15
+@export var tail_rotor_collective_max = 12 # max/min angle of tail rotor blades [°]; kinda extracted from the airfoil AOA/lift coefficient graph
+@export var tail_rotor_collective_min = -10
 
 @export var drag_coefficient = 0.36
 
@@ -28,19 +28,20 @@ extends RigidBody3D
 
 @onready var hud_collective = $HUD/HBoxContainer/VBoxContainer2/Collective
 @onready var hud_cyclic = $HUD/HBoxContainer/VBoxContainer2/Cyclic
+@onready var hud_antitorque = $HUD/HBoxContainer/VBoxContainer2/TailRotorCollective
 @onready var hud_rotor_rpm = $HUD/HBoxContainer/VBoxContainer/RPM
 @onready var hud_engine = $HUD/HBoxContainer/VBoxContainer/Engine
 @onready var hud_engine_rpm = $HUD/HBoxContainer/VBoxContainer/EngineRPM
 
 @onready var fps_counter = $HUD/FPSCounter
 
-var engine_on = false
-var engine_omega = 0.0 # max 282.74 [rad/s] = 2700 rpm
+var engine_on = true
+var engine_omega = 282.74 # max 282.74 [rad/s] = 2700 rpm
 var engine_throttle = 0.25
-var clutch_engaged = false
-var belt_tension = 0.05 #max 1.0 (fraction)
+var clutch_engaged = true
+var belt_tension = 1.0 # 0.05 #max 1.0 (fraction)
 
-var main_rotor_omega = 0.0 # max 55.50 # angular velocity [rad/s]
+var main_rotor_omega = 55.5 # max 55.50 # angular velocity [rad/s]
 var tail_rotor_omega = 0.0 #max 355.62828798 # angular velocity [rad/s]
 var rotor_drag = 0.0
 var main_rotor_alpha = 0.0 # [rad/s^2]
@@ -85,8 +86,8 @@ func _process(delta):
 	main_rotor_collective_pitch += Input.get_axis("collective_pitch_down", "collective_pitch_up") * delta * 15
 	main_rotor_collective_pitch = clamp(main_rotor_collective_pitch, main_rotor_collective_min, main_rotor_collective_max)
 	
-	#tail_rotor_collective_pitch += Input.get_axis("antitorque_right", "antitorque_left") * delta * 30
-	#tail_rotor_collective_pitch = clamp(tail_rotor_collective_pitch, tail_rotor_collective_min, tail_rotor_collective_max)
+	tail_rotor_collective_pitch += Input.get_axis("antitorque_right", "antitorque_left") * delta * 20
+	tail_rotor_collective_pitch = clamp(tail_rotor_collective_pitch, tail_rotor_collective_min, tail_rotor_collective_max)
 	
 	#visual stuff
 	moving_main_rotor_part.quaternion *= Quaternion(Vector3(0.0471064507, 0.99888987496, 0), main_rotor_omega * delta)
@@ -96,6 +97,7 @@ func _process(delta):
 	fps_counter.text = str(Engine.get_frames_per_second())
 	
 	hud_collective.text = 'collective: ' + str(main_rotor_collective_pitch) + ' °'
+	hud_antitorque.text = 'tr collective: ' + str(tail_rotor_collective_pitch) + ' °'
 	hud_cyclic.text = 'cyclic: ' + str(cyclic)
 	hud_engine.text = ['engine off', 'engine on'][int(engine_on)]
 	hud_rotor_rpm.text = 'rotor rpm: ' + str(main_rotor_omega * 9.549297)
@@ -125,8 +127,8 @@ func _physics_process(_delta):
 	
 	print(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * drag_coefficient * 6)#drag_coefficient * 5)
 	
-	#set to exactly countertorque the main rotor with some random control values
-	var tail_rotor_thrust_coefficient = 92466.8 / 55.5 / (tail_rotor_pos_ind.position.x + helicopter_form.position.x) / -19937.17825851426525086220 + Input.get_axis("antitorque_right", "antitorque_left") * 0.015
+	#set to exactly countertorque the main rotor at half collective
+	var tail_rotor_thrust_coefficient = 0.03 * tail_rotor_collective_pitch / tail_rotor_collective_max
 	var tail_rotor_thrust_force = 0.5 * 1.225 * pow(tail_rotor_omega * tail_rotor_radius, 2) * PI * pow(tail_rotor_radius, 2) * tail_rotor_thrust_coefficient
 	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
 	
@@ -140,22 +142,17 @@ func _physics_process(_delta):
 		main_rotor_alpha = engine_power_curve.sample(engine_omega/282.74) * 745.7 / engine_omega * (282.7433 / 55.5) / main_rotor_inertia * int(engine_on)
 		print(engine_power_curve.sample(engine_omega/282.74) * 745.7 / engine_omega * (282.7433 / 55.5))
 	
-	print(belt_tension)
 	main_rotor_omega += main_rotor_alpha / 60 * belt_tension
 	
-	#main_rotor_omega = engine_omega * (55.5/282.74) * belt_tension
 	#rotor profile drag; this will apply some torque somehow ok
-	main_rotor_alpha
 	
 	#rotor_drag = 0.005 + main_rotor_collective_pitch * pow(main_rotor_omega, 2) * 0.00000025
 	
 	#rotor_drag = drag + friction
-	rotor_drag = 2 * 0.5 * 1.225 * pow(main_rotor_radius / 1 * main_rotor_omega, 2) * (0.04 * main_rotor_collective_pitch/12 + 0.005) * 0.2014 + 0.02 * 24 * 9.81
+	rotor_drag = 2 * 0.5 * 1.225 * pow(main_rotor_radius / 1.5 * main_rotor_omega, 2) * (0.04 * main_rotor_collective_pitch/12 + 0.005) * 0.2014 + 0.02 * 24 * 9.81
 	main_rotor_alpha = rotor_drag * main_rotor_radius/2 / main_rotor_inertia
 	
 	main_rotor_omega -= main_rotor_alpha / 60
-	print(rotor_drag * main_rotor_radius/2)
-	print(0.04 * main_rotor_collective_pitch/12 + 0.001)
 	
 	rotor_drag = rotor_drag * main_rotor_radius/2
 	

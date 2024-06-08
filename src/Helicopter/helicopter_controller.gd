@@ -36,6 +36,7 @@ extends RigidBody3D
 
 var engine_on = false
 var engine_omega = 0.0 # max 282.74 [rad/s] = 2700 rpm
+var engine_throttle = 0.25
 var clutch_engaged = false
 var belt_tension = 0.05 #max 1.0 (fraction)
 
@@ -45,6 +46,7 @@ var rotor_drag = 0.0
 var main_rotor_alpha = 0.0 # [rad/s^2]
 
 var main_rotor_collective_pitch = 0.0
+var tail_rotor_collective_pitch = 0.0
 var cyclic = Vector2()
 
 func die():
@@ -82,6 +84,9 @@ func _process(delta):
 	
 	main_rotor_collective_pitch += Input.get_axis("collective_pitch_down", "collective_pitch_up") * delta * 15
 	main_rotor_collective_pitch = clamp(main_rotor_collective_pitch, main_rotor_collective_min, main_rotor_collective_max)
+	
+	#tail_rotor_collective_pitch += Input.get_axis("antitorque_right", "antitorque_left") * delta * 30
+	#tail_rotor_collective_pitch = clamp(tail_rotor_collective_pitch, tail_rotor_collective_min, tail_rotor_collective_max)
 	
 	#visual stuff
 	moving_main_rotor_part.quaternion *= Quaternion(Vector3(0.0471064507, 0.99888987496, 0), main_rotor_omega * delta)

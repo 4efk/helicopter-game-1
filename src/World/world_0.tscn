@@ -4171,6 +4171,9 @@ skeleton = NodePath("")
 visible = false
 mesh = SubResource("SphereMesh_ko5jw")
 
+[node name="RotorDiscDragIndicator" type="RayCast3D" parent="Helicopter0_1"]
+top_level = true
+
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.875532, 0.48316, 0, -0.48316, 0.875532, 0, 8.2787, 25.4668)
 

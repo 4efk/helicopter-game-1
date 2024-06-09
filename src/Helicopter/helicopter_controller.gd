@@ -21,7 +21,7 @@ extends RigidBody3D
 
 @onready var moving_main_rotor_part = $helicopter0_model_test2/MovingMainRotorPart
 @onready var moving_tail_rotor_part = $helicopter0_model_test2/MovingTailRotorPart
-@onready var helicopter_form = $helicopter0_model_test2
+@onready var helicopter_fuselage = $helicopter0_model_test2
 
 @onready var cam_pivot_y = $CamPivotY
 @onready var cam_pivot_z = $CamPivotY/CamPivotZ
@@ -45,6 +45,8 @@ var main_rotor_omega = 55.5 # max 55.50 # angular velocity [rad/s]
 var tail_rotor_omega = 0.0 #max 355.62828798 # angular velocity [rad/s]
 var rotor_drag = 0.0
 var main_rotor_alpha = 0.0 # [rad/s^2]
+var main_rotor_induced_torque = 0.0
+var main_rotor_prev_pos = Vector3()
 
 var main_rotor_collective_pitch = 0.0
 var tail_rotor_collective_pitch = 0.0
@@ -57,6 +59,7 @@ func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 	print(engine_power_curve.sample(1))
+	main_rotor_prev_pos = main_rotor_pos_ind.global_position
 
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -108,7 +111,7 @@ func _physics_process(_delta):
 	#the offset is just made up in terms of how it feels, based on nothing at all
 	#cyclic += Vector2(main_rotor_pos_ind.position.x + helicopter_form.position.x, main_rotor_pos_ind.position.z + helicopter_form.position.z)
 
-	var main_rotor_pos = to_global(Vector3(cyclic.x * main_rotor_radius/20 + main_rotor_pos_ind.position.x + helicopter_form.position.x, main_rotor_pos_ind.position.y, cyclic.y * main_rotor_radius/20 + main_rotor_pos_ind.position.z + helicopter_form.position.z)) - global_position
+	var main_rotor_pos = to_global(Vector3(cyclic.x * main_rotor_radius/20 + main_rotor_pos_ind.position.x + helicopter_fuselage.position.x, main_rotor_pos_ind.position.y, cyclic.y * main_rotor_radius/20 + main_rotor_pos_ind.position.z + helicopter_fuselage.position.z)) - global_position
 	var tail_rotor_pos = tail_rotor_pos_ind.global_position - global_position
 	
 	#main_rotor_pos += Vector3(main_rotor_pos_ind.global_position.x-global_position.x, 0, main_rotor_pos_ind.global_position.z-global_position.z)
@@ -120,19 +123,58 @@ func _physics_process(_delta):
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_thrust_coefficient
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
 	#uhh make this make sense i guess
-	apply_torque(transform.basis.y * -(main_rotor_alpha * 0.5 * 2 * 12 * pow(main_rotor_radius, 2) + rotor_drag)) # main_rotor_omega)
+	#var main_rotor_induced_torque = -(main_rotor_alpha * 0.5 * 2 * 12 * pow(main_rotor_radius, 2) + rotor_drag)
+	apply_torque(transform.basis.y * main_rotor_induced_torque) # main_rotor_omega)
+	#print(main_rotor_induced_torque)
 	
-	#drag - good for now ok
+	#fuselage drag - good for now ok
 	apply_force(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * drag_coefficient * 6)#drag_coefficient * 5)
+	#drag of the rotor disc
+	var rotor_disc_relative_vertical_velocity = transform.basis.y.normalized() * linear_velocity / linear_velocity.length()
+	rotor_disc_relative_vertical_velocity = (main_rotor_pos_ind.global_position - main_rotor_prev_pos) * 60
+	var rotor_disc_drag_coefficient = 4 / pow(((linear_velocity * transform.basis.y).length() / sqrt(main_rotor_thrust_force / (2 * GlobalScript.air_density * PI * pow(main_rotor_radius, 2)))), 2)
 	
-	print(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * drag_coefficient * 6)#drag_coefficient * 5)
+	rotor_disc_relative_vertical_velocity = Vector3(0.001, 0.001, 0.001)
+	print(linear_velocity)
+	if linear_velocity:
+		rotor_disc_relative_vertical_velocity = (transform.basis.y.dot(linear_velocity) / pow(linear_velocity.length(), 2) * transform.basis.y)
+	
+	print(rotor_disc_relative_vertical_velocity)
+	var rotor_disc_drag = 0.5 * GlobalScript.air_density * pow(rotor_disc_relative_vertical_velocity.length(), 2) * PI * pow(main_rotor_radius, 2) * .20
+	$RotorDiscDragIndicator.global_position = main_rotor_pos_ind.global_position
+	$RotorDiscDragIndicator.global_position = global_position
+	$RotorDiscDragIndicator.target_position = transform.basis.y * 1000
+	$RotorDiscDragIndicator.target_position = transform.basis.y.dot(linear_velocity) / pow(linear_velocity.length(), 2) * transform.basis.y
+	#$RotorDiscDragIndicator.target_position = rotor_disc_relative_vertical_velocity * 1000
+	#$RotorDiscDragIndicator.target_position = rotor_disc_relative_vertical_velocity * transform.basis.y# / linear_velocity.length()
+	
+	#print(rotor_disc_relative_vertical_velocity)
+	#print((transform.basis.y.dot(linear_velocity) / pow(linear_velocity.length(), 2) * transform.basis.y).normalized() * rotor_disc_drag)
+	#print(Vector3.UP * linear_velocity / linear_velocity.length())
+	#print(Vector3(0, 1, 0) * Vector3(5, 1, 1.5) / Vector3(5, 1, 1.5).length())
+	#print(Vector3(0, 1, 1) * linear_velocity / linear_velocity.length())
+	
+	print(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag)
+	
+	apply_force(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag, main_rotor_pos)
+	#print(rotor_disc_relative_vertical_velocity)
+	
+	main_rotor_prev_pos = main_rotor_pos_ind.global_position
+	
+	#print(-linear_velocity.normalized() * 0.5 * GlobalScript.air_density * pow(linear_velocity.length(), 2) * drag_coefficient * 6)#drag_coefficient * 5)
 	
 	#set to exactly countertorque the main rotor at half collective
 	var tail_rotor_thrust_coefficient = 0.03 * tail_rotor_collective_pitch / tail_rotor_collective_max
 	var tail_rotor_thrust_force = 0.5 * 1.225 * pow(tail_rotor_omega * tail_rotor_radius, 2) * PI * pow(tail_rotor_radius, 2) * tail_rotor_thrust_coefficient
-	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
 	
-	print(tail_rotor_thrust_coefficient)
+	tail_rotor_thrust_force = main_rotor_induced_torque / -(tail_rotor_pos_ind.global_position-global_position).length() + 0.5 * 1.225 * pow(tail_rotor_omega * tail_rotor_radius, 2) * PI * pow(tail_rotor_radius, 2) * 0.01 * Input.get_axis("antitorque_right", "antitorque_left")
+	#print(tail_rotor_pos_ind.position.x)
+	#print(tail_rotor_thrust_force)
+	#print((main_rotor_alpha * 0.5 * 2 * 12 * pow(main_rotor_radius, 2) + rotor_drag))
+	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
+	#print((tail_rotor_pos_ind.global_position-global_position).length())
+	
+	#print(tail_rotor_thrust_coefficient)
 	
 	### rotors rotating
 	#
@@ -140,10 +182,11 @@ func _physics_process(_delta):
 	main_rotor_alpha = 0.0
 	if engine_omega > 0:
 		main_rotor_alpha = engine_power_curve.sample(engine_omega/282.74) * 745.7 / engine_omega * (282.7433 / 55.5) / main_rotor_inertia * int(engine_on)
-		print(engine_power_curve.sample(engine_omega/282.74) * 745.7 / engine_omega * (282.7433 / 55.5))
+		#print(engine_power_curve.sample(engine_omega/282.74) * 745.7 / engine_omega * (282.7433 / 55.5) / main_rotor_inertia * 0.5 * 2 * 12 * pow(main_rotor_radius, 2))
 	
 	main_rotor_omega += main_rotor_alpha / 60 * belt_tension
 	
+	main_rotor_induced_torque = main_rotor_alpha * main_rotor_inertia
 	#rotor profile drag; this will apply some torque somehow ok
 	
 	#rotor_drag = 0.005 + main_rotor_collective_pitch * pow(main_rotor_omega, 2) * 0.00000025
@@ -153,6 +196,9 @@ func _physics_process(_delta):
 	main_rotor_alpha = rotor_drag * main_rotor_radius/2 / main_rotor_inertia
 	
 	main_rotor_omega -= main_rotor_alpha / 60
+	
+	main_rotor_induced_torque += main_rotor_alpha * main_rotor_inertia
+	main_rotor_induced_torque = -main_rotor_induced_torque
 	
 	rotor_drag = rotor_drag * main_rotor_radius/2
 	

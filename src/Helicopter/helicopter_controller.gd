@@ -137,18 +137,19 @@ func _physics_process(_delta):
 	#rotor_disc_relative_vertical_velocity = Vector3(0.001, 0.001, 0.001)
 	#print(linear_velocity)
 	if linear_velocity.length() > 0.001:
-		rotor_disc_relative_vertical_velocity = (transform.basis.y.dot(linear_velocity) / pow(linear_velocity.length(), 2) * transform.basis.y)
-		print(linear_velocity)
-		print(rotor_disc_relative_vertical_velocity)
+		#rotor_disc_relative_vertical_velocity = (transform.basis.y.dot(linear_velocity) / pow(linear_velocity.length(), 2) * transform.basis.y)
+		rotor_disc_relative_vertical_velocity = transform.basis.y * (linear_velocity.dot(transform.basis.y) / pow(transform.basis.y.length(), 2))
+		#print(linear_velocity)
+		#print(rotor_disc_relative_vertical_velocity)
 	else:
 		rotor_disc_relative_vertical_velocity = Vector3(0, 0, 0)
 	
 	#print(rotor_disc_relative_vertical_velocity)
 	var rotor_disc_drag = 0.5 * GlobalScript.air_density * pow(rotor_disc_relative_vertical_velocity.length(), 2) * PI * pow(main_rotor_radius, 2) * 1.20
 	$RotorDiscDragIndicator.global_position = main_rotor_pos_ind.global_position
-	$RotorDiscDragIndicator.global_position = global_position
-	$RotorDiscDragIndicator.target_position = transform.basis.y * 1000
-	$RotorDiscDragIndicator.target_position = transform.basis.y.dot(linear_velocity) / pow(linear_velocity.length(), 2) * transform.basis.y
+	#$RotorDiscDragIndicator.global_position = global_position
+	#$RotorDiscDragIndicator.target_position = transform.basis.y * 1000
+	#$RotorDiscDragIndicator.target_position = transform.basis.y.dot(linear_velocity) / pow(linear_velocity.length(), 2) * transform.basis.y
 	$RotorDiscDragIndicator.target_position = rotor_disc_relative_vertical_velocity * 100
 	#$RotorDiscDragIndicator.target_position = rotor_disc_relative_vertical_velocity * 1000
 	#$RotorDiscDragIndicator.target_position = rotor_disc_relative_vertical_velocity * transform.basis.y# / linear_velocity.length()
@@ -159,7 +160,7 @@ func _physics_process(_delta):
 	#print(Vector3(0, 1, 0) * Vector3(5, 1, 1.5) / Vector3(5, 1, 1.5).length())
 	#print(Vector3(0, 1, 1) * linear_velocity / linear_velocity.length())
 	
-	#print(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag)
+	print(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag)
 	
 	apply_force(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag, main_rotor_pos)
 	#print(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag)

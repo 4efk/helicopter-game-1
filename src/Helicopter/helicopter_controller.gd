@@ -22,6 +22,7 @@ extends RigidBody3D
 @onready var moving_main_rotor_part = $helicopter0_model_test2/MovingMainRotorPart
 @onready var moving_tail_rotor_part = $helicopter0_model_test2/MovingTailRotorPart
 @onready var helicopter_fuselage = $helicopter0_model_test2
+@onready var hook = $Hook
 
 @onready var cam_pivot_y = $CamPivotY
 @onready var cam_pivot_z = $CamPivotY/CamPivotZ
@@ -51,6 +52,8 @@ var main_rotor_prev_pos = Vector3()
 var main_rotor_collective_pitch = 0.0
 var tail_rotor_collective_pitch = 0.0
 var cyclic = Vector2()
+
+var hooked_object = null
 
 func die():
 	get_tree().change_scene_to_file("res://World/world_0.tscn")
@@ -91,6 +94,13 @@ func _process(delta):
 	
 	tail_rotor_collective_pitch += Input.get_axis("antitorque_right", "antitorque_left") * delta * 20
 	tail_rotor_collective_pitch = clamp(tail_rotor_collective_pitch, tail_rotor_collective_min, tail_rotor_collective_max)
+	
+	if Input.is_action_just_pressed("unhook_object") and hooked_object:
+		hooked_object.freeze = false
+		hooked_object.linear_velocity = linear_velocity
+		hooked_object = null
+	if hooked_object:
+		hooked_object.global_position = hook.global_position
 	
 	#visual stuff
 	moving_main_rotor_part.quaternion *= Quaternion(Vector3(0.0471064507, 0.99888987496, 0), main_rotor_omega * delta)
@@ -160,7 +170,7 @@ func _physics_process(_delta):
 	#print(Vector3(0, 1, 0) * Vector3(5, 1, 1.5) / Vector3(5, 1, 1.5).length())
 	#print(Vector3(0, 1, 1) * linear_velocity / linear_velocity.length())
 	
-	print(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag)
+	#print(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag)
 	
 	apply_force(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag, main_rotor_pos)
 	#print(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag)
@@ -211,3 +221,8 @@ func _physics_process(_delta):
 	
 	main_rotor_omega = clamp(main_rotor_omega, 0, 55.5)
 	tail_rotor_omega = 355.62828798/55.5 * main_rotor_omega
+
+func _on_hook_area_body_entered(body):
+	if body.is_in_group('pickable') and !hooked_object:
+		body.freeze = true
+		hooked_object = body

@@ -1,4 +1,4 @@
-[gd_scene load_steps=261 format=3 uid="uid://bmka3hhlv6i10"]
+[gd_scene load_steps=262 format=3 uid="uid://bmka3hhlv6i10"]
 
 [ext_resource type="Texture2D" uid="uid://spfbipkih55h" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="1_jqykm"]
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_qcidy"]
@@ -3377,6 +3377,8 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_3ldy4")
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_km8gu"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_imgra"]
 albedo_color = Color(0, 1, 0, 1)
 
@@ -3470,6 +3472,7 @@ material = SubResource("StandardMaterial3D_xqaf1")
 [node name="Helicopter0" type="RigidBody3D" parent="."]
 process_mode = 4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.76495, 1.30766, 23.8749)
+visible = false
 mass = 500.0
 center_of_mass_mode = 1
 center_of_mass = Vector3(0.02, 0, 0)
@@ -3508,7 +3511,6 @@ horizontal_alignment = 1
 
 [node name="CamPivotY" type="Node3D" parent="Helicopter0"]
 top_level = true
-visible = false
 
 [node name="CamPivotZ" type="Node3D" parent="Helicopter0/CamPivotY"]
 
@@ -3526,7 +3528,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.727, 0, -0.131)
 
 [node name="HelicopterPlaceholder2" type="MeshInstance3D" parent="Helicopter0"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.272, 0, 0)
-visible = false
 mesh = SubResource("ArrayMesh_sxkx1")
 skeleton = NodePath("")
 
@@ -3552,14 +3553,12 @@ shape = SubResource("ConvexPolygonShape3D_u546c")
 
 [node name="HelicopterPlaceholder1" type="MeshInstance3D" parent="Helicopter0"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.272, 0, 0)
-visible = false
 mesh = ExtResource("2_2hdk4")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_6e08a")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Helicopter0"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.272, 0, 0)
-visible = false
 shape = SubResource("ConvexPolygonShape3D_t65l7")
 disabled = true
 
@@ -4167,12 +4166,21 @@ skeleton = NodePath("")
 mesh = SubResource("ArrayMesh_npkic")
 skeleton = NodePath("")
 
+[node name="Hook" type="Node3D" parent="Helicopter0_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -2.5, 0)
+
+[node name="HookArea" type="Area3D" parent="Helicopter0_1/Hook"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Helicopter0_1/Hook/HookArea"]
+shape = SubResource("SphereShape3D_km8gu")
+
 [node name="MainRotorThrustVectorInd" type="MeshInstance3D" parent="Helicopter0_1"]
 visible = false
 mesh = SubResource("SphereMesh_ko5jw")
 
 [node name="RotorDiscDragIndicator" type="RayCast3D" parent="Helicopter0_1"]
 top_level = true
+visible = false
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.875532, 0.48316, 0, -0.48316, 0.875532, 0, 8.2787, 25.4668)
@@ -4442,6 +4450,7 @@ mesh = SubResource("BoxMesh_f1sfl")
 
 [connection signal="body_entered" from="Helicopter0/MainRotorArea" to="Helicopter0" method="_on_main_rotor_area_body_entered"]
 [connection signal="body_entered" from="Helicopter0/Rope/HookArea" to="Helicopter0" method="_on_hook_area_body_entered"]
+[connection signal="body_entered" from="Helicopter0_1/Hook/HookArea" to="Helicopter0_1" method="_on_hook_area_body_entered"]
 [connection signal="body_entered" from="DropoffPlace" to="DropoffPlace" method="_on_body_entered"]
 [connection signal="body_entered" from="DropoffPlace2" to="DropoffPlace2" method="_on_body_entered"]
 [connection signal="body_entered" from="DropoffPlace3" to="DropoffPlace3" method="_on_body_entered"]

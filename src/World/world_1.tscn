@@ -1,0 +1,41 @@
+[gd_scene load_steps=8 format=3 uid="uid://chgilug5mdge"]
+
+[ext_resource type="Texture2D" uid="uid://spfbipkih55h" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="1_28ng0"]
+[ext_resource type="Texture2D" uid="uid://cc10mt8eel70i" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_AmbientOcclusion.jpg" id="2_bl71e"]
+[ext_resource type="Texture2D" uid="uid://dben3xqr5cxlf" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_NormalGL.jpg" id="3_rlidt"]
+[ext_resource type="Texture2D" uid="uid://6kgju6mj2ps8" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Roughness.jpg" id="4_gwtov"]
+[ext_resource type="PackedScene" uid="uid://cx3fh5tkps8b3" path="res://Helicopter/Helicopter1/helicopter_0_1.tscn" id="5_0c5rh"]
+
+[sub_resource type="Environment" id="Environment_86h43"]
+tonemap_mode = 2
+fog_enabled = true
+fog_density = 0.003
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pncsa"]
+albedo_texture = ExtResource("1_28ng0")
+roughness_texture = ExtResource("4_gwtov")
+normal_enabled = true
+normal_texture = ExtResource("3_rlidt")
+ao_enabled = true
+ao_texture = ExtResource("2_bl71e")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+
+[node name="world_1" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.965926, -0.224144, 0.12941, 0, 0.5, 0.866025, -0.258819, -0.836516, 0.482963, 0, 9.63503, 0)
+shadow_enabled = true
+directional_shadow_max_distance = 500.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_86h43")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(2000, 1, 2000)
+material = SubResource("StandardMaterial3D_pncsa")
+
+[node name="Helicopter0_1" parent="." instance=ExtResource("5_0c5rh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.34407, 0)

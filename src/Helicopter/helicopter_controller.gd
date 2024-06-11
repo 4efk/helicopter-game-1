@@ -33,6 +33,7 @@ extends RigidBody3D
 @onready var hud_rotor_rpm = $HUD/HBoxContainer/VBoxContainer/RPM
 @onready var hud_engine = $HUD/HBoxContainer/VBoxContainer/Engine
 @onready var hud_engine_rpm = $HUD/HBoxContainer/VBoxContainer/EngineRPM
+@onready var hud_altitude = $HUD/HBoxContainer/VBoxContainer2/Altitude
 
 @onready var fps_counter = $HUD/FPSCounter
 
@@ -115,6 +116,7 @@ func _process(delta):
 	hud_engine.text = ['engine off', 'engine on'][int(engine_on)]
 	hud_rotor_rpm.text = 'rotor rpm: ' + str(main_rotor_omega * 9.549297)
 	hud_engine_rpm.text = 'engine rpm: ' + str(engine_omega * 9.549297)
+	hud_altitude.text = 'altitude: ' + str(int(global_position.y)) + ' m'
 
 func _physics_process(_delta):
 	#kinda working cyclic control by offsetting the position of where the force is being applied along the rotor disc

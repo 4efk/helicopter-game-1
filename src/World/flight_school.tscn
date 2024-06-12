@@ -1,5 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://chgilug5mdge"]
+[gd_scene load_steps=12 format=3 uid="uid://chgilug5mdge"]
 
+[ext_resource type="Script" path="res://World/flight_school.gd" id="1_olm0b"]
 [ext_resource type="Texture2D" uid="uid://spfbipkih55h" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="1_u5j2e"]
 [ext_resource type="Texture2D" uid="uid://cc10mt8eel70i" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_AmbientOcclusion.jpg" id="2_eh4j0"]
 [ext_resource type="Texture2D" uid="uid://dben3xqr5cxlf" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_NormalGL.jpg" id="3_8wrw7"]
@@ -21,7 +22,18 @@ ao_texture = ExtResource("2_eh4j0")
 uv1_scale = Vector3(0.5, 0.5, 0.5)
 uv1_triplanar = true
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_sq0vu"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3foqu"]
+albedo_color = Color(0.180005, 0.180005, 0.180005, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3m5ja"]
+material = SubResource("StandardMaterial3D_3foqu")
+size = Vector3(10, 0.1, 10)
+
 [node name="FlightSchool" type="Node3D"]
+script = ExtResource("1_olm0b")
 
 [node name="WorldUI" type="CanvasLayer" parent="."]
 
@@ -29,10 +41,10 @@ uv1_triplanar = true
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -391.0
-offset_top = 211.0
-offset_right = -91.0
-offset_bottom = 478.0
+offset_left = -397.0
+offset_top = 363.0
+offset_right = -97.0
+offset_bottom = 630.0
 grow_horizontal = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -49,11 +61,22 @@ theme_override_colors/caret_background_color = Color(0, 0, 0, 1)
 theme_override_colors/word_highlighted_color = Color(0, 0, 0, 1)
 theme_override_colors/search_result_color = Color(0, 0, 0, 1)
 theme_override_colors/search_result_border_color = Color(0, 0, 0, 1)
-text = "the checklist of checks and also a list
-thing 1 .............................. action 1
-thing 2 .............................. action 2
-thing 3 .............................. action 3"
+text = "STARTUP CHECKLIST
+"
 editable = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WorldUI"]
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.072
+offset_bottom = 1.24
+grow_horizontal = 2
+alignment = 1
+
+[node name="InstructionText" type="Label" parent="WorldUI/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 24
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.965926, -0.224144, 0.12941, 0, 0.5, 0.866025, -0.258819, -0.836516, 0.482963, 0, 9.63503, 0)
@@ -69,5 +92,27 @@ use_collision = true
 size = Vector3(2000, 1, 2000)
 material = SubResource("StandardMaterial3D_pncsa")
 
-[node name="Helicopter0_1" parent="." instance=ExtResource("5_1ipoe")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.34407, 0)
+[node name="Helicopter0_1" parent="." groups=["helicopter"] instance=ExtResource("5_1ipoe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.19913, 0)
+
+[node name="Helipad" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Helipad"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+shape = SubResource("BoxShape3D_sq0vu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Helipad"]
+mesh = SubResource("BoxMesh_3m5ja")
+
+[node name="Helipad2" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.0944, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Helipad2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+shape = SubResource("BoxShape3D_sq0vu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Helipad2"]
+mesh = SubResource("BoxMesh_3m5ja")
+
+[connection signal="body_entered" from="Helipad" to="." method="_on_helipad_body_entered"]
+[connection signal="body_exited" from="Helipad" to="." method="_on_helipad_body_exited"]

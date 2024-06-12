@@ -38,12 +38,12 @@ extends RigidBody3D
 @onready var fps_counter = $HUD/FPSCounter
 
 var engine_on = true
-var engine_omega = 282.74 # max 282.74 [rad/s] = 2700 rpm
+var engine_omega = 0.0 # max 282.74 [rad/s] = 2700 rpm
 var engine_throttle = 0.25
-var clutch_engaged = true
-var belt_tension = 1.0 # 0.05 #max 1.0 (fraction)
+var clutch_engaged = false
+var belt_tension = 0.05 #max 1.0 (fraction)
 
-var main_rotor_omega = 55.5 # max 55.50 # angular velocity [rad/s]
+var main_rotor_omega = 0.0 # max 55.50 # angular velocity [rad/s]
 var tail_rotor_omega = 0.0 #max 355.62828798 # angular velocity [rad/s]
 var rotor_drag = 0.0
 var main_rotor_alpha = 0.0 # [rad/s^2]
@@ -64,6 +64,11 @@ func _ready():
 	
 	print(engine_power_curve.sample(1))
 	main_rotor_prev_pos = main_rotor_pos_ind.global_position
+	
+	main_rotor_omega = 55.5
+	engine_omega = 282.74
+	clutch_engaged = true
+	belt_tension = 1.0
 
 func _input(event):
 	if event is InputEventMouseMotion:

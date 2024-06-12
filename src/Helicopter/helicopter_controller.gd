@@ -33,11 +33,12 @@ extends RigidBody3D
 @onready var hud_rotor_rpm = $HUD/HBoxContainer/VBoxContainer/RPM
 @onready var hud_engine = $HUD/HBoxContainer/VBoxContainer/Engine
 @onready var hud_engine_rpm = $HUD/HBoxContainer/VBoxContainer/EngineRPM
+@onready var hud_clutch = $HUD/HBoxContainer/VBoxContainer/Clutch
 @onready var hud_altitude = $HUD/HBoxContainer/VBoxContainer2/Altitude
 
 @onready var fps_counter = $HUD/FPSCounter
 
-var engine_on = true
+var engine_on = false
 var engine_omega = 0.0 # max 282.74 [rad/s] = 2700 rpm
 var engine_throttle = 0.25
 var clutch_engaged = false
@@ -65,6 +66,7 @@ func _ready():
 	print(engine_power_curve.sample(1))
 	main_rotor_prev_pos = main_rotor_pos_ind.global_position
 	
+	engine_on = true
 	main_rotor_omega = 55.5
 	engine_omega = 282.74
 	clutch_engaged = true
@@ -119,6 +121,7 @@ func _process(delta):
 	hud_antitorque.text = 'tr collective: ' + str(tail_rotor_collective_pitch) + ' °'
 	hud_cyclic.text = 'cyclic: ' + str(cyclic)
 	hud_engine.text = ['engine off', 'engine on'][int(engine_on)]
+	hud_clutch.text = ['clutch disengaged', 'clutch engaged'][int(clutch_engaged)]
 	hud_rotor_rpm.text = 'rotor rpm: ' + str(main_rotor_omega * 9.549297)
 	hud_engine_rpm.text = 'engine rpm: ' + str(engine_omega * 9.549297)
 	hud_altitude.text = 'altitude: ' + str(int(global_position.y)) + ' m'
@@ -162,7 +165,7 @@ func _physics_process(_delta):
 		rotor_disc_relative_vertical_velocity = Vector3(0, 0, 0)
 	
 	#print(rotor_disc_relative_vertical_velocity)
-	var rotor_disc_drag = 0.5 * GlobalScript.air_density * pow(rotor_disc_relative_vertical_velocity.length(), 2) * PI * pow(main_rotor_radius, 2) * 1.20
+	var rotor_disc_drag = 0.5 * GlobalScript.air_density * pow(rotor_disc_relative_vertical_velocity.length(), 2) * PI * pow(main_rotor_radius, 2) * .20
 	$RotorDiscDragIndicator.global_position = main_rotor_pos_ind.global_position
 	#$RotorDiscDragIndicator.global_position = global_position
 	#$RotorDiscDragIndicator.target_position = transform.basis.y * 1000
@@ -180,6 +183,7 @@ func _physics_process(_delta):
 	#print(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag)
 	
 	apply_force(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag, main_rotor_pos)
+	
 	#print(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag)
 	#print(rotor_disc_relative_vertical_velocity)
 	

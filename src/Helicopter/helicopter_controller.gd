@@ -38,6 +38,7 @@ extends RigidBody3D
 
 @onready var fps_counter = $HUD/FPSCounter
 
+var engine_working = true
 var engine_on = false
 var engine_omega = 0.0 # max 282.74 [rad/s] = 2700 rpm
 var engine_throttle = 0.25
@@ -89,6 +90,7 @@ func _process(delta):
 	#helicopter control
 	if Input.is_action_just_pressed("start_engine"):
 		engine_on = !engine_on
+	engine_on = bool(int(engine_on) * int(engine_working))
 	engine_omega = 282.74 * int(engine_on)
 	if Input.is_action_just_pressed('engage_clutch'):
 		clutch_engaged = true
@@ -165,7 +167,7 @@ func _physics_process(_delta):
 		rotor_disc_relative_vertical_velocity = Vector3(0, 0, 0)
 	
 	#print(rotor_disc_relative_vertical_velocity)
-	var rotor_disc_drag = 0.5 * GlobalScript.air_density * pow(rotor_disc_relative_vertical_velocity.length(), 2) * PI * pow(main_rotor_radius, 2) * .20
+	var rotor_disc_drag = 0.5 * GlobalScript.air_density * pow(rotor_disc_relative_vertical_velocity.length(), 2) * PI * pow(main_rotor_radius, 2) * .60
 	$RotorDiscDragIndicator.global_position = main_rotor_pos_ind.global_position
 	#$RotorDiscDragIndicator.global_position = global_position
 	#$RotorDiscDragIndicator.target_position = transform.basis.y * 1000

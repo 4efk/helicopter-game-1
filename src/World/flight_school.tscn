@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://chgilug5mdge"]
+[gd_scene load_steps=13 format=3 uid="uid://chgilug5mdge"]
 
 [ext_resource type="Script" path="res://World/flight_school.gd" id="1_olm0b"]
 [ext_resource type="Texture2D" uid="uid://spfbipkih55h" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="1_u5j2e"]
@@ -31,6 +31,9 @@ albedo_color = Color(0.180005, 0.180005, 0.180005, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_3m5ja"]
 material = SubResource("StandardMaterial3D_3foqu")
 size = Vector3(10, 0.1, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_h8vbu"]
+size = Vector3(10, 2.5, 10)
 
 [node name="FlightSchool" type="Node3D"]
 script = ExtResource("1_olm0b")
@@ -80,6 +83,49 @@ size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 24
 horizontal_alignment = 1
 
+[node name="FinishUI" type="Control" parent="WorldUI"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="WorldUI/FinishUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.533333)
+
+[node name="HBoxContainer" type="VBoxContainer" parent="WorldUI/FinishUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="WorldUI/FinishUI/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "u've done it :)"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="WorldUI/FinishUI/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "[menu]"
+flat = true
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.965926, -0.224144, 0.12941, 0, 0.5, 0.866025, -0.258819, -0.836516, 0.482963, 0, 9.63503, 0)
 shadow_enabled = true
@@ -98,6 +144,7 @@ material = SubResource("StandardMaterial3D_pncsa")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.19913, 0)
 
 [node name="Helipad" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Helipad"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
@@ -107,7 +154,6 @@ shape = SubResource("BoxShape3D_sq0vu")
 mesh = SubResource("BoxMesh_3m5ja")
 
 [node name="Helipad2" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.0944, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Helipad2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
@@ -116,5 +162,16 @@ shape = SubResource("BoxShape3D_sq0vu")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Helipad2"]
 mesh = SubResource("BoxMesh_3m5ja")
 
+[node name="HoverArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.6947, 4.52285, 22.92)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HoverArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+shape = SubResource("BoxShape3D_h8vbu")
+
 [connection signal="body_entered" from="Helipad" to="." method="_on_helipad_body_entered"]
 [connection signal="body_exited" from="Helipad" to="." method="_on_helipad_body_exited"]
+[connection signal="body_entered" from="Helipad2" to="." method="_on_helipad_2_body_entered"]
+[connection signal="body_exited" from="Helipad2" to="." method="_on_helipad_2_body_exited"]
+[connection signal="body_entered" from="HoverArea" to="." method="_on_hover_area_body_entered"]
+[connection signal="body_exited" from="HoverArea" to="." method="_on_hover_area_body_exited"]

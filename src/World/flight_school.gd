@@ -87,12 +87,14 @@ func finish_task():
 
 func player_die():
 	GlobalScript.flightschool_checkpoint = [current_task, Vector3(0, 1.199, 0)]
-
+	get_tree().change_scene_to_file("res://World/flight_school.tscn")
+	
 func _ready():
 	type_instruction_text(0)
 	assigned_task = true
 	print(tasks.find('first flight'))
-	current_task = tasks.find('autorotation p1')
+	current_task = GlobalScript.flightschool_checkpoint[0]
+	player_helicopter.global_position = GlobalScript.flightschool_checkpoint[1]
 
 func _process(delta):
 	if Input.is_action_just_pressed("show_extra_ui"):

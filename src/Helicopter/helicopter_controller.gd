@@ -65,7 +65,6 @@ func die():
 	print("boom")
 	if GlobalScript.current_gamemode == 0:
 		get_parent().player_die()
-	
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)

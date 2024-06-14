@@ -51,6 +51,8 @@ var rotor_drag = 0.0
 var main_rotor_alpha = 0.0 # [rad/s^2]
 var main_rotor_induced_torque = 0.0
 var main_rotor_prev_pos = Vector3()
+var main_rotor_broken = false
+var tail_rotor_broken = false
 
 var main_rotor_collective_pitch = 0.0
 var tail_rotor_collective_pitch = 0.0
@@ -59,7 +61,11 @@ var cyclic = Vector2()
 var hooked_object = null
 
 func die():
-	get_tree().change_scene_to_file("res://World/world_0.tscn")
+	#get_tree().change_scene_to_file("res://World/world_0.tscn")
+	print("boom")
+	if GlobalScript.current_gamemode == 0:
+		get_parent().player_die()
+	
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -143,6 +149,8 @@ func _physics_process(_delta):
 	#this is mostly made up, but in such a way that the maximum main rotor thrust is about 8000 N, which some random hp-to-thrust calculator spat at me and i just went with it
 	var main_rotor_thrust_coefficient = main_rotor_collective_pitch * 0.0005
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_thrust_coefficient
+	#print(main_rotor_thrust_force)
+	main_rotor_thrust_force *= int(!main_rotor_broken)
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
 	#uhh make this make sense i guess
 	#var main_rotor_induced_torque = -(main_rotor_alpha * 0.5 * 2 * 12 * pow(main_rotor_radius, 2) + rotor_drag)
@@ -184,6 +192,8 @@ func _physics_process(_delta):
 	
 	#print(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag)
 	
+	# THIS MUST BE CHANGED BECAUSE THE MAIN ROTOR POS IS OFFSET WITH THE CYCLIC CONTROLS
+	rotor_disc_drag *= int(!main_rotor_broken)
 	apply_force(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag, main_rotor_pos)
 	
 	#print(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag)
@@ -201,6 +211,7 @@ func _physics_process(_delta):
 	#print(tail_rotor_pos_ind.position.x)
 	#print(tail_rotor_thrust_force)
 	#print((main_rotor_alpha * 0.5 * 2 * 12 * pow(main_rotor_radius, 2) + rotor_drag))
+	tail_rotor_thrust_force *= int(!tail_rotor_broken)
 	apply_force(transform.basis.z * tail_rotor_thrust_force, tail_rotor_pos)
 	#print((tail_rotor_pos_ind.global_position-global_position).length())
 	
@@ -235,7 +246,22 @@ func _physics_process(_delta):
 	main_rotor_omega = clamp(main_rotor_omega, 0, 55.5)
 	tail_rotor_omega = 355.62828798/55.5 * main_rotor_omega
 
+func _integrate_forces(state):
+	if !state.get_contact_count(): return
+	if state.get_contact_impulse(0).length() > 750:
+		die()
+
 func _on_hook_area_body_entered(body):
 	if body.is_in_group('pickable') and !hooked_object:
 		body.freeze = true
 		hooked_object = body
+
+func _on_main_rotor_disc_area_body_entered(body):
+	main_rotor_broken = true
+func _on_tail_rotor_disc_area_body_entered(body):
+	tail_rotor_broken = true
+
+func _on_body_entered(body):
+	#print(1)
+	#print(get_inverse_inertia_tensor())
+	pass

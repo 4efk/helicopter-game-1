@@ -84,7 +84,10 @@ func finish_task():
 	task_progress = 0
 	
 	type_instruction_text(0)
-	
+
+func player_die():
+	GlobalScript.flightschool_checkpoint = [current_task, Vector3(0, 1.199, 0)]
+
 func _ready():
 	type_instruction_text(0)
 	assigned_task = true
@@ -95,8 +98,9 @@ func _process(delta):
 	if Input.is_action_just_pressed("show_extra_ui"):
 		ui_checklist.visible = !ui_checklist.visible
 	
-	print(current_task, current_message)
-	print(hovering_timer)
+	#print(current_task, current_message)
+	#print(hovering_timer)
+	
 	# instruction typing and skipping
 	if typing and typing_timer > GlobalScript.settings['text_typing_time'] and current_message_character < len(instruction_messages[current_task][current_message]):
 		ui_instruction_text.text += instruction_messages[current_task][current_message][current_message_character]

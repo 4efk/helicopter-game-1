@@ -1,4 +1,4 @@
-[gd_scene load_steps=211 format=3 uid="uid://cx3fh5tkps8b3"]
+[gd_scene load_steps=213 format=3 uid="uid://cx3fh5tkps8b3"]
 
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_m15n6"]
 
@@ -12,6 +12,14 @@ size = Vector3(2.71768, 2.59631, 2.0022)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_eqvh7"]
 size = Vector3(4.35954, 0.387359, 0.505067)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1rpc6"]
+height = 0.05
+radius = 4.2449
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_fl40d"]
+height = 0.05
+radius = 0.610285
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yaw5b"]
 resource_name = "metal_paint_1"
@@ -3278,6 +3286,8 @@ height = 0.5
 [node name="Helicopter0_1" type="RigidBody3D"]
 mass = 500.0
 center_of_mass_mode = 1
+max_contacts_reported = 1
+contact_monitor = true
 script = ExtResource("1_m15n6")
 engine_power_curve = SubResource("Curve_xwg30")
 
@@ -3370,6 +3380,19 @@ shape = SubResource("BoxShape3D_eqvh7")
 
 [node name="helicopter0_model_test2" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.426, 0, 0)
+
+[node name="MainRotorDiscArea" type="Area3D" parent="helicopter0_model_test2"]
+transform = Transform3D(0.999701, 0.0244322, 0, -0.0244322, 0.999701, 0, 0, 0, 1, -0.426343, 1.7648, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="helicopter0_model_test2/MainRotorDiscArea"]
+shape = SubResource("CylinderShape3D_1rpc6")
+
+[node name="TailRotorDiscArea" type="Area3D" parent="helicopter0_model_test2"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -5.33261, 0.887808, -0.178905)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="helicopter0_model_test2/TailRotorDiscArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.079977, 0)
+shape = SubResource("CylinderShape3D_fl40d")
 
 [node name="MainRotorPosInd" type="Marker3D" parent="helicopter0_model_test2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.426343, 1.60823, 0)
@@ -3867,4 +3890,7 @@ mesh = SubResource("SphereMesh_ko5jw")
 top_level = true
 visible = false
 
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_entered" from="helicopter0_model_test2/MainRotorDiscArea" to="." method="_on_main_rotor_disc_area_body_entered"]
+[connection signal="body_entered" from="helicopter0_model_test2/TailRotorDiscArea" to="." method="_on_tail_rotor_disc_area_body_entered"]
 [connection signal="body_entered" from="Hook/HookArea" to="." method="_on_hook_area_body_entered"]

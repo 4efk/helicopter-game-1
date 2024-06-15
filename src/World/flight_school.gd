@@ -66,6 +66,8 @@ var task_progress = 0
 
 var hovering_timer = 0.0
 
+var checkpoint_pos = Vector3()
+
 func type_instruction_text(message_number):
 	ui_instruction_text.text = ''
 	typing_timer = 0
@@ -78,6 +80,7 @@ func finish_task():
 		print('you won and stuff')
 		ui_finish.show()
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		GlobalScript.flightschool_checkpoint = [0, Vector3(0, 1.199, 0)]
 		return
 		
 	current_task += 1
@@ -86,15 +89,23 @@ func finish_task():
 	type_instruction_text(0)
 
 func player_die():
-	GlobalScript.flightschool_checkpoint = [current_task, Vector3(0, 1.199, 0)]
+	if current_task == tasks.find("second landing"):
+		current_task = tasks.find("second flight")
+	if current_task in [tasks.find('autorotation p2'), tasks.find('autorotation p3')]:
+		current_task = tasks.find('autorotation p1')
+	#if current_task == tasks.find("last landing"):
+		#checkpoint_pos = player_helicopter.global_position
+	
+	GlobalScript.flightschool_checkpoint = [current_task, checkpoint_pos]
 	get_tree().change_scene_to_file("res://World/flight_school.tscn")
 	
 func _ready():
 	type_instruction_text(0)
 	assigned_task = true
-	print(tasks.find('first flight'))
 	current_task = GlobalScript.flightschool_checkpoint[0]
 	player_helicopter.global_position = GlobalScript.flightschool_checkpoint[1]
+	checkpoint_pos = GlobalScript.flightschool_checkpoint[1]
+	#current_task = 6
 
 func _process(delta):
 	if Input.is_action_just_pressed("show_extra_ui"):
@@ -135,6 +146,7 @@ func _process(delta):
 	if current_task == tasks.find('autorotation p3') and player_helicopter.global_position.y < 2 and player_helicopter.linear_velocity.length() < 0.005:
 		finish_task()
 		player_helicopter.engine_working = true
+		checkpoint_pos = player_helicopter.global_position
 	
 	if task_progress:
 		if current_task in [tasks.find('first flight'), tasks.find('second landing'), tasks.find('last landing')] and player_helicopter.linear_velocity.length() < 0.005:

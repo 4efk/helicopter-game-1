@@ -247,7 +247,7 @@ func _physics_process(_delta):
 
 func _integrate_forces(state):
 	if !state.get_contact_count(): return
-	if state.get_contact_impulse(0).length() > 750:
+	if state.get_contact_impulse(0).length() > 1500:
 		die()
 
 func _on_hook_area_body_entered(body):

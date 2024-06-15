@@ -55,6 +55,9 @@ var tasks = [
 	"last landing",
 ]
 
+var autorotation_height = 150 # [m]
+var longer_flight_distance = 100 # [m]
+
 var current_message = 0
 var typing = false
 var current_message_character = 0
@@ -108,6 +111,7 @@ func _ready():
 	#current_task = 6
 
 func _process(delta):
+	
 	if Input.is_action_just_pressed("show_extra_ui"):
 		ui_checklist.visible = !ui_checklist.visible
 	
@@ -134,11 +138,16 @@ func _process(delta):
 	if current_task == tasks.find('startup') and player_helicopter.main_rotor_omega == 55.5:
 		finish_task()
 	
-	if current_task == tasks.find('second flight') and player_helicopter.global_position.length() > 150:
+	if current_task == tasks.find('second flight') and player_helicopter.global_position.length() > longer_flight_distance:
 		finish_task()
-		
-	if current_task == tasks.find('autorotation p1') and player_helicopter.global_position.y > 100:
+	
+	if current_task == tasks.find('autorotation p1') and player_helicopter.global_position.y > autorotation_height:
 		finish_task()
+	if current_task == tasks.find('autorotation p2') and player_helicopter.global_position.y < autorotation_height:
+		current_task = tasks.find('autorotation p1')
+		task_progress = 0
+	
+		type_instruction_text(len(instruction_messages[current_task])-1)
 	if current_task == tasks.find('autorotation p2') and Input.is_action_just_pressed("ui_focus_next"):
 		finish_task()
 		player_helicopter.engine_working = false
@@ -153,6 +162,7 @@ func _process(delta):
 			finish_task()
 		if current_task == tasks.find('hover'):
 			hovering_timer += delta
+			print(hovering_timer)
 		if current_task == tasks.find('hover') and hovering_timer > 30:
 			finish_task()
 

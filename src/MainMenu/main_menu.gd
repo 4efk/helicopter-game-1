@@ -5,7 +5,7 @@ func _ready():
 
 func _on_button_pressed():
 	GlobalScript.current_gamemode = 1
-	get_tree().change_scene_to_file("res://World/world_0.tscn")
+	get_tree().change_scene_to_file("res://World/free_flight.tscn")
 
 func _on_button_2_pressed():
 	GlobalScript.current_gamemode = 0

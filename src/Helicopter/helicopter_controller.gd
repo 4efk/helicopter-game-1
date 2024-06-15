@@ -63,8 +63,7 @@ var hooked_object = null
 func die():
 	#get_tree().change_scene_to_file("res://World/world_0.tscn")
 	print("boom")
-	if GlobalScript.current_gamemode == 0:
-		get_parent().player_die()
+	get_parent().player_die()
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)

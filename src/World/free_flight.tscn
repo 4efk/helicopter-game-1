@@ -25,13 +25,13 @@ uv1_triplanar = true
 [node name="free_flight" type="Node3D"]
 script = ExtResource("1_0iu0b")
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0juab")
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.965926, -0.224144, 0.12941, 0, 0.5, 0.866025, -0.258819, -0.836516, 0.482963, 0, 9.63503, 0)
 shadow_enabled = true
 directional_shadow_max_distance = 500.0
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_0juab")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)

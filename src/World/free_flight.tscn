@@ -39,4 +39,5 @@ use_collision = true
 size = Vector3(2000, 1, 2000)
 material = SubResource("StandardMaterial3D_f8r35")
 
-[node name="Helicopter0_2" parent="." instance=ExtResource("6_5rsq8")]
+[node name="PlayerHelicopter" parent="." instance=ExtResource("6_5rsq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cc10mt8eel70i" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_AmbientOcclusion.jpg" id="2_ntei6"]
 [ext_resource type="Texture2D" uid="uid://dben3xqr5cxlf" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_NormalGL.jpg" id="3_qgsma"]
 [ext_resource type="Texture2D" uid="uid://6kgju6mj2ps8" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Roughness.jpg" id="4_c1qde"]
-[ext_resource type="PackedScene" uid="uid://cx3fh5tkps8b3" path="res://Helicopter/Helicopter1/helicopter_0_1.tscn" id="5_i0acl"]
+[ext_resource type="PackedScene" uid="uid://crx38qtc48mgg" path="res://Helicopter/Helicopter1/helicopter_1_0.tscn" id="6_5rsq8"]
 
 [sub_resource type="Environment" id="Environment_0juab"]
 tonemap_mode = 2
@@ -39,4 +39,4 @@ use_collision = true
 size = Vector3(2000, 1, 2000)
 material = SubResource("StandardMaterial3D_f8r35")
 
-[node name="Helicopter0_1" parent="." instance=ExtResource("5_i0acl")]
+[node name="Helicopter0_2" parent="." instance=ExtResource("6_5rsq8")]

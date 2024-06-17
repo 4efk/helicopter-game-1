@@ -16,12 +16,12 @@ extends RigidBody3D
 @export var camera_rotation_speed = 2
 @export var mouse_sensitivity = 0.005
 
-@onready var main_rotor_pos_ind = $helicopter0_model_test2/MainRotorPosInd
-@onready var tail_rotor_pos_ind = $helicopter0_model_test2/TailRotorPosInd
+@onready var main_rotor_pos_ind = $helicopter1_model_2/MainRotorPosInd
+@onready var tail_rotor_pos_ind = $helicopter1_model_2/TailRotorPosInd
 
-@onready var moving_main_rotor_part = $helicopter0_model_test2/MovingMainRotorPart
-@onready var moving_tail_rotor_part = $helicopter0_model_test2/MovingTailRotorPart
-@onready var helicopter_fuselage = $helicopter0_model_test2
+@onready var moving_main_rotor_part = $helicopter1_model_2/MovingMainRotorPart
+@onready var moving_tail_rotor_part = $helicopter1_model_2/MovingTailRotorPart
+@onready var helicopter_fuselage = $helicopter1_model_2
 @onready var hook = $Hook
 
 @onready var cam_pivot_y = $CamPivotY

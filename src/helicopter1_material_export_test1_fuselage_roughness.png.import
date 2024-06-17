@@ -3,23 +3,22 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://djdly7upuc2gd"
-path.s3tc="res://.godot/imported/helicopter1_material_export_test1_fuselage_roughness.png-21afacf57e1061e3871a483039f65f91.s3tc.ctex"
+path="res://.godot/imported/helicopter1_material_export_test1_fuselage_roughness.png-21afacf57e1061e3871a483039f65f91.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
-"md5": "199dc63e21fb5100846b296d84d3c809"
+"md5": "76556a4973f8bf25f6069a700b84b006"
 }
 
 [deps]
 
 source_file="res://helicopter1_material_export_test1_fuselage_roughness.png"
-dest_files=["res://.godot/imported/helicopter1_material_export_test1_fuselage_roughness.png-21afacf57e1061e3871a483039f65f91.s3tc.ctex"]
+dest_files=["res://.godot/imported/helicopter1_material_export_test1_fuselage_roughness.png-21afacf57e1061e3871a483039f65f91.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
@@ -27,9 +26,9 @@ compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=0
+roughness/mode=6
 roughness/src_normal=""
-process/fix_alpha_border=true
+process/fix_alpha_border=false
 process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false

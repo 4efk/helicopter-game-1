@@ -4,7 +4,7 @@ extends Node3D
 @onready var ui_instruction_text = $WorldUI/VBoxContainer/InstructionText
 @onready var ui_finish = $WorldUI/FinishUI
 
-@onready var player_helicopter = $Helicopter0_1
+@onready var player_helicopter = $PlayerHelicopter
 
 var instruction_messages = [
 	[

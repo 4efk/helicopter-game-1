@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cc10mt8eel70i" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_AmbientOcclusion.jpg" id="2_eh4j0"]
 [ext_resource type="Texture2D" uid="uid://dben3xqr5cxlf" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_NormalGL.jpg" id="3_8wrw7"]
 [ext_resource type="Texture2D" uid="uid://6kgju6mj2ps8" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Roughness.jpg" id="4_jkq5u"]
-[ext_resource type="PackedScene" uid="uid://cx3fh5tkps8b3" path="res://Helicopter/Helicopter1/helicopter_0_1.tscn" id="5_1ipoe"]
+[ext_resource type="PackedScene" uid="uid://crx38qtc48mgg" path="res://Helicopter/Helicopter1/helicopter_1_0.tscn" id="7_qbfnc"]
 
 [sub_resource type="Environment" id="Environment_86h43"]
 tonemap_mode = 2
@@ -140,9 +140,6 @@ use_collision = true
 size = Vector3(2000, 1, 2000)
 material = SubResource("StandardMaterial3D_pncsa")
 
-[node name="Helicopter0_1" parent="." groups=["helicopter"] instance=ExtResource("5_1ipoe")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.19913, 0)
-
 [node name="Helipad" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 0, 0)
 
@@ -168,6 +165,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.6947, 4.52285, 22.92)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HoverArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 shape = SubResource("BoxShape3D_h8vbu")
+
+[node name="PlayerHelicopter" parent="." instance=ExtResource("7_qbfnc")]
 
 [connection signal="body_entered" from="Helipad" to="." method="_on_helipad_body_entered"]
 [connection signal="body_exited" from="Helipad" to="." method="_on_helipad_body_exited"]

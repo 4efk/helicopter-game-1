@@ -137,7 +137,7 @@ func _physics_process(_delta):
 	#the offset is just made up in terms of how it feels, based on nothing at all
 	#cyclic += Vector2(main_rotor_pos_ind.position.x + helicopter_form.position.x, main_rotor_pos_ind.position.z + helicopter_form.position.z)
 
-	var main_rotor_pos = to_global(Vector3(cyclic.x * main_rotor_radius/20 + main_rotor_pos_ind.position.x + helicopter_fuselage.position.x, main_rotor_pos_ind.position.y, cyclic.y * main_rotor_radius/20 + main_rotor_pos_ind.position.z + helicopter_fuselage.position.z)) - global_position
+	var main_rotor_pos = to_global(Vector3(cyclic.x * main_rotor_radius/30 + main_rotor_pos_ind.position.x + helicopter_fuselage.position.x, main_rotor_pos_ind.position.y, cyclic.y * main_rotor_radius/30 + main_rotor_pos_ind.position.z + helicopter_fuselage.position.z)) - global_position
 	var tail_rotor_pos = tail_rotor_pos_ind.global_position - global_position
 	
 	#main_rotor_pos += Vector3(main_rotor_pos_ind.global_position.x-global_position.x, 0, main_rotor_pos_ind.global_position.z-global_position.z)
@@ -149,6 +149,7 @@ func _physics_process(_delta):
 	var main_rotor_thrust_force = 0.5 * GlobalScript.air_density * pow(main_rotor_omega * main_rotor_radius, 2) * PI * pow(main_rotor_radius, 2) * main_rotor_thrust_coefficient
 	#print(main_rotor_thrust_force)
 	main_rotor_thrust_force *= int(!main_rotor_broken)
+	main_rotor_thrust_force += 1
 	apply_force(transform.basis.y * main_rotor_thrust_force, main_rotor_pos)
 	#uhh make this make sense i guess
 	#var main_rotor_induced_torque = -(main_rotor_alpha * 0.5 * 2 * 12 * pow(main_rotor_radius, 2) + rotor_drag)
@@ -173,7 +174,7 @@ func _physics_process(_delta):
 		rotor_disc_relative_vertical_velocity = Vector3(0, 0, 0)
 	
 	#print(rotor_disc_relative_vertical_velocity)
-	var rotor_disc_drag = 0.5 * GlobalScript.air_density * pow(rotor_disc_relative_vertical_velocity.length(), 2) * PI * pow(main_rotor_radius, 2) * .60
+	var rotor_disc_drag = 0.5 * GlobalScript.air_density * pow(rotor_disc_relative_vertical_velocity.length(), 2) * PI * pow(main_rotor_radius, 2) * 1.20
 	$RotorDiscDragIndicator.global_position = main_rotor_pos_ind.global_position
 	#$RotorDiscDragIndicator.global_position = global_position
 	#$RotorDiscDragIndicator.target_position = transform.basis.y * 1000
@@ -190,9 +191,9 @@ func _physics_process(_delta):
 	
 	#print(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag)
 	
-	# THIS MUST BE CHANGED BECAUSE THE MAIN ROTOR POS IS OFFSET WITH THE CYCLIC CONTROLS
+	# rotor disc drag
 	rotor_disc_drag *= int(!main_rotor_broken)
-	apply_force(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag, main_rotor_pos)
+	apply_force(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag, main_rotor_pos_ind.global_position - global_position)
 	
 	#print(-rotor_disc_relative_vertical_velocity.normalized() * rotor_disc_drag)
 	#print(rotor_disc_relative_vertical_velocity)

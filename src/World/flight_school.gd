@@ -56,7 +56,7 @@ var tasks = [
 ]
 
 var autorotation_height = 150 # [m]
-var longer_flight_distance = 100 # [m]
+var longer_flight_distance = 200 # [m]
 
 var current_message = 0
 var typing = false
@@ -111,6 +111,7 @@ func _ready():
 	#current_task = 6
 
 func _process(delta):
+	#print((player_helicopter.global_position - $Helipad2.global_position).length())
 	
 	if Input.is_action_just_pressed("show_extra_ui"):
 		ui_checklist.visible = !ui_checklist.visible
@@ -191,7 +192,6 @@ func _on_helipad_2_body_exited(body):
 		task_progress = 0
 	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('last landing'):
 		task_progress = 0
-
 
 func _on_hover_area_body_entered(body):
 	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('hover'):

@@ -1,39 +1,15 @@
-[gd_scene load_steps=13 format=3 uid="uid://chgilug5mdge"]
+[gd_scene load_steps=7 format=3 uid="uid://chgilug5mdge"]
 
 [ext_resource type="Script" path="res://World/flight_school.gd" id="1_olm0b"]
-[ext_resource type="Texture2D" uid="uid://spfbipkih55h" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="1_u5j2e"]
-[ext_resource type="Texture2D" uid="uid://cc10mt8eel70i" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_AmbientOcclusion.jpg" id="2_eh4j0"]
-[ext_resource type="Texture2D" uid="uid://dben3xqr5cxlf" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_NormalGL.jpg" id="3_8wrw7"]
-[ext_resource type="Texture2D" uid="uid://6kgju6mj2ps8" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Roughness.jpg" id="4_jkq5u"]
+[ext_resource type="Environment" uid="uid://ckc2air8sqx7r" path="res://World/sunny_environment.tres" id="2_uk8rx"]
+[ext_resource type="PackedScene" uid="uid://c17g4xyv6h8t2" path="res://World/Models/game_map_1.glb" id="3_557wv"]
 [ext_resource type="PackedScene" uid="uid://crx38qtc48mgg" path="res://Helicopter/Helicopter1/helicopter_1_0.tscn" id="7_qbfnc"]
 
-[sub_resource type="Environment" id="Environment_86h43"]
-tonemap_mode = 2
-fog_enabled = true
-fog_density = 0.003
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pncsa"]
-albedo_texture = ExtResource("1_u5j2e")
-roughness_texture = ExtResource("4_jkq5u")
-normal_enabled = true
-normal_texture = ExtResource("3_8wrw7")
-ao_enabled = true
-ao_texture = ExtResource("2_eh4j0")
-uv1_scale = Vector3(0.5, 0.5, 0.5)
-uv1_triplanar = true
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_sq0vu"]
-size = Vector3(10, 0.1, 10)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3foqu"]
-albedo_color = Color(0.180005, 0.180005, 0.180005, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_3m5ja"]
-material = SubResource("StandardMaterial3D_3foqu")
-size = Vector3(10, 0.1, 10)
+size = Vector3(15, 0.1, 15)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_h8vbu"]
-size = Vector3(10, 2.5, 10)
+size = Vector3(10, 5, 10)
 
 [node name="FlightSchool" type="Node3D"]
 script = ExtResource("1_olm0b")
@@ -126,47 +102,39 @@ theme_override_font_sizes/font_size = 24
 text = "[menu]"
 flat = true
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("2_uk8rx")
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.965926, -0.224144, 0.12941, 0, 0.5, 0.866025, -0.258819, -0.836516, 0.482963, 0, 9.63503, 0)
 shadow_enabled = true
 directional_shadow_max_distance = 500.0
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_86h43")
-
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-use_collision = true
-size = Vector3(2000, 1, 2000)
-material = SubResource("StandardMaterial3D_pncsa")
+[node name="game_map_1" parent="." instance=ExtResource("3_557wv")]
 
 [node name="Helipad" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.4737, -0.35421, -138.555)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Helipad"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.103, 0)
 shape = SubResource("BoxShape3D_sq0vu")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Helipad"]
-mesh = SubResource("BoxMesh_3m5ja")
-
 [node name="Helipad2" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 111.884, 3.97965, -138.33)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Helipad2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 shape = SubResource("BoxShape3D_sq0vu")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Helipad2"]
-mesh = SubResource("BoxMesh_3m5ja")
-
 [node name="HoverArea" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.6947, 4.52285, 22.92)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 165.279, 4.79009, 100.807)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HoverArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 shape = SubResource("BoxShape3D_h8vbu")
 
 [node name="PlayerHelicopter" parent="." instance=ExtResource("7_qbfnc")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 111.624, 5.21894, -138.816)
 
 [connection signal="body_entered" from="Helipad" to="." method="_on_helipad_body_entered"]
 [connection signal="body_exited" from="Helipad" to="." method="_on_helipad_body_exited"]

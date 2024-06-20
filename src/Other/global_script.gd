@@ -7,4 +7,4 @@ var settings = {
 }
 
 var current_gamemode = 0
-var flightschool_checkpoint = [0, Vector3(0, 1.199, 0)] # [current_task, player_helicopter.global_position]
+var flightschool_checkpoint = [0, Vector3(111.62, 5.219, -138.8)] # [current_task, player_helicopter.global_position]

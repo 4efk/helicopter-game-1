@@ -63,7 +63,7 @@ var hooked_object = null
 func die():
 	#get_tree().change_scene_to_file("res://World/world_0.tscn")
 	print("boom")
-	#get_parent().player_die()
+	get_parent().player_die()
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -71,11 +71,12 @@ func _ready():
 	print(engine_power_curve.sample(1))
 	main_rotor_prev_pos = main_rotor_pos_ind.global_position
 	
-	engine_on = true
-	main_rotor_omega = 55.5
-	engine_omega = 282.74
-	clutch_engaged = true
-	belt_tension = 1.0
+	if GlobalScript.flightschool_checkpoint[3]:
+		engine_on = true
+		main_rotor_omega = 55.5
+		engine_omega = 282.74
+		clutch_engaged = true
+		belt_tension = 1.0
 
 func _input(event):
 	if event is InputEventMouseMotion:

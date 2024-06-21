@@ -134,7 +134,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 shape = SubResource("BoxShape3D_h8vbu")
 
 [node name="PlayerHelicopter" parent="." instance=ExtResource("7_qbfnc")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 111.624, 5.21894, -138.816)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 111.624, 5.21894, -138.816)
 
 [connection signal="body_entered" from="Helipad" to="." method="_on_helipad_body_entered"]
 [connection signal="body_exited" from="Helipad" to="." method="_on_helipad_body_exited"]

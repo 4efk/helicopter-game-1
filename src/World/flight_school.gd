@@ -70,6 +70,8 @@ var task_progress = 0
 var hovering_timer = 0.0
 
 var checkpoint_pos = Vector3()
+var checkpoint_rot = Vector3()
+var checkpoint_engine_state = false
 
 func type_instruction_text(message_number):
 	ui_instruction_text.text = ''
@@ -83,13 +85,23 @@ func finish_task():
 		print('you won and stuff')
 		ui_finish.show()
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		GlobalScript.flightschool_checkpoint = [0, Vector3(0, 1.199, 0)]
+		GlobalScript.flightschool_checkpoint = GlobalScript.DEFAULT_FLIGHTSCHOOL_CHECKPOINT.duplicate()
 		return
-		
+	
+	# HOVER MIGHT BE A BIT WEIRD HERE 
+	# I MEAN IT'S JUST NOT GREAT IF YOU FINISH THE TASK IN THE AIR LOL
+	if current_task in [tasks.find('startup'), tasks.find('first flight'), tasks.find('second landing'), tasks.find('autorotation p3'), tasks.find('last landing')]:
+		save_checkpoint()
+	
 	current_task += 1
 	task_progress = 0
 	
 	type_instruction_text(0)
+
+func save_checkpoint():
+	checkpoint_pos = player_helicopter.global_position
+	checkpoint_rot = player_helicopter.global_rotation_degrees
+	checkpoint_engine_state = player_helicopter.engine_on
 
 func player_die():
 	if current_task == tasks.find("second landing"):
@@ -99,7 +111,7 @@ func player_die():
 	#if current_task == tasks.find("last landing"):
 		#checkpoint_pos = player_helicopter.global_position
 	
-	GlobalScript.flightschool_checkpoint = [current_task, checkpoint_pos]
+	GlobalScript.flightschool_checkpoint = [current_task, checkpoint_pos, checkpoint_rot, checkpoint_engine_state]
 	get_tree().change_scene_to_file("res://World/flight_school.tscn")
 	
 func _ready():
@@ -108,6 +120,8 @@ func _ready():
 	current_task = GlobalScript.flightschool_checkpoint[0]
 	player_helicopter.global_position = GlobalScript.flightschool_checkpoint[1]
 	checkpoint_pos = GlobalScript.flightschool_checkpoint[1]
+	player_helicopter.global_rotation_degrees =  GlobalScript.flightschool_checkpoint[2]
+	checkpoint_rot = GlobalScript.flightschool_checkpoint[2]
 	#current_task = 6
 
 func _process(delta):
@@ -156,7 +170,6 @@ func _process(delta):
 	if current_task == tasks.find('autorotation p3') and player_helicopter.global_position.y < 2 and player_helicopter.linear_velocity.length() < 0.005:
 		finish_task()
 		player_helicopter.engine_working = true
-		checkpoint_pos = player_helicopter.global_position
 	
 	if task_progress:
 		if current_task in [tasks.find('first flight'), tasks.find('second landing'), tasks.find('last landing')] and player_helicopter.linear_velocity.length() < 0.005:

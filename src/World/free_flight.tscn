@@ -1,43 +1,22 @@
-[gd_scene load_steps=9 format=3 uid="uid://p6uo11oo7lyf"]
+[gd_scene load_steps=5 format=3 uid="uid://p6uo11oo7lyf"]
 
 [ext_resource type="Script" path="res://World/free_flight.gd" id="1_0iu0b"]
-[ext_resource type="Texture2D" uid="uid://spfbipkih55h" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="1_vxhry"]
-[ext_resource type="Texture2D" uid="uid://cc10mt8eel70i" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_AmbientOcclusion.jpg" id="2_ntei6"]
-[ext_resource type="Texture2D" uid="uid://dben3xqr5cxlf" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_NormalGL.jpg" id="3_qgsma"]
-[ext_resource type="Texture2D" uid="uid://6kgju6mj2ps8" path="res://World/Textures/Grass001_1K-JPG/Grass001_1K-JPG_Roughness.jpg" id="4_c1qde"]
+[ext_resource type="Environment" uid="uid://ckc2air8sqx7r" path="res://World/sunny_environment.tres" id="2_2ykme"]
+[ext_resource type="PackedScene" uid="uid://c17g4xyv6h8t2" path="res://World/Models/game_map_1.glb" id="3_5mrxy"]
 [ext_resource type="PackedScene" uid="uid://crx38qtc48mgg" path="res://Helicopter/Helicopter1/helicopter_1_0.tscn" id="6_5rsq8"]
-
-[sub_resource type="Environment" id="Environment_0juab"]
-tonemap_mode = 2
-fog_enabled = true
-fog_density = 0.003
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f8r35"]
-albedo_texture = ExtResource("1_vxhry")
-roughness_texture = ExtResource("4_c1qde")
-normal_enabled = true
-normal_texture = ExtResource("3_qgsma")
-ao_enabled = true
-ao_texture = ExtResource("2_ntei6")
-uv1_scale = Vector3(0.5, 0.5, 0.5)
-uv1_triplanar = true
 
 [node name="free_flight" type="Node3D"]
 script = ExtResource("1_0iu0b")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_0juab")
+environment = ExtResource("2_2ykme")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.965926, -0.224144, 0.12941, 0, 0.5, 0.866025, -0.258819, -0.836516, 0.482963, 0, 9.63503, 0)
+transform = Transform3D(0.965926, -0.224144, 0.12941, 0, 0.5, 0.866025, -0.258819, -0.836516, 0.482963, 0, 204.3, 0)
 shadow_enabled = true
 directional_shadow_max_distance = 500.0
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-use_collision = true
-size = Vector3(2000, 1, 2000)
-material = SubResource("StandardMaterial3D_f8r35")
+[node name="game_map_1" parent="." instance=ExtResource("3_5mrxy")]
 
 [node name="PlayerHelicopter" parent="." instance=ExtResource("6_5rsq8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 28.3168, 0.895032, -138.934)

@@ -128,9 +128,12 @@ func player_die():
 	GlobalScript.flightschool_checkpoint = [current_task, checkpoint_pos, checkpoint_rot, checkpoint_engine_state]
 	#get_tree().change_scene_to_file("res://World/flight_school.tscn")
 
-func player_fail(dead=false):
+func player_fail(dead=false, immediate=false):
 	print(1)
 	player_die()
+	if immediate:
+		_on_fail_timer_timeout()
+		return
 	if fail_timer.is_stopped():
 		fail_timer.start()
 
@@ -251,6 +254,7 @@ func _on_fail_timer_timeout():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	ending_camera.global_position = player_helicopter.get_node("CamPivotY/CamPivotZ/Camera3D").global_position
 	ending_camera.global_rotation = player_helicopter.get_node("CamPivotY/CamPivotZ/Camera3D").global_rotation
+	player_helicopter.get_node("CamPivotY/CamPivotZ/Camera3D").current = false
 	ending_camera.current = true
 
 func _on_main_menu_button_pressed():

@@ -1,6 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://chgilug5mdge"]
+[gd_scene load_steps=9 format=3 uid="uid://chgilug5mdge"]
 
 [ext_resource type="Script" path="res://World/flight_school.gd" id="1_olm0b"]
+[ext_resource type="FontFile" uid="uid://dofuod4wkjojk" path="res://Fonts/FreeMonoBold.otf" id="2_21qwc"]
+[ext_resource type="FontFile" uid="uid://2c0clvecpiwo" path="res://Fonts/DejaVuSans.ttf" id="2_a4ch0"]
 [ext_resource type="Environment" uid="uid://ckc2air8sqx7r" path="res://World/sunny_environment.tres" id="2_uk8rx"]
 [ext_resource type="PackedScene" uid="uid://c17g4xyv6h8t2" path="res://World/Models/game_map_1.glb" id="3_557wv"]
 [ext_resource type="PackedScene" uid="uid://crx38qtc48mgg" path="res://Helicopter/Helicopter1/helicopter_1_0.tscn" id="7_qbfnc"]
@@ -12,6 +14,7 @@ size = Vector3(15, 0.1, 15)
 size = Vector3(10, 5, 10)
 
 [node name="FlightSchool" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.101, 0)
 script = ExtResource("1_olm0b")
 
 [node name="WorldUI" type="CanvasLayer" parent="."]
@@ -76,6 +79,7 @@ alignment = 1
 
 [node name="Label" type="Label" parent="WorldUI/FinishUI/HBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_a4ch0")
 theme_override_font_sizes/font_size = 16
 text = "u've done it :)"
 horizontal_alignment = 1
@@ -84,6 +88,7 @@ horizontal_alignment = 1
 layout_mode = 2
 focus_mode = 0
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_a4ch0")
 theme_override_font_sizes/font_size = 24
 text = "[menu]"
 flat = true
@@ -119,6 +124,7 @@ alignment = 1
 
 [node name="Label" type="Label" parent="WorldUI/FailUI/HBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_a4ch0")
 theme_override_font_sizes/font_size = 16
 text = "you failed or died or sth"
 horizontal_alignment = 1
@@ -127,6 +133,7 @@ horizontal_alignment = 1
 layout_mode = 2
 focus_mode = 0
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_a4ch0")
 theme_override_font_sizes/font_size = 24
 text = "[retry]"
 flat = true
@@ -135,6 +142,7 @@ flat = true
 layout_mode = 2
 focus_mode = 0
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_a4ch0")
 theme_override_font_sizes/font_size = 24
 text = "[menu]"
 flat = true
@@ -154,6 +162,7 @@ alignment = 1
 custom_minimum_size = Vector2(800, 0)
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("2_21qwc")
 theme_override_font_sizes/font_size = 24
 autowrap_mode = 3
 
@@ -164,6 +173,8 @@ environment = ExtResource("2_uk8rx")
 transform = Transform3D(0.965926, -0.224144, 0.12941, 0, 0.5, 0.866025, -0.258819, -0.836516, 0.482963, 0, 9.63503, 0)
 shadow_enabled = true
 directional_shadow_max_distance = 500.0
+
+[node name="EndingCamera" type="Camera3D" parent="."]
 
 [node name="game_map_1" parent="." instance=ExtResource("3_557wv")]
 
@@ -189,9 +200,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 shape = SubResource("BoxShape3D_h8vbu")
 
 [node name="PlayerHelicopter" parent="." instance=ExtResource("7_qbfnc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 111.624, 5.21894, -138.816)
-
-[node name="EndingCamera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 110.677, 5.21894, -138.816)
 
 [node name="FailTimer" type="Timer" parent="."]
 wait_time = 2.0

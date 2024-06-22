@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dd457rl1u3dew"]
+[gd_scene load_steps=3 format=3 uid="uid://dd457rl1u3dew"]
 
 [ext_resource type="Script" path="res://MainMenu/main_menu.gd" id="1_y4a7q"]
+[ext_resource type="FontFile" uid="uid://2c0clvecpiwo" path="res://Fonts/DejaVuSans.ttf" id="2_w2njg"]
 
 [node name="MainMenu" type="CanvasLayer"]
 script = ExtResource("1_y4a7q")
@@ -17,16 +18,18 @@ alignment = 1
 layout_mode = 2
 focus_mode = 0
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_w2njg")
 theme_override_font_sizes/font_size = 32
-text = "[flight school]"
+text = "[FLIGHT SCHOOL]"
 flat = true
 
 [node name="Button" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_w2njg")
 theme_override_font_sizes/font_size = 32
-text = "[free flight]"
+text = "[FREE FLIGHT]"
 flat = true
 
 [connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_button_2_pressed"]

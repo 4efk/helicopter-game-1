@@ -38,6 +38,8 @@ extends RigidBody3D
 
 @onready var fps_counter = $HUD/FPSCounter
 
+var dead = false
+
 var engine_working = true
 var engine_on = false
 var engine_omega = 0.0 # max 282.74 [rad/s] = 2700 rpm
@@ -60,13 +62,14 @@ var cyclic = Vector2()
 
 var hooked_object = null
 
-func die():
+func die(immediate=false):
 	#get_tree().change_scene_to_file("res://World/world_0.tscn")
+	dead = true
 	print("boom")
 	if GlobalScript.current_gamemode == 1:
 		get_parent().player_die()
 	elif GlobalScript.current_gamemode == 0:
-		get_parent().player_fail(true)
+		get_parent().player_fail(true, immediate)
 
 func rotor_broken(rotor):
 	if rotor == 0:
@@ -145,6 +148,9 @@ func _process(delta):
 	hud_altitude.text = 'altitude: ' + str(int(global_position.y * 3.28084)) + ' ft'
 
 func _physics_process(_delta):
+	#falling into water
+	if global_position.y < 0 and !dead:
+		die(true)
 	#kinda working cyclic control by offsetting the position of where the force is being applied along the rotor disc
 	#the offset is just made up in terms of how it feels, based on nothing at all
 	#cyclic += Vector2(main_rotor_pos_ind.position.x + helicopter_form.position.x, main_rotor_pos_ind.position.z + helicopter_form.position.z)
@@ -258,9 +264,15 @@ func _physics_process(_delta):
 	tail_rotor_omega = 355.62828798/55.5 * main_rotor_omega
 
 func _integrate_forces(state):
-	if !state.get_contact_count(): return
-	if state.get_contact_impulse(0).length() > 1500:
+	var normal_relative_velocity = Vector3(0, 0, 0)
+	if linear_velocity.length() > 0.001 and state.get_contact_count():
+		var collision_normal = state.get_contact_local_normal(0)
+		normal_relative_velocity = collision_normal * (linear_velocity.dot(collision_normal) / pow(collision_normal.length(), 2))
+	if normal_relative_velocity.length() > 2:
 		die()
+	#if !state.get_contact_count(): return
+	#if state.get_contact_impulse(0).length() > 1500:
+		#die()
 
 func _on_hook_area_body_entered(body):
 	if body.is_in_group('pickable') and !hooked_object:

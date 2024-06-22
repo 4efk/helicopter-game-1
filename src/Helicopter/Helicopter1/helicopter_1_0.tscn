@@ -1,8 +1,10 @@
-[gd_scene load_steps=232 format=3 uid="uid://crx38qtc48mgg"]
+[gd_scene load_steps=234 format=3 uid="uid://crx38qtc48mgg"]
 
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_b05el"]
 [ext_resource type="Texture2D" uid="uid://cd5a324ph2lmj" path="res://Helicopter/Helicopter1/helicopter1_model_2_apollo_palette-1x.png" id="2_27dgy"]
+[ext_resource type="FontFile" uid="uid://2c0clvecpiwo" path="res://Fonts/DejaVuSans.ttf" id="2_xj8a3"]
 [ext_resource type="Texture2D" uid="uid://clo68j71rj7e1" path="res://Helicopter/Helicopter1/helicopter1_model_2_fuselage_roughness.png" id="3_gqg1e"]
+[ext_resource type="FontFile" uid="uid://dl3dn6caktlny" path="res://Fonts/DejaVuSansMono.ttf" id="3_y4wv2"]
 [ext_resource type="ArrayMesh" uid="uid://dmpqve1wdlbr0" path="res://Helicopter/Helicopter1/helicopter1_collision_shape.obj" id="4_oql48"]
 
 [sub_resource type="Curve" id="Curve_xwg30"]
@@ -3462,21 +3464,25 @@ layout_mode = 2
 
 [node name="Engine" type="Label" parent="HUD/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_xj8a3")
 theme_override_font_sizes/font_size = 32
 text = "engine: off"
 
 [node name="RPM" type="Label" parent="HUD/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_xj8a3")
 theme_override_font_sizes/font_size = 32
 text = "rpm: 0 %"
 
 [node name="EngineRPM" type="Label" parent="HUD/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_xj8a3")
 theme_override_font_sizes/font_size = 32
 text = "rpm: 0 %"
 
 [node name="Clutch" type="Label" parent="HUD/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_xj8a3")
 theme_override_font_sizes/font_size = 32
 text = "clutch: engaged"
 
@@ -3485,29 +3491,35 @@ layout_mode = 2
 
 [node name="Collective" type="Label" parent="HUD/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_xj8a3")
 theme_override_font_sizes/font_size = 32
 text = "collective: 12 °"
 
 [node name="Cyclic" type="Label" parent="HUD/HBoxContainer/VBoxContainer2"]
 visible = false
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_xj8a3")
 theme_override_font_sizes/font_size = 32
 text = "cyclic: (0, 0)"
 
 [node name="TailRotorCollective" type="Label" parent="HUD/HBoxContainer/VBoxContainer2"]
 visible = false
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_xj8a3")
 theme_override_font_sizes/font_size = 32
 text = "collective: 12 °"
 
 [node name="Altitude" type="Label" parent="HUD/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_xj8a3")
 theme_override_font_sizes/font_size = 32
 text = "altitude: 0 m"
 
 [node name="FPSCounter" type="Label" parent="HUD"]
+visible = false
 offset_right = 59.0
 offset_bottom = 45.0
+theme_override_fonts/font = ExtResource("3_y4wv2")
 theme_override_font_sizes/font_size = 32
 text = "60"
 horizontal_alignment = 1

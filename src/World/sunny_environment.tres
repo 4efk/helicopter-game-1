@@ -2,11 +2,11 @@
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ua2tt"]
 sky_top_color = Color(0.267051, 0.410592, 0.694495, 1)
-sky_horizon_color = Color(0.381229, 0.390186, 0.404325, 1)
+sky_horizon_color = Color(0.549352, 0.863223, 1, 1)
 ground_bottom_color = Color(0.317647, 0.447059, 0.643137, 1)
+ground_horizon_color = Color(0.475175, 0.651578, 1, 1)
 ground_curve = 0.00353552
-sun_angle_max = 0.0
-sun_curve = 0.382368
+sun_curve = 0.0652914
 
 [sub_resource type="Sky" id="Sky_moydn"]
 sky_material = SubResource("ProceduralSkyMaterial_ua2tt")

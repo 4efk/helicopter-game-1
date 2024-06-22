@@ -45,20 +45,6 @@ text = "STARTUP CHECKLIST
 "
 editable = false
 
-[node name="VBoxContainer" type="VBoxContainer" parent="WorldUI"]
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 0.072
-offset_bottom = 1.24
-grow_horizontal = 2
-alignment = 1
-
-[node name="InstructionText" type="Label" parent="WorldUI/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 24
-horizontal_alignment = 1
-
 [node name="FinishUI" type="Control" parent="WorldUI"]
 visible = false
 layout_mode = 3
@@ -94,13 +80,82 @@ theme_override_font_sizes/font_size = 16
 text = "u've done it :)"
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="WorldUI/FinishUI/HBoxContainer"]
+[node name="MainMenuButton" type="Button" parent="WorldUI/FinishUI/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 24
 text = "[menu]"
 flat = true
+
+[node name="FailUI" type="Control" parent="WorldUI"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="WorldUI/FailUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.533333)
+
+[node name="HBoxContainer" type="VBoxContainer" parent="WorldUI/FailUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="WorldUI/FailUI/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "you failed or died or sth"
+horizontal_alignment = 1
+
+[node name="RetryButton" type="Button" parent="WorldUI/FailUI/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "[retry]"
+flat = true
+
+[node name="MainMenuButton" type="Button" parent="WorldUI/FailUI/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "[menu]"
+flat = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WorldUI"]
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.072
+offset_left = 400.0
+offset_top = 50.0
+offset_right = -400.0
+offset_bottom = 1.24
+grow_horizontal = 2
+alignment = 1
+
+[node name="InstructionText" type="Label" parent="WorldUI/VBoxContainer"]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 24
+autowrap_mode = 3
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("2_uk8rx")
@@ -136,9 +191,18 @@ shape = SubResource("BoxShape3D_h8vbu")
 [node name="PlayerHelicopter" parent="." instance=ExtResource("7_qbfnc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 111.624, 5.21894, -138.816)
 
+[node name="EndingCamera" type="Camera3D" parent="."]
+
+[node name="FailTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="pressed" from="WorldUI/FailUI/HBoxContainer/RetryButton" to="." method="_on_retry_button_pressed"]
+[connection signal="pressed" from="WorldUI/FailUI/HBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
 [connection signal="body_entered" from="Helipad" to="." method="_on_helipad_body_entered"]
 [connection signal="body_exited" from="Helipad" to="." method="_on_helipad_body_exited"]
 [connection signal="body_entered" from="Helipad2" to="." method="_on_helipad_2_body_entered"]
 [connection signal="body_exited" from="Helipad2" to="." method="_on_helipad_2_body_exited"]
 [connection signal="body_entered" from="HoverArea" to="." method="_on_hover_area_body_entered"]
 [connection signal="body_exited" from="HoverArea" to="." method="_on_hover_area_body_exited"]
+[connection signal="timeout" from="FailTimer" to="." method="_on_fail_timer_timeout"]

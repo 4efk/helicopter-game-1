@@ -2,6 +2,7 @@ extends CanvasLayer
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	GlobalScript.flightschool_checkpoint = GlobalScript.DEFAULT_FLIGHTSCHOOL_CHECKPOINT.duplicate()
 
 func _on_button_pressed():
 	GlobalScript.current_gamemode = 1

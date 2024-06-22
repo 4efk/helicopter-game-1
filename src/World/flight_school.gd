@@ -3,43 +3,52 @@ extends Node3D
 @onready var ui_checklist = $WorldUI/ChecklistText
 @onready var ui_instruction_text = $WorldUI/VBoxContainer/InstructionText
 @onready var ui_finish = $WorldUI/FinishUI
+@onready var ui_fail = $WorldUI/FailUI
 
 @onready var player_helicopter = $PlayerHelicopter
+@onready var ending_camera = $EndingCamera
+
+@onready var fail_timer = $FailTimer
 
 var instruction_messages = [
 	[
-		"welcome to the helicopte training... whatever",
-		"you're gonna learn the basics of how to fly a helicopter",
-		"starting with the basic 3 controls:",
-		"there's cyclic",
-		"collective",
-		"antitorque",
-		"-----",
-		"let's start the helicopter",
-		"bring up a startup checklist by pressing [c] and follow it carefully",
+		"Hey, welcome to this helicopter training. You will learn the skills necessary to safely operate a chopper here",
+		"You probably already know about the three main controls used in flight.",
+		"The collective controls the pitch of the blades, and therefore the thrust of the main rotor. You keep that in check using [shift]/[L2]/[LT] and [spacebar]/[R2]/[RT].",
+		"The cyclic that tells the aircraft where to go with [w], [a], [s], [d], or the left thumbstick",
+		"And the anti-torque, which makes the ship turn in a certain direction. You would use the [mouse1]/[L1]/[LB] and [mouse2]/[R1]/[RB] for that.",
+		"So let's start her up!",
+		"Bring up the startup checklist by pressing [c] or [whatever] and follow it very carefully, otherwise you might damage the engine or transmission",
 	], [
-		"now slowly raise collective",
-		"and like udunno land on the closest helipad there"
+		"Nice work! Now we're ready to fly.",
+		"Let's land on the second helipad there. First slowly raise the collective to about 8˚, which will increase the rotor's thrust, remember? It should get us off the ground.",
+		"Use the cyclic to direct the aircraft forward and when you get to where you wanna land, lower the collective just a bit to slowly descend.",
+		"Controlling the bird may seem very difficult at first, but don't worry, you'll get used to it eventually. Just be careful not to slam it into the ground!",
 	], [
-		"great job bro",
-		"now take it a bit further"
+		"Very well. Now try to fly a little further. I'll let you know when to come back. And don't forget the controls: collective, cyclic, anti-torque.",
 	], [
-		"return and land"
+		"That's alright, now land on one of the helipads again."
 	], [
-		"awesome",
-		"next fly over there to that thing and try to hover in the air for 30 seconds"
+		"Good. Now this one's gonna be a bit tricky.",
+		"Did you see the tiny island over there? I want you to hover above that lonely palm tree for about thirty seconds.",
+		"Get over there when you're ready and I'll time it for you.",
 	], [
-		"alright, now for autorotation",
-		"explanation",
-		"explanation....",
-		"so first gain some altitude, get to about ... or so",
+		"You did it! Good job. Now land again, the next task requires a bit more thorough explanation."
 	], [
-		"okay so now skip this message when you're ready to cut the power \n [tab]"
+		"So you need to learn how to land the helicopter when you loose the engine, but don't worry, it's not as hard as it sounds.",
+		"The most important thing is lowering the collective immediately after losing power.",
+		"After only 3 seconds, the rotor system will lose so much inertia that it won't be possible to land safely. During autorotation, rotor inertia is the most valuable thing you have",
+		"Next thing you do is glide, with the drag coefficient similar to a parachute, the rotor disk will prevent us from falling like a rock.",
+		"Then about 6 feet off the ground you're gonna flare the collective back up to cushion the landing.",
+		"First autos are rarely ever soft landings, but a good landing is the one you walk away from, haha.",
+		"So first gain some altitude, get up to about 500 feet. Also, try to position yourself in front of where you wanna land. Preferably a long flat stretch",
 	], [
-		"glide and then quickly raise the collective before hitting the ground"
+		"That's plenty. Now skip this message when you're ready. I'll cut the engine. \n [tab]"
 	], [
-		"good",
-		"now idk that's it ig just land on a helipad again; engine on"
+		"Remember: lower the collective, glide, raise the collective and move your cyclic back before hitting the ground."
+	], [
+		"Nicely done! That wasn't bad at all for your first time!",
+		"In my eyes you've proven yourself worthy of a pilot's license"
 	]
 ]
 
@@ -49,6 +58,7 @@ var tasks = [
 	"second flight",
 	"second landing",
 	"hover",
+	"afterhover landing",
 	"autorotation p1",
 	"autorotation p2",
 	"autorotation p3",
@@ -86,6 +96,9 @@ func finish_task():
 		ui_finish.show()
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		GlobalScript.flightschool_checkpoint = GlobalScript.DEFAULT_FLIGHTSCHOOL_CHECKPOINT.duplicate()
+		ending_camera.global_position = player_helicopter.get_node("CamPivotY/CamPivotZ/Camera3D").global_position
+		ending_camera.global_rotation = player_helicopter.get_node("CamPivotY/CamPivotZ/Camera3D").global_rotation
+		ending_camera.current = true
 		return
 	
 	# HOVER MIGHT BE A BIT WEIRD HERE 
@@ -104,6 +117,7 @@ func save_checkpoint():
 	checkpoint_engine_state = player_helicopter.engine_on
 
 func player_die():
+	print("asdasd")
 	if current_task == tasks.find("second landing"):
 		current_task = tasks.find("second flight")
 	if current_task in [tasks.find('autorotation p2'), tasks.find('autorotation p3')]:
@@ -112,8 +126,14 @@ func player_die():
 		#checkpoint_pos = player_helicopter.global_position
 	
 	GlobalScript.flightschool_checkpoint = [current_task, checkpoint_pos, checkpoint_rot, checkpoint_engine_state]
-	get_tree().change_scene_to_file("res://World/flight_school.tscn")
-	
+	#get_tree().change_scene_to_file("res://World/flight_school.tscn")
+
+func player_fail(dead=false):
+	print(1)
+	player_die()
+	if fail_timer.is_stopped():
+		fail_timer.start()
+
 func _ready():
 	type_instruction_text(0)
 	assigned_task = true
@@ -134,10 +154,13 @@ func _process(delta):
 	#print(hovering_timer)
 	
 	# instruction typing and skipping
+	#print(typing_timer)
 	if typing and typing_timer > GlobalScript.settings['text_typing_time'] and current_message_character < len(instruction_messages[current_task][current_message]):
 		ui_instruction_text.text += instruction_messages[current_task][current_message][current_message_character]
 		typing_timer = 0.0
 		current_message_character += 1
+		if current_task == tasks.find("last landing") and current_message == 1 and current_message_character == len(instruction_messages[current_task][current_message])-1:
+			finish_task()
 	elif typing and current_message_character >= len(instruction_messages[current_task][current_message]):
 		typing = false
 		if current_message < len(instruction_messages[current_task])-1:
@@ -169,10 +192,10 @@ func _process(delta):
 		player_helicopter.engine_on = false
 	if current_task == tasks.find('autorotation p3') and player_helicopter.global_position.y < 2 and player_helicopter.linear_velocity.length() < 0.005:
 		finish_task()
-		player_helicopter.engine_working = true
+		#player_helicopter.engine_working = true
 	
 	if task_progress:
-		if current_task in [tasks.find('first flight'), tasks.find('second landing'), tasks.find('last landing')] and player_helicopter.linear_velocity.length() < 0.005:
+		if current_task in [tasks.find('first flight'), tasks.find('second landing'), tasks.find('last landing'), tasks.find('afterhover landing')] and player_helicopter.linear_velocity.length() < 0.005:
 			finish_task()
 		if current_task == tasks.find('hover'):
 			hovering_timer += delta
@@ -187,6 +210,8 @@ func _on_helipad_body_entered(body):
 		task_progress = 1
 	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('last landing'):
 		task_progress = 1
+	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('afterhover landing'):
+		task_progress = 1
 func _on_helipad_body_exited(body):
 	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('first flight'):
 		task_progress = 0
@@ -194,16 +219,22 @@ func _on_helipad_body_exited(body):
 		task_progress = 0
 	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('last landing'):
 		task_progress = 0
+	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('afterhover landing'):
+		task_progress = 0
 
 func _on_helipad_2_body_entered(body):
 	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('second landing'):
 		task_progress = 1
 	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('last landing'):
 		task_progress = 1
+	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('afterhover landing'):
+		task_progress = 1
 func _on_helipad_2_body_exited(body):
 	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('second landing'):
 		task_progress = 0
 	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('last landing'):
+		task_progress = 0
+	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('afterhover landing'):
 		task_progress = 0
 
 func _on_hover_area_body_entered(body):
@@ -213,3 +244,16 @@ func _on_hover_area_body_exited(body):
 	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('hover'):
 		task_progress = 0
 		hovering_timer = 0
+
+func _on_fail_timer_timeout():
+	print("klawrjnasdjfbasedhjbfc")
+	ui_fail.show()
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	ending_camera.global_position = player_helicopter.get_node("CamPivotY/CamPivotZ/Camera3D").global_position
+	ending_camera.global_rotation = player_helicopter.get_node("CamPivotY/CamPivotZ/Camera3D").global_rotation
+	ending_camera.current = true
+
+func _on_main_menu_button_pressed():
+	get_tree().change_scene_to_file("res://MainMenu/main_menu.tscn")
+func _on_retry_button_pressed():
+	get_tree().change_scene_to_file("res://World/flight_school.tscn")

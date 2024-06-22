@@ -63,7 +63,18 @@ var hooked_object = null
 func die():
 	#get_tree().change_scene_to_file("res://World/world_0.tscn")
 	print("boom")
-	get_parent().player_die()
+	if GlobalScript.current_gamemode == 1:
+		get_parent().player_die()
+	elif GlobalScript.current_gamemode == 0:
+		get_parent().player_fail(true)
+
+func rotor_broken(rotor):
+	if rotor == 0:
+		main_rotor_broken = true
+	elif rotor == 1:
+		tail_rotor_broken = true
+	if GlobalScript.current_gamemode == 0:
+		get_parent().player_fail()
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -131,7 +142,7 @@ func _process(delta):
 	hud_clutch.text = ['clutch disengaged', 'clutch engaged'][int(clutch_engaged)]
 	hud_rotor_rpm.text = 'rotor rpm: ' + str(main_rotor_omega * 9.549297)
 	hud_engine_rpm.text = 'engine rpm: ' + str(engine_omega * 9.549297)
-	hud_altitude.text = 'altitude: ' + str(int(global_position.y)) + ' m'
+	hud_altitude.text = 'altitude: ' + str(int(global_position.y * 3.28084)) + ' ft'
 
 func _physics_process(_delta):
 	#kinda working cyclic control by offsetting the position of where the force is being applied along the rotor disc
@@ -257,9 +268,9 @@ func _on_hook_area_body_entered(body):
 		hooked_object = body
 
 func _on_main_rotor_disc_area_body_entered(body):
-	main_rotor_broken = true
+	rotor_broken(0)
 func _on_tail_rotor_disc_area_body_entered(body):
-	tail_rotor_broken = true
+	rotor_broken(1)
 
 func _on_body_entered(body):
 	#print(1)

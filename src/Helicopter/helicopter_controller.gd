@@ -26,6 +26,8 @@ extends RigidBody3D
 
 @onready var cam_pivot_y = $CamPivotY
 @onready var cam_pivot_z = $CamPivotY/CamPivotZ
+@onready var cam_spring_arm = $CamPivotY/CamPivotZ/CameraSpringArm
+@onready var camera = $CamPivotY/CamPivotZ/CameraSpringArm/Camera3D
 
 @onready var hud_collective = $HUD/HBoxContainer/VBoxContainer2/Collective
 @onready var hud_cyclic = $HUD/HBoxContainer/VBoxContainer2/Cyclic
@@ -62,10 +64,11 @@ var cyclic = Vector2()
 
 var hooked_object = null
 
+var player_moving_camera = false
+
 func die(immediate=false):
 	#get_tree().change_scene_to_file("res://World/world_0.tscn")
 	dead = true
-	print("boom")
 	if GlobalScript.current_gamemode == 1:
 		get_parent().player_die()
 	elif GlobalScript.current_gamemode == 0:
@@ -81,8 +84,9 @@ func rotor_broken(rotor):
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	cam_spring_arm.add_excluded_object(self)
 	
-	print(engine_power_curve.sample(1))
+	#print(engine_power_curve.sample(1))
 	main_rotor_prev_pos = main_rotor_pos_ind.global_position
 	
 	if GlobalScript.flightschool_checkpoint[3]:
@@ -93,17 +97,27 @@ func _ready():
 		belt_tension = 1.0
 
 func _input(event):
+	player_moving_camera = false
 	if event is InputEventMouseMotion:
 		cam_pivot_y.rotate_y(-event.relative.x * mouse_sensitivity) 
 		cam_pivot_z.rotate_z(-event.relative.y * mouse_sensitivity) 
 		cam_pivot_z.rotation.z = clamp(cam_pivot_z.rotation.z, -PI/2, PI/2)
+		player_moving_camera = true
 
 func _process(delta):
 	#camera control
+	
 	cam_pivot_y.global_position = global_position
 	
-	cam_pivot_y.rotation.y += Input.get_axis("camera_right", "camera_left")  * camera_rotation_speed * delta
-	cam_pivot_z.rotation.z += Input.get_axis("camera_down", "camera_up")  * camera_rotation_speed * delta
+	#cam_pivot_y.global_position = cam_pivot_y.global_position.lerp(global_position, delta * 10)
+	
+	#cam_pivot_y.rotation.y += Input.get_axis("camera_right", "camera_left") * camera_rotation_speed * delta
+	#if !player_moving_camera:
+		#cam_pivot_y.quaternion = cam_pivot_y.quaternion.slerp(quaternion, delta * 5)
+		#cam_pivot_y.rotation.z = 0
+		#cam_pivot_y.rotation.x = 0
+	
+	cam_pivot_z.rotation.z += Input.get_axis("camera_down", "camera_up") * camera_rotation_speed * delta
 	cam_pivot_z.rotation.z = clamp(cam_pivot_z.rotation.z, -PI/2, PI/2)
 	
 	#helicopter control
@@ -268,7 +282,7 @@ func _integrate_forces(state):
 	if linear_velocity.length() > 0.001 and state.get_contact_count():
 		var collision_normal = state.get_contact_local_normal(0)
 		normal_relative_velocity = collision_normal * (linear_velocity.dot(collision_normal) / pow(collision_normal.length(), 2))
-	if normal_relative_velocity.length() > 2:
+	if normal_relative_velocity.length() > 5:
 		die()
 	#if !state.get_contact_count(): return
 	#if state.get_contact_impulse(0).length() > 1500:

@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://chgilug5mdge"]
+[gd_scene load_steps=10 format=3 uid="uid://chgilug5mdge"]
 
 [ext_resource type="Script" path="res://World/flight_school.gd" id="1_olm0b"]
 [ext_resource type="FontFile" uid="uid://dofuod4wkjojk" path="res://Fonts/FreeMonoBold.otf" id="2_21qwc"]
 [ext_resource type="FontFile" uid="uid://2c0clvecpiwo" path="res://Fonts/DejaVuSans.ttf" id="2_a4ch0"]
 [ext_resource type="Environment" uid="uid://ckc2air8sqx7r" path="res://World/sunny_environment.tres" id="2_uk8rx"]
 [ext_resource type="PackedScene" uid="uid://c17g4xyv6h8t2" path="res://World/Models/game_map_1.glb" id="3_557wv"]
+[ext_resource type="PackedScene" uid="uid://qggmhiv5oib7" path="res://World/Models/game_map_1_prop_colliders.glb" id="6_x2frn"]
 [ext_resource type="PackedScene" uid="uid://crx38qtc48mgg" path="res://Helicopter/Helicopter1/helicopter_1_0.tscn" id="7_qbfnc"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sq0vu"]
@@ -177,6 +178,9 @@ directional_shadow_max_distance = 500.0
 [node name="EndingCamera" type="Camera3D" parent="."]
 
 [node name="game_map_1" parent="." instance=ExtResource("3_557wv")]
+
+[node name="game_map_1_prop_colliders" parent="." instance=ExtResource("6_x2frn")]
+visible = false
 
 [node name="Helipad" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.4737, -0.35421, -138.555)

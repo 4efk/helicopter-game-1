@@ -96,8 +96,8 @@ func finish_task():
 		ui_finish.show()
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		GlobalScript.flightschool_checkpoint = GlobalScript.DEFAULT_FLIGHTSCHOOL_CHECKPOINT.duplicate()
-		ending_camera.global_position = player_helicopter.get_node("CamPivotY/CamPivotZ/Camera3D").global_position
-		ending_camera.global_rotation = player_helicopter.get_node("CamPivotY/CamPivotZ/Camera3D").global_rotation
+		ending_camera.global_position = player_helicopter.camera.global_position
+		ending_camera.global_rotation = player_helicopter.camera.global_rotation
 		ending_camera.current = true
 		return
 	
@@ -138,6 +138,8 @@ func player_fail(dead=false, immediate=false):
 		fail_timer.start()
 
 func _ready():
+	print(GlobalScript.flightschool_checkpoint)
+	
 	type_instruction_text(0)
 	assigned_task = true
 	current_task = GlobalScript.flightschool_checkpoint[0]
@@ -145,6 +147,7 @@ func _ready():
 	checkpoint_pos = GlobalScript.flightschool_checkpoint[1]
 	player_helicopter.global_rotation_degrees =  GlobalScript.flightschool_checkpoint[2]
 	checkpoint_rot = GlobalScript.flightschool_checkpoint[2]
+	checkpoint_engine_state = GlobalScript.flightschool_checkpoint[3]
 	#current_task = 6
 
 func _process(delta):
@@ -252,9 +255,9 @@ func _on_fail_timer_timeout():
 	print("klawrjnasdjfbasedhjbfc")
 	ui_fail.show()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	ending_camera.global_position = player_helicopter.get_node("CamPivotY/CamPivotZ/Camera3D").global_position
-	ending_camera.global_rotation = player_helicopter.get_node("CamPivotY/CamPivotZ/Camera3D").global_rotation
-	player_helicopter.get_node("CamPivotY/CamPivotZ/Camera3D").current = false
+	ending_camera.global_position = player_helicopter.camera.global_position
+	ending_camera.global_rotation = player_helicopter.camera.global_rotation
+	player_helicopter.camera.current = false
 	ending_camera.current = true
 
 func _on_main_menu_button_pressed():

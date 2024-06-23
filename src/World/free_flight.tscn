@@ -1,11 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://p6uo11oo7lyf"]
+[gd_scene load_steps=6 format=3 uid="uid://p6uo11oo7lyf"]
 
 [ext_resource type="Script" path="res://World/free_flight.gd" id="1_0iu0b"]
 [ext_resource type="Environment" uid="uid://ckc2air8sqx7r" path="res://World/sunny_environment.tres" id="2_2ykme"]
 [ext_resource type="PackedScene" uid="uid://c17g4xyv6h8t2" path="res://World/Models/game_map_1.glb" id="3_5mrxy"]
+[ext_resource type="PackedScene" uid="uid://qggmhiv5oib7" path="res://World/Models/game_map_1_prop_colliders.glb" id="4_stidw"]
 [ext_resource type="PackedScene" uid="uid://crx38qtc48mgg" path="res://Helicopter/Helicopter1/helicopter_1_0.tscn" id="6_5rsq8"]
 
 [node name="free_flight" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.101, 0)
 script = ExtResource("1_0iu0b")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -17,6 +19,9 @@ shadow_enabled = true
 directional_shadow_max_distance = 500.0
 
 [node name="game_map_1" parent="." instance=ExtResource("3_5mrxy")]
+
+[node name="game_map_1_prop_colliders" parent="." instance=ExtResource("4_stidw")]
+visible = false
 
 [node name="PlayerHelicopter" parent="." instance=ExtResource("6_5rsq8")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 28.3168, 0.895032, -138.934)

@@ -3762,7 +3762,7 @@ top_level = true
 [node name="CameraSpringArm" type="SpringArm3D" parent="CamPivotY/CamPivotZ"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
 spring_length = 10.0
-margin = 0.1
+margin = 0.2
 
 [node name="Camera3D" type="Camera3D" parent="CamPivotY/CamPivotZ/CameraSpringArm"]
 transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, 4.37114e-07, 0, 10)

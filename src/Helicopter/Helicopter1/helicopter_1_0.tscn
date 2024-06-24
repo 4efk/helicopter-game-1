@@ -4365,7 +4365,11 @@ mesh = SubResource("SphereMesh_ko5jw")
 top_level = true
 visible = false
 
+[node name="EngineCooldownTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_entered" from="helicopter1_model_2/MainRotorDiscArea" to="." method="_on_main_rotor_disc_area_body_entered"]
 [connection signal="body_entered" from="helicopter1_model_2/TailRotorDiscArea" to="." method="_on_tail_rotor_disc_area_body_entered"]
 [connection signal="body_entered" from="Hook/HookArea" to="." method="_on_hook_area_body_entered"]
+[connection signal="timeout" from="EngineCooldownTimer" to="." method="_on_engine_cooldown_timer_timeout"]

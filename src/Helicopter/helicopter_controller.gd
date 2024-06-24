@@ -18,6 +18,7 @@ extends RigidBody3D
 
 @onready var main_rotor_pos_ind = $helicopter1_model_2/MainRotorPosInd
 @onready var tail_rotor_pos_ind = $helicopter1_model_2/TailRotorPosInd
+@onready var engine_cooldown_timer = $EngineCooldownTimer
 
 @onready var moving_main_rotor_part = $helicopter1_model_2/MovingMainRotorPart
 @onready var moving_tail_rotor_part = $helicopter1_model_2/MovingTailRotorPart
@@ -44,6 +45,8 @@ var dead = false
 
 var engine_working = true
 var engine_on = false
+var engine_cooled = true
+var engine_alpha = 0.0 # [rad/s^2]
 var engine_omega = 0.0 # max 282.74 [rad/s] = 2700 rpm
 var engine_throttle = 0.25
 var clutch_engaged = false
@@ -93,7 +96,7 @@ func _ready():
 	if GlobalScript.flightschool_checkpoint[3]:
 		engine_on = true
 		main_rotor_omega = 55.5
-		#engine_omega = 282.74
+		engine_omega = 282.74
 		clutch_engaged = true
 		belt_tension = 1.0
 
@@ -107,7 +110,6 @@ func _input(event):
 
 func _process(delta):
 	#camera control
-	
 	cam_pivot_y.global_position = global_position
 	
 	#cam_pivot_y.global_position = cam_pivot_y.global_position.lerp(global_position, delta * 10)
@@ -122,23 +124,27 @@ func _process(delta):
 	cam_pivot_z.rotation.z = clamp(cam_pivot_z.rotation.z, -PI/2, PI/2)
 	
 	#helicopter control
-	if Input.is_action_just_pressed("start_engine"):
+	if Input.is_action_just_pressed("start_engine") and engine_cooled:
 		engine_on = !engine_on
+		engine_cooled = false
+		engine_cooldown_timer.start()
 	engine_on = bool(int(engine_on) * int(engine_working))
+	if engine_on:
+		engine_alpha = [141.37, 282.7433/8][int(engine_omega > 141.37)]
+	else:
+		engine_alpha = -282.7433 / 6
 	
-	var engine_alpha = 282.7433/(engine_omega+10.0) + 4
-	print(engine_alpha)
-	
-	engine_omega += engine_alpha
-	#engine_omega = 282.74 * int(engine_on)
+	engine_omega += engine_alpha * delta
 	engine_omega = clampf(engine_omega, 0, 282.7433)
 	
+	if engine_on and engine_omega < 130 and engine_omega > (530/2700 * main_rotor_omega) and belt_tension > 0.5:
+		engine_on = false
+		main_rotor_omega += 0.05
+	
 	if Input.is_action_just_pressed('engage_clutch'):
-		print(1)
 		clutch_engaged = !clutch_engaged
-		clutch_movement = [-1.0/3.0, 1][int(clutch_engaged)]
+		clutch_movement = [-1.0, 1][int(clutch_engaged)]
 		
-	print(clutch_movement)
 	belt_tension += delta/10 * clutch_movement
 	belt_tension = clampf(belt_tension, 0.05, 1.0)
 	#if belt_tension == 1.0 or belt_tension == 0.05:
@@ -266,7 +272,7 @@ func _physics_process(_delta):
 	#
 	var main_rotor_inertia = 0.5 * 2 * 12 * pow(main_rotor_radius, 2)
 	main_rotor_alpha = 0.0
-	if engine_omega > 0:
+	if engine_omega > (530/2700 * main_rotor_omega):
 		main_rotor_alpha = engine_power_curve.sample(engine_omega/282.74) * 745.7 / engine_omega * (282.7433 / 55.5) / main_rotor_inertia * int(engine_on)
 		#print(engine_power_curve.sample(engine_omega/282.74) * 745.7 / engine_omega * (282.7433 / 55.5) / main_rotor_inertia * 0.5 * 2 * 12 * pow(main_rotor_radius, 2))
 	
@@ -316,3 +322,6 @@ func _on_body_entered(body):
 	#print(1)
 	#print(get_inverse_inertia_tensor())
 	pass
+
+func _on_engine_cooldown_timer_timeout():
+	engine_cooled = true

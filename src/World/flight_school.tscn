@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://chgilug5mdge"]
+[gd_scene load_steps=14 format=3 uid="uid://chgilug5mdge"]
 
 [ext_resource type="Script" path="res://World/flight_school.gd" id="1_olm0b"]
 [ext_resource type="FontFile" uid="uid://dofuod4wkjojk" path="res://Fonts/FreeMonoBold.otf" id="2_21qwc"]
@@ -7,6 +7,96 @@
 [ext_resource type="PackedScene" uid="uid://c17g4xyv6h8t2" path="res://World/Models/game_map_1.glb" id="3_557wv"]
 [ext_resource type="PackedScene" uid="uid://qggmhiv5oib7" path="res://World/Models/game_map_1_prop_colliders.glb" id="6_x2frn"]
 [ext_resource type="PackedScene" uid="uid://crx38qtc48mgg" path="res://Helicopter/Helicopter1/helicopter_1_0.tscn" id="7_qbfnc"]
+
+[sub_resource type="Animation" id="Animation_iburx"]
+resource_name = "show_checklist"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position:y")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1311.6, 327.9]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_awau5"]
+resource_name = "hide_checklist"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position:y")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [327.9, 1311.6]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="Animation" id="Animation_y6qar"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1395.8, 327.9)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gq6su"]
+_data = {
+"RESET": SubResource("Animation_y6qar"),
+"hide_checklist": SubResource("Animation_awau5"),
+"show_checklist": SubResource("Animation_iburx")
+}
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sq0vu"]
 size = Vector3(15, 0.1, 15)
@@ -20,34 +110,79 @@ script = ExtResource("1_olm0b")
 
 [node name="WorldUI" type="CanvasLayer" parent="."]
 
-[node name="ChecklistText" type="TextEdit" parent="WorldUI"]
+[node name="StartupChecklist" type="Control" parent="WorldUI"]
 visible = false
-anchors_preset = 1
+custom_minimum_size = Vector2(424.2, 424.2)
+layout_mode = 3
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -397.0
-offset_top = 363.0
-offset_right = -97.0
-offset_bottom = 630.0
+anchor_bottom = 1.0
+offset_left = 1395.8
+offset_top = 327.9
+offset_right = 1820.0
+offset_bottom = 752.1
 grow_horizontal = 0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_colors/background_color = Color(1, 1, 1, 1)
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="WorldUI/StartupChecklist"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WorldUI/StartupChecklist"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = -15.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="WorldUI/StartupChecklist/VBoxContainer"]
+layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
-theme_override_colors/font_readonly_color = Color(0, 0, 0, 1)
-theme_override_colors/font_placeholder_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/selection_color = Color(0, 0, 0, 1)
-theme_override_colors/current_line_color = Color(0, 0, 0, 1)
-theme_override_colors/caret_color = Color(0, 0, 0, 1)
-theme_override_colors/caret_background_color = Color(0, 0, 0, 1)
-theme_override_colors/word_highlighted_color = Color(0, 0, 0, 1)
-theme_override_colors/search_result_color = Color(0, 0, 0, 1)
-theme_override_colors/search_result_border_color = Color(0, 0, 0, 1)
-text = "STARTUP CHECKLIST
-"
-editable = false
+theme_override_fonts/font = ExtResource("2_21qwc")
+theme_override_font_sizes/font_size = 24
+text = "STARTUP CHECKLIST"
+horizontal_alignment = 1
+
+[node name="Legend" type="Label" parent="WorldUI/StartupChecklist/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_21qwc")
+theme_override_font_sizes/font_size = 24
+text = ".... [keyboard]/[controller]"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Label" parent="WorldUI/StartupChecklist/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+
+[node name="Spacer2" type="Label" parent="WorldUI/StartupChecklist/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+
+[node name="Contents" type="Label" parent="WorldUI/StartupChecklist/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_21qwc")
+theme_override_font_sizes/font_size = 24
+text = "Collective ............ DOWN
+Clutch .......... DISENGAGED
+Engine ......... ON [1]/[UP]
+Clutch ... ENGAGE [2]/[DOWN]"
+
+[node name="ChecklistAnimationPlayer" type="AnimationPlayer" parent="WorldUI/StartupChecklist"]
+libraries = {
+"": SubResource("AnimationLibrary_gq6su")
+}
 
 [node name="FinishUI" type="Control" parent="WorldUI"]
 visible = false

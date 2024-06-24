@@ -1,6 +1,7 @@
 extends Node3D
 
-@onready var ui_checklist = $WorldUI/ChecklistText
+@onready var ui_checklist = $WorldUI/StartupChecklist
+@onready var checklist_animation_player = $WorldUI/StartupChecklist/ChecklistAnimationPlayer
 @onready var ui_instruction_text = $WorldUI/VBoxContainer/InstructionText
 @onready var ui_finish = $WorldUI/FinishUI
 @onready var ui_fail = $WorldUI/FailUI
@@ -66,7 +67,7 @@ var tasks = [
 ]
 
 var autorotation_height = 150 # [m]
-var longer_flight_distance = 200 # [m]
+var longer_flight_distance = 150 # [m]
 
 var current_message = 0
 var typing = false
@@ -138,8 +139,6 @@ func player_fail(dead=false, immediate=false):
 		fail_timer.start()
 
 func _ready():
-	print(GlobalScript.flightschool_checkpoint)
-	
 	type_instruction_text(0)
 	assigned_task = true
 	current_task = GlobalScript.flightschool_checkpoint[0]
@@ -154,8 +153,10 @@ func _process(delta):
 	#print((player_helicopter.global_position - $Helipad2.global_position).length())
 	
 	if Input.is_action_just_pressed("show_extra_ui"):
-		ui_checklist.visible = !ui_checklist.visible
-	
+		#ui_checklist.visible = !ui_checklist.visible
+		if !checklist_animation_player.is_playing():
+			checklist_animation_player.play(["hide_checklist", "show_checklist"][int(!ui_checklist.visible)])
+		
 	#print(current_task, current_message)
 	#print(hovering_timer)
 	

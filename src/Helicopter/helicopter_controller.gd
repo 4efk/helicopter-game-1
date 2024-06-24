@@ -48,6 +48,7 @@ var engine_omega = 0.0 # max 282.74 [rad/s] = 2700 rpm
 var engine_throttle = 0.25
 var clutch_engaged = false
 var belt_tension = 0.05 #max 1.0 (fraction)
+var clutch_movement = 0
 
 var main_rotor_omega = 0.0 # max 55.50 # angular velocity [rad/s]
 var tail_rotor_omega = 0.0 #max 355.62828798 # angular velocity [rad/s]
@@ -92,7 +93,7 @@ func _ready():
 	if GlobalScript.flightschool_checkpoint[3]:
 		engine_on = true
 		main_rotor_omega = 55.5
-		engine_omega = 282.74
+		#engine_omega = 282.74
 		clutch_engaged = true
 		belt_tension = 1.0
 
@@ -124,11 +125,24 @@ func _process(delta):
 	if Input.is_action_just_pressed("start_engine"):
 		engine_on = !engine_on
 	engine_on = bool(int(engine_on) * int(engine_working))
-	engine_omega = 282.74 * int(engine_on)
+	
+	var engine_alpha = 282.7433/(engine_omega+10.0) + 4
+	print(engine_alpha)
+	
+	engine_omega += engine_alpha
+	#engine_omega = 282.74 * int(engine_on)
+	engine_omega = clampf(engine_omega, 0, 282.7433)
+	
 	if Input.is_action_just_pressed('engage_clutch'):
-		clutch_engaged = true
-	belt_tension += delta/10 * int(clutch_engaged)
-	belt_tension = clampf(belt_tension, 0.0, 1.0)
+		print(1)
+		clutch_engaged = !clutch_engaged
+		clutch_movement = [-1.0/3.0, 1][int(clutch_engaged)]
+		
+	print(clutch_movement)
+	belt_tension += delta/10 * clutch_movement
+	belt_tension = clampf(belt_tension, 0.05, 1.0)
+	#if belt_tension == 1.0 or belt_tension == 0.05:
+		#clutch_movement = 0
 	
 	cyclic = Input.get_vector("cyclic_forward", "cyclic_backward", "cyclic_right", "cyclic_left")
 	

@@ -15,6 +15,8 @@ extends RigidBody3D
 
 @export var camera_rotation_speed = 2
 @export var mouse_sensitivity = 0.005
+@export var default_camera_rotation = Vector3(0, PI, -PI/6)
+@export var camera_recover_speed = 1
 
 @onready var main_rotor_pos_ind = $helicopter1_model_2/MainRotorPosInd
 @onready var tail_rotor_pos_ind = $helicopter1_model_2/TailRotorPosInd
@@ -29,6 +31,7 @@ extends RigidBody3D
 @onready var cam_pivot_z = $CamPivotY/CamPivotZ
 @onready var cam_spring_arm = $CamPivotY/CamPivotZ/CameraSpringArm
 @onready var camera = $CamPivotY/CamPivotZ/CameraSpringArm/Camera3D
+@onready var camera_reset_timer = $CameraResetTimer
 
 @onready var hud_collective = $HUD/HBoxContainer/VBoxContainer2/Collective
 @onready var hud_cyclic = $HUD/HBoxContainer/VBoxContainer2/Cyclic
@@ -89,6 +92,8 @@ func rotor_broken(rotor):
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	cam_spring_arm.add_excluded_object(self)
+	cam_pivot_y.rotation.y = default_camera_rotation.y
+	cam_pivot_z.rotation.z = default_camera_rotation.z
 	
 	#print(engine_power_curve.sample(1))
 	main_rotor_prev_pos = main_rotor_pos_ind.global_position
@@ -101,25 +106,27 @@ func _ready():
 		belt_tension = 1.0
 
 func _input(event):
-	player_moving_camera = false
 	if event is InputEventMouseMotion:
 		cam_pivot_y.rotate_y(-event.relative.x * mouse_sensitivity) 
 		cam_pivot_z.rotate_z(-event.relative.y * mouse_sensitivity) 
 		cam_pivot_z.rotation.z = clamp(cam_pivot_z.rotation.z, -PI/2, PI/2)
 		player_moving_camera = true
+		camera_reset_timer.start()
 
 func _process(delta):
 	#camera control
 	cam_pivot_y.global_position = global_position
 	
-	#cam_pivot_y.global_position = cam_pivot_y.global_position.lerp(global_position, delta * 10)
+	if !player_moving_camera and linear_velocity.length() > 1 and !Input.get_vector("camera_up", "camera_down", "camera_right", "camera_left"):
+		cam_pivot_y.quaternion = cam_pivot_y.quaternion.slerp(quaternion, camera_recover_speed * delta)
+		cam_pivot_z.quaternion = cam_pivot_z.quaternion.slerp(Quaternion.from_euler(default_camera_rotation), camera_recover_speed * delta)
+
+		cam_pivot_y.rotation.z = 0
+		cam_pivot_y.rotation.x = 0
+		cam_pivot_z.rotation.y = 0
+		cam_pivot_z.rotation.x = 0
 	
-	#cam_pivot_y.rotation.y += Input.get_axis("camera_right", "camera_left") * camera_rotation_speed * delta
-	#if !player_moving_camera:
-		#cam_pivot_y.quaternion = cam_pivot_y.quaternion.slerp(quaternion, delta * 5)
-		#cam_pivot_y.rotation.z = 0
-		#cam_pivot_y.rotation.x = 0
-	
+	cam_pivot_y.rotation.y += Input.get_axis("camera_right", "camera_left") * camera_rotation_speed * delta
 	cam_pivot_z.rotation.z += Input.get_axis("camera_down", "camera_up") * camera_rotation_speed * delta
 	cam_pivot_z.rotation.z = clamp(cam_pivot_z.rotation.z, -PI/2, PI/2)
 	
@@ -325,3 +332,6 @@ func _on_body_entered(body):
 
 func _on_engine_cooldown_timer_timeout():
 	engine_cooled = true
+
+func _on_camera_reset_timer_timeout():
+	player_moving_camera = false

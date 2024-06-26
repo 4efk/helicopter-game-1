@@ -1,7 +1,8 @@
-[gd_scene load_steps=251 format=3 uid="uid://crx38qtc48mgg"]
+[gd_scene load_steps=252 format=3 uid="uid://crx38qtc48mgg"]
 
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_b05el"]
 [ext_resource type="Texture2D" uid="uid://cd5a324ph2lmj" path="res://Helicopter/Helicopter1/helicopter1_model_2_apollo_palette-1x.png" id="2_27dgy"]
+[ext_resource type="Texture2D" uid="uid://t4fd22hyw730" path="res://UI/path1.svg" id="2_cf467"]
 [ext_resource type="FontFile" uid="uid://2c0clvecpiwo" path="res://Fonts/DejaVuSans.ttf" id="2_xj8a3"]
 [ext_resource type="Texture2D" uid="uid://clo68j71rj7e1" path="res://Helicopter/Helicopter1/helicopter1_model_2_fuselage_roughness.png" id="3_gqg1e"]
 [ext_resource type="FontFile" uid="uid://dl3dn6caktlny" path="res://Fonts/DejaVuSansMono.ttf" id="3_y4wv2"]
@@ -3678,6 +3679,33 @@ engine_power_curve = SubResource("Curve_xwg30")
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
+[node name="HelicopterHUD" type="VBoxContainer" parent="HUD"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -476.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="LightRow" type="HBoxContainer" parent="HUD/HelicopterHUD"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FirstRow" type="HBoxContainer" parent="HUD/HelicopterHUD"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="HUD/HelicopterHUD/FirstRow"]
+layout_mode = 2
+texture = ExtResource("2_cf467")
+expand_mode = 3
+
+[node name="SecondRow" type="HBoxContainer" parent="HUD/HelicopterHUD"]
+layout_mode = 2
+size_flags_vertical = 3
+
 [node name="HBoxContainer" type="HBoxContainer" parent="HUD"]
 anchors_preset = 12
 anchor_top = 1.0
@@ -3744,6 +3772,9 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("2_xj8a3")
 theme_override_font_sizes/font_size = 32
 text = "altitude: 0 m"
+
+[node name="LightRow" type="VBoxContainer" parent="HUD/HBoxContainer"]
+layout_mode = 2
 
 [node name="FPSCounter" type="Label" parent="HUD"]
 visible = false

@@ -117,6 +117,8 @@ func _process(delta):
 	#camera control
 	cam_pivot_y.global_position = global_position
 	
+	print(linear_velocity)
+	
 	if !player_moving_camera and linear_velocity.length() > 1 and !Input.get_vector("camera_up", "camera_down", "camera_right", "camera_left"):
 		cam_pivot_y.quaternion = cam_pivot_y.quaternion.slerp(quaternion, camera_recover_speed * delta)
 		cam_pivot_z.quaternion = cam_pivot_z.quaternion.slerp(Quaternion.from_euler(default_camera_rotation), camera_recover_speed * delta)

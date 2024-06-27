@@ -2,7 +2,8 @@ extends Node3D
 
 @onready var ui_checklist = $WorldUI/StartupChecklist
 @onready var checklist_animation_player = $WorldUI/StartupChecklist/ChecklistAnimationPlayer
-@onready var ui_instruction_text = $WorldUI/VBoxContainer/InstructionText
+@onready var ui_instruction_text = $WorldUI/IntructionMessage/VBoxContainer/InstructionText
+@onready var ui_intruction_message = $WorldUI/IntructionMessage
 @onready var ui_finish = $WorldUI/FinishUI
 @onready var ui_fail = $WorldUI/FailUI
 
@@ -38,11 +39,11 @@ var instruction_messages = [
 	], [
 		"So you need to learn how to land the helicopter when you loose the engine, but don't worry, it's not as hard as it sounds.",
 		"The most important thing is lowering the collective immediately after losing power.",
-		"After only 3 seconds, the rotor system will lose so much inertia that it won't be possible to land safely. During autorotation, rotor inertia is the most valuable thing you have",
+		"After only 3 seconds, the rotor system will lose so much inertia that it won't be possible to land safely. During autorotation, rotor inertia is the most valuable thing you have.",
 		"Next thing you do is glide, with the drag coefficient similar to a parachute, the rotor disk will prevent us from falling like a rock.",
 		"Then about 6 feet off the ground you're gonna flare the collective back up to cushion the landing.",
 		"First autos are rarely ever soft landings, but a good landing is the one you walk away from, haha.",
-		"So first gain some altitude, get up to about 500 feet. Also, try to position yourself in front of where you wanna land. Preferably a long flat stretch",
+		"So first gain some altitude, get up to about 500 feet. Also, try to position yourself in front of where you wanna land. Preferably a long flat stretch.",
 	], [
 		"That's plenty. Now skip this message when you're ready. I'll cut the engine. \n [tab]"
 	], [
@@ -84,6 +85,8 @@ var checkpoint_pos = Vector3()
 var checkpoint_rot = Vector3()
 var checkpoint_engine_state = false
 
+var change_ending_camera = true
+
 func type_instruction_text(message_number):
 	ui_instruction_text.text = ''
 	typing_timer = 0
@@ -97,9 +100,12 @@ func finish_task():
 		ui_finish.show()
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		GlobalScript.flightschool_checkpoint = GlobalScript.DEFAULT_FLIGHTSCHOOL_CHECKPOINT.duplicate()
-		ending_camera.global_position = player_helicopter.camera.global_position
-		ending_camera.global_rotation = player_helicopter.camera.global_rotation
+		ending_camera.global_position = get_viewport().get_camera_3d().global_position
+		ending_camera.global_rotation = get_viewport().get_camera_3d().global_rotation
 		ending_camera.current = true
+		if !GlobalScript.game_save['freeflight_unlocked']:
+			GlobalScript.game_save['freeflight_unlocked'] = true
+			GlobalScript.save_game()
 		return
 	
 	# HOVER MIGHT BE A BIT WEIRD HERE 
@@ -118,7 +124,6 @@ func save_checkpoint():
 	checkpoint_engine_state = player_helicopter.engine_on
 
 func player_die():
-	print("asdasd")
 	if current_task == tasks.find("second landing"):
 		current_task = tasks.find("second flight")
 	if current_task in [tasks.find('autorotation p2'), tasks.find('autorotation p3')]:
@@ -253,13 +258,14 @@ func _on_hover_area_body_exited(body):
 		hovering_timer = 0
 
 func _on_fail_timer_timeout():
-	print("klawrjnasdjfbasedhjbfc")
 	ui_fail.show()
+	ui_intruction_message.hide()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	ending_camera.global_position = player_helicopter.camera.global_position
-	ending_camera.global_rotation = player_helicopter.camera.global_rotation
-	player_helicopter.camera.current = false
-	ending_camera.current = true
+	if change_ending_camera:
+		ending_camera.global_position = get_viewport().get_camera_3d().global_position
+		ending_camera.global_rotation = get_viewport().get_camera_3d().global_rotation
+		player_helicopter.camera.current = false
+		ending_camera.current = true
 
 func _on_main_menu_button_pressed():
 	get_tree().change_scene_to_file("res://MainMenu/main_menu.tscn")

@@ -6,9 +6,13 @@ extends Node3D
 @onready var main_menu = $CanvasLayer/MainMenu
 @onready var settings = $CanvasLayer/Settings
 
+@onready var freeflight_button = $CanvasLayer/MainMenu/VBoxContainer/FFButton
+
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	GlobalScript.flightschool_checkpoint = GlobalScript.DEFAULT_FLIGHTSCHOOL_CHECKPOINT.duplicate()
+	
+	freeflight_button.disabled = !GlobalScript.game_save['freeflight_unlocked']
 
 func _process(delta):
 	var main_rotor_omega = 2

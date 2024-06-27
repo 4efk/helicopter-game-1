@@ -3712,6 +3712,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(0.647059, 0.188235, 0.188235, 1)
 theme_override_colors/font_focus_color = Color(0.647059, 0.188235, 0.188235, 1)
+theme_override_colors/font_disabled_color = Color(0.699653, 0.699653, 0.699653, 1)
 theme_override_fonts/font = ExtResource("2_w2njg")
 theme_override_font_sizes/font_size = 32
 text = "[FREE FLIGHT]"

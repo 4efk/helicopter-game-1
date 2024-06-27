@@ -1,5 +1,8 @@
 extends RigidBody3D
 
+var detached_main_rotor = preload("res://Helicopter/Helicopter1/detached_main_rotor.tscn")
+var detached_tail_rotor = preload("res://Helicopter/Helicopter1/detached_tail_rotor.tscn")
+
 @export var main_rotor_radius = 3.835 # radius of the main rotor disc [m]
 @export var main_rotor_blades_n = 2
 @export var main_rotor_collective_max = 12 # max/min angle of main rotor blades [°]; kinda made up
@@ -24,8 +27,9 @@ extends RigidBody3D
 
 @onready var moving_main_rotor_part = $helicopter1_model_2/MovingMainRotorPart
 @onready var moving_tail_rotor_part = $helicopter1_model_2/MovingTailRotorPart
-@onready var helicopter_fuselage = $helicopter1_model_2
+@onready var helicopter_form = $helicopter1_model_2
 @onready var hook = $Hook
+@onready var helicopter_exploded = $Helicopter_1_0_Exploded
 
 @onready var cam_pivot_y = $CamPivotY
 @onready var cam_pivot_z = $CamPivotY/CamPivotZ
@@ -73,24 +77,55 @@ var hooked_object = null
 
 var player_moving_camera = false
 
-func die(immediate=false):
+func die(immediate=false, explode=true):
+	if dead:
+		return
 	#get_tree().change_scene_to_file("res://World/world_0.tscn")
+	if explode:
+		disable_collision()
+		helicopter_form.hide()
+		helicopter_exploded.explode(main_rotor_omega, tail_rotor_omega)
 	dead = true
 	if GlobalScript.current_gamemode == 1:
 		get_parent().player_die()
 	elif GlobalScript.current_gamemode == 0:
 		get_parent().player_fail(true, immediate)
+		#get_parent().change_ending_camera = !explode
 
-func rotor_broken(rotor):
-	if rotor == 0:
+func rotor_broken(rotor, fling_direction=Vector3.UP):
+	var broken_before = main_rotor_broken or tail_rotor_broken
+	if rotor == 0 and !main_rotor_broken:
 		main_rotor_broken = true
-	elif rotor == 1:
+		moving_main_rotor_part.hide()
+		var detached_main_rotor_instance = detached_main_rotor.instantiate()
+		add_child(detached_main_rotor_instance)
+		var detached_main_rotor_child = get_child(get_child_count()-1)
+		detached_main_rotor_child.global_position = main_rotor_pos_ind.global_position + transform.basis.y * 1
+		detached_main_rotor_child.linear_velocity = fling_direction * randf_range(30, 50)
+		detached_main_rotor_child.angular_velocity = Vector3(0, 1, 0) * main_rotor_omega
+	elif rotor == 1 and !tail_rotor_broken:
 		tail_rotor_broken = true
-	if GlobalScript.current_gamemode == 0:
+		moving_tail_rotor_part.hide()
+		var detached_tail_rotor_instance = detached_tail_rotor.instantiate()
+		add_child(detached_tail_rotor_instance)
+		var detached_tail_rotor_child = get_child(get_child_count()-1)
+		detached_tail_rotor_child.global_position = tail_rotor_pos_ind.global_position + transform.basis.z * -1
+		detached_tail_rotor_child.linear_velocity = fling_direction * randf_range(40, 50)
+		detached_tail_rotor_child.angular_velocity = Vector3(0, 0, 1) * tail_rotor_omega
+	if GlobalScript.current_gamemode == 0 and !broken_before:
 		get_parent().player_fail()
 
+func disable_collision():
+	$"@CollisionShape3D@25131".disabled = true
+	$"@CollisionShape3D@25130".disabled = true
+	$"@CollisionShape3D@25129".disabled = true
+	$"@CollisionShape3D@25128".disabled = true
+	$"@CollisionShape3D@25127".disabled = true
+	$"@CollisionShape3D@25126".disabled = true
+
+
 func _ready():
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	cam_spring_arm.add_excluded_object(self)
 	cam_pivot_y.rotation.y = default_camera_rotation.y
 	cam_pivot_z.rotation.z = default_camera_rotation.z
@@ -117,8 +152,6 @@ func _process(delta):
 	#camera control
 	cam_pivot_y.global_position = global_position
 	
-	print(linear_velocity)
-	
 	if !player_moving_camera and linear_velocity.length() > 1 and !Input.get_vector("camera_up", "camera_down", "camera_right", "camera_left"):
 		cam_pivot_y.quaternion = cam_pivot_y.quaternion.slerp(quaternion, camera_recover_speed * delta)
 		cam_pivot_z.quaternion = cam_pivot_z.quaternion.slerp(Quaternion.from_euler(default_camera_rotation), camera_recover_speed * delta)
@@ -134,6 +167,7 @@ func _process(delta):
 	
 	#helicopter control
 	if Input.is_action_just_pressed("start_engine") and engine_cooled:
+		rotor_broken(1)
 		engine_on = !engine_on
 		engine_cooled = false
 		engine_cooldown_timer.start()
@@ -193,12 +227,12 @@ func _process(delta):
 func _physics_process(_delta):
 	#falling into water
 	if global_position.y < 0 and !dead:
-		die(true)
+		die(true, false)
 	#kinda working cyclic control by offsetting the position of where the force is being applied along the rotor disc
 	#the offset is just made up in terms of how it feels, based on nothing at all
 	#cyclic += Vector2(main_rotor_pos_ind.position.x + helicopter_form.position.x, main_rotor_pos_ind.position.z + helicopter_form.position.z)
 
-	var main_rotor_pos = to_global(Vector3(cyclic.x * main_rotor_radius/30 + main_rotor_pos_ind.position.x + helicopter_fuselage.position.x, main_rotor_pos_ind.position.y, cyclic.y * main_rotor_radius/30 + main_rotor_pos_ind.position.z + helicopter_fuselage.position.z)) - global_position
+	var main_rotor_pos = to_global(Vector3(cyclic.x * main_rotor_radius/30 + main_rotor_pos_ind.position.x + helicopter_form.position.x, main_rotor_pos_ind.position.y, cyclic.y * main_rotor_radius/30 + main_rotor_pos_ind.position.z + helicopter_form.position.z)) - global_position
 	var tail_rotor_pos = tail_rotor_pos_ind.global_position - global_position
 	
 	#main_rotor_pos += Vector3(main_rotor_pos_ind.global_position.x-global_position.x, 0, main_rotor_pos_ind.global_position.z-global_position.z)
@@ -311,7 +345,7 @@ func _integrate_forces(state):
 	if linear_velocity.length() > 0.001 and state.get_contact_count():
 		var collision_normal = state.get_contact_local_normal(0)
 		normal_relative_velocity = collision_normal * (linear_velocity.dot(collision_normal) / pow(collision_normal.length(), 2))
-	if normal_relative_velocity.length() > 5:
+	if normal_relative_velocity.length() > 4:
 		die()
 	#if !state.get_contact_count(): return
 	#if state.get_contact_impulse(0).length() > 1500:
@@ -323,9 +357,9 @@ func _on_hook_area_body_entered(body):
 		hooked_object = body
 
 func _on_main_rotor_disc_area_body_entered(body):
-	rotor_broken(0)
+	rotor_broken(0, (global_position - body.global_position).normalized())
 func _on_tail_rotor_disc_area_body_entered(body):
-	rotor_broken(1)
+	rotor_broken(1,  (global_position - body.global_position).normalized())
 
 func _on_body_entered(body):
 	#print(1)

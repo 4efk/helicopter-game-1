@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://b14fxdxro67f"]
+
+[ext_resource type="Script" path="res://Helicopter/explosion_follow_camera.gd" id="1_p6f73"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_kkhyf"]
+radius = 0.25
+
+[node name="ExplosionFollowCamera" type="RigidBody3D"]
+top_level = true
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+script = ExtResource("1_p6f73")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+fov = 90.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_kkhyf")

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ccnnrrn4yvyl5"
-path="res://.godot/imported/altimeter_pointer.svg-b9c94a1b3da0c0735e12b96f3b872a64.ctex"
+uid="uid://cdlxvq0xqi1uv"
+path="res://.godot/imported/light_off.svg-e84a166d8c53320931b59c66d28307b7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/altimeter_pointer.svg"
-dest_files=["res://.godot/imported/altimeter_pointer.svg-b9c94a1b3da0c0735e12b96f3b872a64.ctex"]
+source_file="res://UI/HUD/light_off.svg"
+dest_files=["res://.godot/imported/light_off.svg-e84a166d8c53320931b59c66d28307b7.ctex"]
 
 [params]
 

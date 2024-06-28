@@ -149,6 +149,7 @@ func _input(event):
 		camera_reset_timer.start()
 
 func _process(delta):
+	print(linear_velocity)
 	#camera control
 	cam_pivot_y.global_position = global_position
 	

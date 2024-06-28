@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bsaf8yegjv74c"
-path="res://.godot/imported/vertical_speed_base.svg-82545cf49500f87a56973fb93a701ac8.ctex"
+path="res://.godot/imported/vertical_speed_base.svg-968139737c688b6df60b24b5c14abf8e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/vertical_speed_base.svg"
-dest_files=["res://.godot/imported/vertical_speed_base.svg-82545cf49500f87a56973fb93a701ac8.ctex"]
+source_file="res://UI/HUD/vertical_speed_base.svg"
+dest_files=["res://.godot/imported/vertical_speed_base.svg-968139737c688b6df60b24b5c14abf8e.ctex"]
 
 [params]
 

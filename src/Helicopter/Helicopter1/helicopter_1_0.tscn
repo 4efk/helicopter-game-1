@@ -1,10 +1,12 @@
-[gd_scene load_steps=253 format=3 uid="uid://crx38qtc48mgg"]
+[gd_scene load_steps=255 format=3 uid="uid://crx38qtc48mgg"]
 
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_b05el"]
 [ext_resource type="Texture2D" uid="uid://cd5a324ph2lmj" path="res://Helicopter/Helicopter1/helicopter1_model_2_apollo_palette-1x.png" id="2_27dgy"]
-[ext_resource type="Texture2D" uid="uid://bsaf8yegjv74c" path="res://UI/vertical_speed_base.svg" id="2_qhhg2"]
+[ext_resource type="Texture2D" uid="uid://cdlxvq0xqi1uv" path="res://UI/HUD/light_off.svg" id="2_h7cxv"]
+[ext_resource type="Texture2D" uid="uid://bsaf8yegjv74c" path="res://UI/HUD/vertical_speed_base.svg" id="2_qhhg2"]
 [ext_resource type="FontFile" uid="uid://2c0clvecpiwo" path="res://Fonts/DejaVuSans.ttf" id="2_xj8a3"]
 [ext_resource type="Texture2D" uid="uid://clo68j71rj7e1" path="res://Helicopter/Helicopter1/helicopter1_model_2_fuselage_roughness.png" id="3_gqg1e"]
+[ext_resource type="Texture2D" uid="uid://cvd0ipdj7sfuh" path="res://UI/HUD/light_on.svg" id="3_pohl6"]
 [ext_resource type="FontFile" uid="uid://dl3dn6caktlny" path="res://Fonts/DejaVuSansMono.ttf" id="3_y4wv2"]
 [ext_resource type="ArrayMesh" uid="uid://dmpqve1wdlbr0" path="res://Helicopter/Helicopter1/helicopter1_collision_shape.obj" id="4_oql48"]
 [ext_resource type="Texture2D" uid="uid://cgfotahctuhbf" path="res://Helicopter/Helicopter1/helicopter1_painted_parts_white_apollo_palette-1x.png" id="6_ktjy8"]
@@ -3694,6 +3696,18 @@ mouse_filter = 2
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="HUD/HelicopterHUD/LightRow"]
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("2_h7cxv")
+expand_mode = 2
+
+[node name="TextureRect2" type="TextureRect" parent="HUD/HelicopterHUD/LightRow"]
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_pohl6")
+expand_mode = 2
 
 [node name="FirstRow" type="HBoxContainer" parent="HUD/HelicopterHUD"]
 layout_mode = 2

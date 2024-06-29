@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://clqeheo8hg4b"
-path="res://.godot/imported/vertical_speed_base.svg-968139737c688b6df60b24b5c14abf8e.ctex"
+uid="uid://day0fwnrsyuhi"
+path="res://.godot/imported/general_pointer.svg-6cb8aa11b9fd0213ff40ab077a1ffcf2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/HUD/vertical_speed_base.svg"
-dest_files=["res://.godot/imported/vertical_speed_base.svg-968139737c688b6df60b24b5c14abf8e.ctex"]
+source_file="res://UI/HUD/general_pointer.svg"
+dest_files=["res://.godot/imported/general_pointer.svg-6cb8aa11b9fd0213ff40ab077a1ffcf2.ctex"]
 
 [params]
 

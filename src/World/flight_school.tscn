@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://chgilug5mdge"]
+[gd_scene load_steps=19 format=3 uid="uid://chgilug5mdge"]
 
 [ext_resource type="Script" path="res://World/flight_school.gd" id="1_olm0b"]
 [ext_resource type="FontFile" uid="uid://dofuod4wkjojk" path="res://Fonts/FreeMonoBold.otf" id="2_21qwc"]
@@ -101,6 +101,60 @@ _data = {
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_44ikg"]
 bg_color = Color(1, 1, 1, 1)
 
+[sub_resource type="Animation" id="Animation_ws4ju"]
+resource_name = "start_timer"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect3:position:y")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [33.49, 161.0]
+}
+
+[sub_resource type="Animation" id="Animation_eqyf7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect3:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(533, 33.5)]
+}
+
+[sub_resource type="Animation" id="Animation_nolj5"]
+resource_name = "stop_timer"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect3:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(533, 161), Vector2(533, 33.59)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fcy50"]
+_data = {
+"RESET": SubResource("Animation_eqyf7"),
+"start_timer": SubResource("Animation_ws4ju"),
+"stop_timer": SubResource("Animation_nolj5")
+}
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_sq0vu"]
 size = Vector3(15, 0.1, 15)
 
@@ -121,10 +175,10 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 1395.8
+offset_left = -524.2
 offset_top = 327.9
-offset_right = 1820.0
-offset_bottom = 7232.1
+offset_right = -100.0
+offset_bottom = 752.1
 grow_horizontal = 0
 grow_vertical = 2
 mouse_filter = 2
@@ -315,6 +369,52 @@ offset_bottom = 184.0
 grow_horizontal = 2
 mouse_filter = 2
 
+[node name="ColorRect3" type="ColorRect" parent="WorldUI/IntructionMessage"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.15
+anchor_right = 0.5
+anchor_bottom = 1.693
+offset_left = -37.0
+offset_top = -127.5
+offset_right = 38.0
+offset_bottom = -127.52
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="HoveringTimerText" type="Label" parent="WorldUI/IntructionMessage/ColorRect3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_21qwc")
+theme_override_font_sizes/font_size = 32
+text = "21"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ColorRect4" type="ColorRect" parent="WorldUI/IntructionMessage/ColorRect3"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.15
+anchor_right = 0.5
+anchor_bottom = 1.693
+offset_left = -32.5
+offset_top = -82.4
+offset_right = 42.5
+offset_bottom = -47.668
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
 [node name="ColorRect2" type="ColorRect" parent="WorldUI/IntructionMessage"]
 custom_minimum_size = Vector2(1140, 101)
 layout_mode = 1
@@ -365,6 +465,11 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_44ikg")
 text = "After only 3 seconds, the rotor system will lose so much inertia that it won't be possible to land safely. During autorotation, rotor inertia is the most valuable thing you have.
 [tab]"
 autowrap_mode = 3
+
+[node name="TimeAnimationPlayer" type="AnimationPlayer" parent="WorldUI/IntructionMessage"]
+libraries = {
+"": SubResource("AnimationLibrary_fcy50")
+}
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("2_uk8rx")

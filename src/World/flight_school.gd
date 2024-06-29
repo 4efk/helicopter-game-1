@@ -3,7 +3,9 @@ extends Node3D
 @onready var ui_checklist = $WorldUI/StartupChecklist
 @onready var checklist_animation_player = $WorldUI/StartupChecklist/ChecklistAnimationPlayer
 @onready var ui_instruction_text = $WorldUI/IntructionMessage/VBoxContainer/InstructionText
+@onready var time_animation_player = $WorldUI/IntructionMessage/TimeAnimationPlayer
 @onready var ui_intruction_message = $WorldUI/IntructionMessage
+@onready var hovering_timer_text = $WorldUI/IntructionMessage/ColorRect3/HoveringTimerText
 @onready var ui_finish = $WorldUI/FinishUI
 @onready var ui_fail = $WorldUI/FailUI
 
@@ -214,6 +216,8 @@ func _process(delta):
 			print(hovering_timer)
 		if current_task == tasks.find('hover') and hovering_timer > 30:
 			finish_task()
+	
+	hovering_timer_text.text = str(int(hovering_timer))
 
 func _on_helipad_body_entered(body):
 	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('first flight'):
@@ -252,10 +256,12 @@ func _on_helipad_2_body_exited(body):
 func _on_hover_area_body_entered(body):
 	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('hover'):
 		task_progress = 1
+		time_animation_player.play("start_timer")
 func _on_hover_area_body_exited(body):
 	if body.is_in_group('helicopter') and assigned_task and current_task == tasks.find('hover'):
 		task_progress = 0
 		hovering_timer = 0
+		time_animation_player.play("stop_timer")
 
 func _on_fail_timer_timeout():
 	ui_fail.show()

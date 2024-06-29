@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://clqeheo8hg4b"
-path="res://.godot/imported/vertical_speed_base.svg-968139737c688b6df60b24b5c14abf8e.ctex"
+uid="uid://beyr0q5nit06g"
+path="res://.godot/imported/airspeed_base.svg-a0de23a83028bad566c5784f50cd3aa2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/HUD/vertical_speed_base.svg"
-dest_files=["res://.godot/imported/vertical_speed_base.svg-968139737c688b6df60b24b5c14abf8e.ctex"]
+source_file="res://UI/HUD/airspeed_base.svg"
+dest_files=["res://.godot/imported/airspeed_base.svg-a0de23a83028bad566c5784f50cd3aa2.ctex"]
 
 [params]
 

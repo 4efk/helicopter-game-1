@@ -1,16 +1,21 @@
-[gd_scene load_steps=255 format=3 uid="uid://crx38qtc48mgg"]
+[gd_scene load_steps=260 format=3 uid="uid://crx38qtc48mgg"]
 
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_b05el"]
 [ext_resource type="Texture2D" uid="uid://cd5a324ph2lmj" path="res://Helicopter/Helicopter1/helicopter1_model_2_apollo_palette-1x.png" id="2_27dgy"]
 [ext_resource type="Texture2D" uid="uid://cdlxvq0xqi1uv" path="res://UI/HUD/light_off.svg" id="2_h7cxv"]
-[ext_resource type="Texture2D" uid="uid://bsaf8yegjv74c" path="res://UI/HUD/vertical_speed_base.svg" id="2_qhhg2"]
 [ext_resource type="FontFile" uid="uid://2c0clvecpiwo" path="res://Fonts/DejaVuSans.ttf" id="2_xj8a3"]
 [ext_resource type="Texture2D" uid="uid://clo68j71rj7e1" path="res://Helicopter/Helicopter1/helicopter1_model_2_fuselage_roughness.png" id="3_gqg1e"]
 [ext_resource type="Texture2D" uid="uid://cvd0ipdj7sfuh" path="res://UI/HUD/light_on.svg" id="3_pohl6"]
 [ext_resource type="FontFile" uid="uid://dl3dn6caktlny" path="res://Fonts/DejaVuSansMono.ttf" id="3_y4wv2"]
+[ext_resource type="Texture2D" uid="uid://doheu2lm80ujm" path="res://UI/HUD/instrument_panel.svg" id="4_4wxrb"]
 [ext_resource type="ArrayMesh" uid="uid://dmpqve1wdlbr0" path="res://Helicopter/Helicopter1/helicopter1_collision_shape.obj" id="4_oql48"]
+[ext_resource type="Texture2D" uid="uid://cq5qwjcgn254i" path="res://UI/HUD/RPM_pointer.svg" id="6_crxra"]
 [ext_resource type="Texture2D" uid="uid://cgfotahctuhbf" path="res://Helicopter/Helicopter1/helicopter1_painted_parts_white_apollo_palette-1x.png" id="6_ktjy8"]
 [ext_resource type="Texture2D" uid="uid://b8kk4a3pk3clb" path="res://Helicopter/Helicopter1/helicopter1_painted_parts_white_fuselage_roughness.png" id="7_7rv2w"]
+[ext_resource type="Texture2D" uid="uid://cp1fy2elye18h" path="res://UI/HUD/RPM_base.svg" id="7_st1gh"]
+[ext_resource type="Texture2D" uid="uid://day0fwnrsyuhi" path="res://UI/HUD/general_pointer.svg" id="8_b1764"]
+[ext_resource type="Texture2D" uid="uid://bjia0vhjomxdh" path="res://UI/HUD/altimeter_base.svg" id="8_p8j52"]
+[ext_resource type="Texture2D" uid="uid://b4gnr2ual1eh6" path="res://UI/HUD/collective_base.svg" id="9_1kqx4"]
 [ext_resource type="PackedScene" uid="uid://bl2er138id4gf" path="res://Helicopter/Helicopter1/helicopter_1_0_exploded.tscn" id="10_mvs5c"]
 
 [sub_resource type="Curve" id="Curve_xwg30"]
@@ -3682,50 +3687,6 @@ engine_power_curve = SubResource("Curve_xwg30")
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
-[node name="HelicopterHUD" type="VBoxContainer" parent="HUD"]
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -601.0
-grow_horizontal = 2
-grow_vertical = 0
-mouse_filter = 2
-
-[node name="LightRow" type="HBoxContainer" parent="HUD/HelicopterHUD"]
-layout_mode = 2
-size_flags_vertical = 3
-mouse_filter = 2
-
-[node name="TextureRect" type="TextureRect" parent="HUD/HelicopterHUD/LightRow"]
-layout_mode = 2
-mouse_filter = 2
-texture = ExtResource("2_h7cxv")
-expand_mode = 2
-
-[node name="TextureRect2" type="TextureRect" parent="HUD/HelicopterHUD/LightRow"]
-layout_mode = 2
-mouse_filter = 2
-texture = ExtResource("3_pohl6")
-expand_mode = 2
-
-[node name="FirstRow" type="HBoxContainer" parent="HUD/HelicopterHUD"]
-layout_mode = 2
-size_flags_vertical = 3
-mouse_filter = 2
-alignment = 1
-
-[node name="TextureRect" type="TextureRect" parent="HUD/HelicopterHUD/FirstRow"]
-layout_mode = 2
-mouse_filter = 2
-texture = ExtResource("2_qhhg2")
-expand_mode = 3
-
-[node name="SecondRow" type="HBoxContainer" parent="HUD/HelicopterHUD"]
-layout_mode = 2
-size_flags_vertical = 3
-mouse_filter = 2
-
 [node name="HBoxContainer" type="HBoxContainer" parent="HUD"]
 anchors_preset = 12
 anchor_top = 1.0
@@ -3808,6 +3769,132 @@ theme_override_fonts/font = ExtResource("3_y4wv2")
 theme_override_font_sizes/font_size = 32
 text = "60"
 horizontal_alignment = 1
+
+[node name="InstrumentPanel" type="Sprite2D" parent="HUD"]
+position = Vector2(960, 935.09)
+texture = ExtResource("4_4wxrb")
+
+[node name="RPMBase" type="Sprite2D" parent="HUD/InstrumentPanel"]
+position = Vector2(210, 25)
+scale = Vector2(0.225, 0.225)
+texture = ExtResource("7_st1gh")
+
+[node name="ColorRect" type="ColorRect" parent="HUD/InstrumentPanel/RPMBase"]
+offset_left = -275.555
+offset_top = -18.1777
+offset_right = -235.555
+offset_bottom = 21.8223
+color = Color(0.0823529, 0.113725, 0.156863, 1)
+
+[node name="EnginePointer" type="Sprite2D" parent="HUD/InstrumentPanel/RPMBase"]
+position = Vector2(-261, -0.4)
+texture = ExtResource("6_crxra")
+centered = false
+offset = Vector2(-7, -5.5)
+
+[node name="RotorPointer" type="Sprite2D" parent="HUD/InstrumentPanel/RPMBase"]
+position = Vector2(261, 0)
+texture = ExtResource("6_crxra")
+centered = false
+offset = Vector2(-318, -5)
+
+[node name="AltimeterBase" type="Sprite2D" parent="HUD/InstrumentPanel"]
+position = Vector2(-210, 25)
+scale = Vector2(0.225, 0.225)
+texture = ExtResource("8_p8j52")
+
+[node name="Pointer" type="Sprite2D" parent="HUD/InstrumentPanel/AltimeterBase"]
+texture = ExtResource("8_b1764")
+offset = Vector2(0, -160)
+
+[node name="CollectiveBase" type="Sprite2D" parent="HUD/InstrumentPanel"]
+position = Vector2(0, 25)
+scale = Vector2(0.225, 0.225)
+texture = ExtResource("9_1kqx4")
+
+[node name="Pointer" type="Sprite2D" parent="HUD/InstrumentPanel/CollectiveBase"]
+texture = ExtResource("8_b1764")
+offset = Vector2(0, -160)
+
+[node name="EngineLight" type="Sprite2D" parent="HUD/InstrumentPanel"]
+position = Vector2(-150, -100)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_h7cxv")
+
+[node name="On" type="Sprite2D" parent="HUD/InstrumentPanel/EngineLight"]
+texture = ExtResource("3_pohl6")
+
+[node name="Label" type="Label" parent="HUD/InstrumentPanel/EngineLight"]
+offset_left = -370.0
+offset_top = -80.0
+offset_right = -98.0
+offset_bottom = 80.0
+theme_override_fonts/font = ExtResource("2_xj8a3")
+theme_override_font_sizes/font_size = 48
+text = "ENGINE
+ON"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ClutchLight" type="Sprite2D" parent="HUD/InstrumentPanel"]
+position = Vector2(-50, -100)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_h7cxv")
+
+[node name="On" type="Sprite2D" parent="HUD/InstrumentPanel/ClutchLight"]
+texture = ExtResource("3_pohl6")
+
+[node name="Label" type="Label" parent="HUD/InstrumentPanel/ClutchLight"]
+offset_left = -370.0
+offset_top = -80.0
+offset_right = -98.0
+offset_bottom = 80.0
+theme_override_fonts/font = ExtResource("2_xj8a3")
+theme_override_font_sizes/font_size = 48
+text = "CLUTCH
+ENG."
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ClutchMovingLight" type="Sprite2D" parent="HUD/InstrumentPanel"]
+position = Vector2(50, -100)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_h7cxv")
+
+[node name="On" type="Sprite2D" parent="HUD/InstrumentPanel/ClutchMovingLight"]
+texture = ExtResource("3_pohl6")
+
+[node name="Label" type="Label" parent="HUD/InstrumentPanel/ClutchMovingLight"]
+offset_left = -370.0
+offset_top = -80.0
+offset_right = -98.0
+offset_bottom = 80.0
+theme_override_fonts/font = ExtResource("2_xj8a3")
+theme_override_font_sizes/font_size = 48
+text = "CLUTCH
+MOVING"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LowRPMLight" type="Sprite2D" parent="HUD/InstrumentPanel"]
+position = Vector2(150, -100)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_h7cxv")
+
+[node name="On" type="Sprite2D" parent="HUD/InstrumentPanel/LowRPMLight"]
+texture = ExtResource("3_pohl6")
+
+[node name="Label" type="Label" parent="HUD/InstrumentPanel/LowRPMLight"]
+offset_left = -370.0
+offset_top = -80.0
+offset_right = -98.0
+offset_bottom = 80.0
+theme_override_fonts/font = ExtResource("2_xj8a3")
+theme_override_font_sizes/font_size = 48
+text = "LOW
+RPM"
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="CamPivotY" type="Node3D" parent="."]
 top_level = true

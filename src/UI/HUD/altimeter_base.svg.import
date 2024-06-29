@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://clqeheo8hg4b"
-path="res://.godot/imported/vertical_speed_base.svg-968139737c688b6df60b24b5c14abf8e.ctex"
+uid="uid://bjia0vhjomxdh"
+path="res://.godot/imported/altimeter_base.svg-e6090a602d6e74dcf1844251c2f31141.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/HUD/vertical_speed_base.svg"
-dest_files=["res://.godot/imported/vertical_speed_base.svg-968139737c688b6df60b24b5c14abf8e.ctex"]
+source_file="res://UI/HUD/altimeter_base.svg"
+dest_files=["res://.godot/imported/altimeter_base.svg-e6090a602d6e74dcf1844251c2f31141.ctex"]
 
 [params]
 

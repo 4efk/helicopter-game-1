@@ -37,14 +37,19 @@ var detached_tail_rotor = preload("res://Helicopter/Helicopter1/detached_tail_ro
 @onready var camera = $CamPivotY/CamPivotZ/CameraSpringArm/Camera3D
 @onready var camera_reset_timer = $CameraResetTimer
 
-@onready var hud_collective = $HUD/HBoxContainer/VBoxContainer2/Collective
+@onready var hud_collective = $HUD/InstrumentPanel/CollectiveBase
 @onready var hud_cyclic = $HUD/HBoxContainer/VBoxContainer2/Cyclic
 @onready var hud_antitorque = $HUD/HBoxContainer/VBoxContainer2/TailRotorCollective
+@onready var hud_rpm = $HUD/InstrumentPanel/RPMBase
 @onready var hud_rotor_rpm = $HUD/HBoxContainer/VBoxContainer/RPM
 @onready var hud_engine = $HUD/HBoxContainer/VBoxContainer/Engine
 @onready var hud_engine_rpm = $HUD/HBoxContainer/VBoxContainer/EngineRPM
 @onready var hud_clutch = $HUD/HBoxContainer/VBoxContainer/Clutch
-@onready var hud_altitude = $HUD/HBoxContainer/VBoxContainer2/Altitude
+@onready var hud_altitude = $HUD/InstrumentPanel/AltimeterBase
+@onready var hud_light_engine = $HUD/InstrumentPanel/EngineLight
+@onready var hud_light_clutch = $HUD/InstrumentPanel/ClutchLight
+@onready var hud_light_clutch_moving = $HUD/InstrumentPanel/ClutchMovingLight
+@onready var hud_light_low_rpm = $HUD/InstrumentPanel/LowRPMLight
 
 @onready var fps_counter = $HUD/FPSCounter
 
@@ -102,7 +107,7 @@ func rotor_broken(rotor, fling_direction=Vector3.UP):
 		var detached_main_rotor_child = get_child(get_child_count()-1)
 		detached_main_rotor_child.global_position = main_rotor_pos_ind.global_position + transform.basis.y * 1
 		detached_main_rotor_child.linear_velocity = fling_direction * randf_range(30, 50)
-		detached_main_rotor_child.angular_velocity = Vector3(0, 1, 0) * main_rotor_omega
+		detached_main_rotor_child.angular_velocity = transform.basis.y * main_rotor_omega
 	elif rotor == 1 and !tail_rotor_broken:
 		tail_rotor_broken = true
 		moving_tail_rotor_part.hide()
@@ -111,11 +116,12 @@ func rotor_broken(rotor, fling_direction=Vector3.UP):
 		var detached_tail_rotor_child = get_child(get_child_count()-1)
 		detached_tail_rotor_child.global_position = tail_rotor_pos_ind.global_position + transform.basis.z * -1
 		detached_tail_rotor_child.linear_velocity = fling_direction * randf_range(40, 50)
-		detached_tail_rotor_child.angular_velocity = Vector3(0, 0, 1) * tail_rotor_omega
+		detached_tail_rotor_child.angular_velocity = transform.basis.z * tail_rotor_omega
 	if GlobalScript.current_gamemode == 0 and !broken_before:
 		get_parent().player_fail()
 
 func disable_collision():
+	# TODO USE set_deferred()
 	$"@CollisionShape3D@25131".disabled = true
 	$"@CollisionShape3D@25130".disabled = true
 	$"@CollisionShape3D@25129".disabled = true
@@ -125,7 +131,7 @@ func disable_collision():
 
 
 func _ready():
-	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	cam_spring_arm.add_excluded_object(self)
 	cam_pivot_y.rotation.y = default_camera_rotation.y
 	cam_pivot_z.rotation.z = default_camera_rotation.z
@@ -149,7 +155,6 @@ func _input(event):
 		camera_reset_timer.start()
 
 func _process(delta):
-	print(linear_velocity)
 	#camera control
 	cam_pivot_y.global_position = global_position
 	
@@ -168,7 +173,6 @@ func _process(delta):
 	
 	#helicopter control
 	if Input.is_action_just_pressed("start_engine") and engine_cooled:
-		rotor_broken(1)
 		engine_on = !engine_on
 		engine_cooled = false
 		engine_cooldown_timer.start()
@@ -216,14 +220,21 @@ func _process(delta):
 	#setting HUD values
 	fps_counter.text = str(Engine.get_frames_per_second())
 	
-	hud_collective.text = 'collective: ' + str(main_rotor_collective_pitch) + ' °'
-	hud_antitorque.text = 'tr collective: ' + str(tail_rotor_collective_pitch) + ' °'
-	hud_cyclic.text = 'cyclic: ' + str(cyclic)
-	hud_engine.text = ['engine off', 'engine on'][int(engine_on)]
-	hud_clutch.text = ['clutch disengaged', 'clutch engaged'][int(clutch_engaged)]
-	hud_rotor_rpm.text = 'rotor rpm: ' + str(main_rotor_omega * 9.549297)
-	hud_engine_rpm.text = 'engine rpm: ' + str(engine_omega * 9.549297)
-	hud_altitude.text = 'altitude: ' + str(int(global_position.y * 3.28084)) + ' ft'
+	hud_rpm.get_node("EnginePointer").rotation_degrees = 50 - (81.5 * engine_omega / 282.7433) # 50 - -31.5 °  81.5
+	hud_rpm.get_node("RotorPointer").rotation_degrees = -50 + (81.5 * main_rotor_omega / 55.5) # 50 - -31.5 °  81.5
+	hud_altitude.get_child(0).rotation_degrees = clamp(global_position.y * 3.28084 / 975 * 334, 0, 334)
+	hud_collective.get_child(0).rotation_degrees = main_rotor_collective_pitch / main_rotor_collective_max * 334
+	hud_light_engine.get_child(0).visible = engine_on and engine_working
+	hud_light_clutch.get_child(0).visible = clutch_engaged
+	hud_light_clutch_moving.get_child(0).visible = not belt_tension in [0.05, 1.0]
+	hud_light_low_rpm.get_child(0).visible = main_rotor_omega > 10 and main_rotor_omega < 45
+	
+	#hud_cyclic.text = 'cyclic: ' + str(cyclic)
+	#hud_engine.text = ['engine off', 'engine on'][int(engine_on)]
+	#hud_clutch.text = ['clutch disengaged', 'clutch engaged'][int(clutch_engaged)]
+	#hud_rotor_rpm.text = 'rotor rpm: ' + str(main_rotor_omega * 9.549297)
+	#hud_engine_rpm.text = 'engine rpm: ' + str(engine_omega * 9.549297)
+	#hud_altitude.text = 'altitude: ' + str(int(global_position.y * 3.28084)) + ' ft'
 
 func _physics_process(_delta):
 	#falling into water

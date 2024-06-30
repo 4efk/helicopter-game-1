@@ -155,6 +155,9 @@ func _input(event):
 		camera_reset_timer.start()
 
 func _process(delta):
+	$extra_water_1.global_position = global_position
+	$extra_water_1.global_position.y = 10.1
+	
 	#camera control
 	cam_pivot_y.global_position = global_position
 	
@@ -225,7 +228,7 @@ func _process(delta):
 	hud_altitude.get_child(0).rotation_degrees = clamp(global_position.y * 3.28084 / 975 * 334, 0, 334)
 	hud_collective.get_child(0).rotation_degrees = main_rotor_collective_pitch / main_rotor_collective_max * 334
 	hud_light_engine.get_child(0).visible = engine_on and engine_working
-	hud_light_clutch.get_child(0).visible = clutch_engaged
+	hud_light_clutch.get_child(0).visible = belt_tension == 1.0
 	hud_light_clutch_moving.get_child(0).visible = not belt_tension in [0.05, 1.0]
 	hud_light_low_rpm.get_child(0).visible = main_rotor_omega > 10 and main_rotor_omega < 45
 	

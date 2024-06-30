@@ -1,4 +1,4 @@
-[gd_scene load_steps=260 format=3 uid="uid://crx38qtc48mgg"]
+[gd_scene load_steps=261 format=3 uid="uid://crx38qtc48mgg"]
 
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_b05el"]
 [ext_resource type="Texture2D" uid="uid://cd5a324ph2lmj" path="res://Helicopter/Helicopter1/helicopter1_model_2_apollo_palette-1x.png" id="2_27dgy"]
@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://bjia0vhjomxdh" path="res://UI/HUD/altimeter_base.svg" id="8_p8j52"]
 [ext_resource type="Texture2D" uid="uid://b4gnr2ual1eh6" path="res://UI/HUD/collective_base.svg" id="9_1kqx4"]
 [ext_resource type="PackedScene" uid="uid://bl2er138id4gf" path="res://Helicopter/Helicopter1/helicopter_1_0_exploded.tscn" id="10_mvs5c"]
+[ext_resource type="PackedScene" uid="uid://ddjdjwodnw6eg" path="res://World/Models/extra_water_1.glb" id="18_oa6qe"]
 
 [sub_resource type="Curve" id="Curve_xwg30"]
 max_value = 124.0
@@ -4516,6 +4517,9 @@ one_shot = true
 [node name="CameraResetTimer" type="Timer" parent="."]
 wait_time = 10.0
 one_shot = true
+
+[node name="extra_water_1" parent="." instance=ExtResource("18_oa6qe")]
+top_level = true
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_entered" from="helicopter1_model_2/MainRotorDiscArea" to="." method="_on_main_rotor_disc_area_body_entered"]

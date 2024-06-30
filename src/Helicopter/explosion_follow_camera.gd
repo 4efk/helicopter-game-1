@@ -11,3 +11,5 @@ func _ready():
 func _process(delta):
 	#global_position = get_parent().global_position + Vector3(8, 8, 8)
 	camera.look_at(look_at_position)
+	#if global_position.y < 1:
+		#global_position.y = 1.25

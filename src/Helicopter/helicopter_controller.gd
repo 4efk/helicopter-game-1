@@ -156,7 +156,7 @@ func _input(event):
 
 func _process(delta):
 	$extra_water_1.global_position = global_position
-	$extra_water_1.global_position.y = 10.1
+	$extra_water_1.global_position.y =  10
 	
 	#camera control
 	cam_pivot_y.global_position = global_position
@@ -176,6 +176,7 @@ func _process(delta):
 	
 	#helicopter control
 	if Input.is_action_just_pressed("start_engine") and engine_cooled:
+		die()
 		engine_on = !engine_on
 		engine_cooled = false
 		engine_cooldown_timer.start()

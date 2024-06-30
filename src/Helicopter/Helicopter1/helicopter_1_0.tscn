@@ -1,4 +1,4 @@
-[gd_scene load_steps=261 format=3 uid="uid://crx38qtc48mgg"]
+[gd_scene load_steps=265 format=3 uid="uid://crx38qtc48mgg"]
 
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_b05el"]
 [ext_resource type="Texture2D" uid="uid://cd5a324ph2lmj" path="res://Helicopter/Helicopter1/helicopter1_model_2_apollo_palette-1x.png" id="2_27dgy"]
@@ -17,7 +17,6 @@
 [ext_resource type="Texture2D" uid="uid://bjia0vhjomxdh" path="res://UI/HUD/altimeter_base.svg" id="8_p8j52"]
 [ext_resource type="Texture2D" uid="uid://b4gnr2ual1eh6" path="res://UI/HUD/collective_base.svg" id="9_1kqx4"]
 [ext_resource type="PackedScene" uid="uid://bl2er138id4gf" path="res://Helicopter/Helicopter1/helicopter_1_0_exploded.tscn" id="10_mvs5c"]
-[ext_resource type="PackedScene" uid="uid://ddjdjwodnw6eg" path="res://World/Models/extra_water_1.glb" id="18_oa6qe"]
 
 [sub_resource type="Curve" id="Curve_xwg30"]
 max_value = 124.0
@@ -3678,6 +3677,66 @@ material = SubResource("StandardMaterial3D_imgra")
 radius = 0.25
 height = 0.5
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lnjba"]
+resource_name = "water_1"
+cull_mode = 2
+shading_mode = 0
+albedo_color = Color(0.235294, 0.368627, 0.545098, 1)
+texture_filter = 2
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_puffj"]
+_surfaces = [{
+"aabb": AABB(-250, 0, -250, 500, 1e-05, 500),
+"format": 34896613377,
+"index_count": 6,
+"index_data": PackedByteArray(0, 0, 3, 0, 1, 0, 0, 0, 2, 0, 3, 0),
+"name": "water_1",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0)
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_3ttyl"]
+resource_name = "extra_water_1_Plane_018"
+_surfaces = [{
+"aabb": AABB(-250, 0, -250, 500, 1e-05, 500),
+"attribute_data": PackedByteArray(81, 11, 255, 127, 81, 11, 255, 127, 81, 11, 255, 127, 81, 11, 255, 127),
+"format": 34896613399,
+"index_count": 6,
+"index_data": PackedByteArray(0, 0, 3, 0, 1, 0, 0, 0, 2, 0, 3, 0),
+"material": SubResource("StandardMaterial3D_lnjba"),
+"name": "water_1",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 255, 255, 255, 191, 255, 255, 0, 0, 255, 255, 255, 191, 0, 0, 0, 0, 0, 0, 255, 191, 255, 255, 0, 0, 0, 0, 255, 191, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127)
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_puffj")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_xcmyc"]
+resource_name = "extra_water_1_Plane_018"
+_surfaces = [{
+"aabb": AABB(-250, 0, -250, 500, 1e-05, 500),
+"attribute_data": PackedByteArray(81, 11, 255, 127, 81, 11, 255, 127, 81, 11, 255, 127, 81, 11, 255, 127),
+"format": 34896613399,
+"index_count": 6,
+"index_data": PackedByteArray(0, 0, 3, 0, 1, 0, 0, 0, 2, 0, 3, 0),
+"material": SubResource("StandardMaterial3D_lnjba"),
+"name": "water_1",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 255, 255, 255, 191, 255, 255, 0, 0, 255, 255, 255, 191, 0, 0, 0, 0, 0, 0, 255, 191, 255, 255, 0, 0, 0, 0, 255, 191, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127)
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_puffj")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s625e"]
+size = Vector3(500, 5, 500)
+
 [node name="Helicopter0_1" type="RigidBody3D" groups=["helicopter"]]
 mass = 500.0
 center_of_mass_mode = 1
@@ -4518,8 +4577,101 @@ one_shot = true
 wait_time = 10.0
 one_shot = true
 
-[node name="extra_water_1" parent="." instance=ExtResource("18_oa6qe")]
+[node name="extra_water_1" type="Node3D" parent="."]
 top_level = true
+
+[node name="Plane" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 500, -10.054, 0)
+mesh = SubResource("ArrayMesh_3ttyl")
+skeleton = NodePath("")
+
+[node name="Plane_001" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 500, -10.054, -500)
+mesh = SubResource("ArrayMesh_3ttyl")
+skeleton = NodePath("")
+
+[node name="Plane_003" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10.054, -500)
+mesh = SubResource("ArrayMesh_3ttyl")
+skeleton = NodePath("")
+
+[node name="Plane_004" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -500, -10.054, -500)
+mesh = SubResource("ArrayMesh_3ttyl")
+skeleton = NodePath("")
+
+[node name="Plane_005" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -500, -10.054, 0)
+mesh = SubResource("ArrayMesh_3ttyl")
+skeleton = NodePath("")
+
+[node name="Plane_006" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -500, -10.054, 500)
+mesh = SubResource("ArrayMesh_3ttyl")
+skeleton = NodePath("")
+
+[node name="Plane_007" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10.054, 500)
+mesh = SubResource("ArrayMesh_3ttyl")
+skeleton = NodePath("")
+
+[node name="Plane_008" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 500, -10.054, 500)
+mesh = SubResource("ArrayMesh_3ttyl")
+skeleton = NodePath("")
+
+[node name="Plane_009" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, -10.054, -1500)
+mesh = SubResource("ArrayMesh_xcmyc")
+skeleton = NodePath("")
+
+[node name="Plane_010" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 1500, -10.054, -1500)
+mesh = SubResource("ArrayMesh_xcmyc")
+skeleton = NodePath("")
+
+[node name="Plane_011" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 1500, -10.054, 0)
+mesh = SubResource("ArrayMesh_xcmyc")
+skeleton = NodePath("")
+
+[node name="Plane_012" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, -10.054, 1500)
+mesh = SubResource("ArrayMesh_xcmyc")
+skeleton = NodePath("")
+
+[node name="Plane_013" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 1500, -10.054, 1500)
+mesh = SubResource("ArrayMesh_xcmyc")
+skeleton = NodePath("")
+
+[node name="Plane_014" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -1500, -10.054, -1500)
+mesh = SubResource("ArrayMesh_xcmyc")
+skeleton = NodePath("")
+
+[node name="Plane_015" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -1500, -10.054, 1500)
+mesh = SubResource("ArrayMesh_xcmyc")
+skeleton = NodePath("")
+
+[node name="Plane_016" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -1500, -10.054, 0)
+mesh = SubResource("ArrayMesh_xcmyc")
+skeleton = NodePath("")
+
+[node name="Plane_017" type="MeshInstance3D" parent="extra_water_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10.054, 0)
+mesh = SubResource("ArrayMesh_3ttyl")
+skeleton = NodePath("")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="extra_water_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12.5, 0)
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="extra_water_1/StaticBody3D"]
+shape = SubResource("BoxShape3D_s625e")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_entered" from="helicopter1_model_2/MainRotorDiscArea" to="." method="_on_main_rotor_disc_area_body_entered"]

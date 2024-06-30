@@ -3748,6 +3748,7 @@ engine_power_curve = SubResource("Curve_xwg30")
 [node name="HUD" type="CanvasLayer" parent="."]
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HUD"]
+visible = false
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0

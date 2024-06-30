@@ -13,6 +13,8 @@ func _ready():
 	GlobalScript.flightschool_checkpoint = GlobalScript.DEFAULT_FLIGHTSCHOOL_CHECKPOINT.duplicate()
 	
 	freeflight_button.disabled = !GlobalScript.game_save['freeflight_unlocked']
+	
+	$CanvasLayer/MainMenu/VBoxContainer/FSButton.grab_focus()
 
 func _process(delta):
 	var main_rotor_omega = 2
@@ -32,3 +34,6 @@ func _on_button_2_pressed():
 func _on_settings_button_pressed():
 	main_menu.hide()
 	settings.show()
+
+func _on_quit_button_pressed():
+	get_tree().quit()

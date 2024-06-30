@@ -1,0 +1,75 @@
+[gd_scene load_steps=4 format=3 uid="uid://c53t64j5il08k"]
+
+[ext_resource type="Script" path="res://UI/pause_menu.gd" id="1_b7ccu"]
+[ext_resource type="FontFile" uid="uid://2c0clvecpiwo" path="res://Fonts/DejaVuSans.ttf" id="2_etfki"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6m0ws"]
+
+[node name="PauseMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_b7ccu")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.784314)
+
+[node name="HBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_etfki")
+theme_override_font_sizes/font_size = 32
+text = "GAME PAUSED"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_etfki")
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+
+[node name="RetryButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.458824, 0.654902, 0.262745, 1)
+theme_override_colors/font_hover_color = Color(0.309804, 0.560784, 0.729412, 1)
+theme_override_colors/font_focus_color = Color(0.309804, 0.560784, 0.729412, 1)
+theme_override_fonts/font = ExtResource("2_etfki")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_6m0ws")
+text = "[respawn]"
+flat = true
+
+[node name="MainMenuButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.458824, 0.654902, 0.262745, 1)
+theme_override_colors/font_hover_color = Color(0.309804, 0.560784, 0.729412, 1)
+theme_override_colors/font_focus_color = Color(0.309804, 0.560784, 0.729412, 1)
+theme_override_fonts/font = ExtResource("2_etfki")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_6m0ws")
+text = "[main menu]"
+flat = true
+
+[connection signal="pressed" from="HBoxContainer/RetryButton" to="." method="_on_retry_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]

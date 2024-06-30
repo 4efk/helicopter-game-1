@@ -37,6 +37,7 @@ var detached_tail_rotor = preload("res://Helicopter/Helicopter1/detached_tail_ro
 @onready var camera = $CamPivotY/CamPivotZ/CameraSpringArm/Camera3D
 @onready var camera_reset_timer = $CameraResetTimer
 
+@onready var hud = $HUD
 @onready var hud_collective = $HUD/InstrumentPanel/CollectiveBase
 @onready var hud_cyclic = $HUD/HBoxContainer/VBoxContainer2/Cyclic
 @onready var hud_antitorque = $HUD/HBoxContainer/VBoxContainer2/TailRotorCollective
@@ -91,6 +92,7 @@ func die(immediate=false, explode=true):
 		helicopter_form.hide()
 		helicopter_exploded.explode(main_rotor_omega, tail_rotor_omega)
 	dead = true
+	hud.hide()
 	if GlobalScript.current_gamemode == 1:
 		get_parent().player_die()
 	elif GlobalScript.current_gamemode == 0:
@@ -119,6 +121,10 @@ func rotor_broken(rotor, fling_direction=Vector3.UP):
 		detached_tail_rotor_child.angular_velocity = transform.basis.z * tail_rotor_omega
 	if GlobalScript.current_gamemode == 0 and !broken_before:
 		get_parent().player_fail()
+		hud.hide()
+	if GlobalScript.current_gamemode == 1 and !broken_before:
+		get_parent().player_die()
+		hud.hide()
 
 func disable_collision():
 	# TODO USE set_deferred()
@@ -176,7 +182,6 @@ func _process(delta):
 	
 	#helicopter control
 	if Input.is_action_just_pressed("start_engine") and engine_cooled:
-		die()
 		engine_on = !engine_on
 		engine_cooled = false
 		engine_cooldown_timer.start()

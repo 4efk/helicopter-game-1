@@ -1,4 +1,4 @@
-[gd_scene load_steps=237 format=3 uid="uid://dd457rl1u3dew"]
+[gd_scene load_steps=238 format=3 uid="uid://dd457rl1u3dew"]
 
 [ext_resource type="Script" path="res://MainMenu/main_menu.gd" id="1_y4a7q"]
 [ext_resource type="FontFile" uid="uid://2c0clvecpiwo" path="res://Fonts/DejaVuSans.ttf" id="2_w2njg"]
@@ -8,6 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://cgfotahctuhbf" path="res://Helicopter/Helicopter1/helicopter1_painted_parts_white_apollo_palette-1x.png" id="6_fw80x"]
 [ext_resource type="Texture2D" uid="uid://clo68j71rj7e1" path="res://Helicopter/Helicopter1/helicopter1_model_2_fuselage_roughness.png" id="6_satbe"]
 [ext_resource type="Texture2D" uid="uid://b8kk4a3pk3clb" path="res://Helicopter/Helicopter1/helicopter1_painted_parts_white_fuselage_roughness.png" id="7_38d4w"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pm2v8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bfyak"]
 resource_name = "metal_paint_1.003"
@@ -3683,11 +3685,13 @@ alignment = 2
 layout_mode = 2
 focus_neighbor_bottom = NodePath("../FFButton")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/font_hover_color = Color(0.647059, 0.188235, 0.188235, 1)
-theme_override_colors/font_focus_color = Color(0.647059, 0.188235, 0.188235, 1)
+theme_override_colors/font_pressed_color = Color(0.458824, 0.654902, 0.262745, 1)
+theme_override_colors/font_hover_color = Color(0.309804, 0.560784, 0.729412, 1)
+theme_override_colors/font_focus_color = Color(0.309804, 0.560784, 0.729412, 1)
+theme_override_colors/icon_disabled_color = Color(0.909804, 0.756863, 0.439216, 1)
 theme_override_fonts/font = ExtResource("2_w2njg")
 theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_pm2v8")
 text = "[FLIGHT SCHOOL]"
 flat = true
 alignment = 0
@@ -3707,28 +3711,44 @@ text = "[FLIGHT SCHOOL]"
 
 [node name="FFButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
 layout_mode = 2
-focus_neighbor_top = NodePath("../FSButton")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/font_hover_color = Color(0.647059, 0.188235, 0.188235, 1)
-theme_override_colors/font_focus_color = Color(0.647059, 0.188235, 0.188235, 1)
+theme_override_colors/font_pressed_color = Color(0.458824, 0.654902, 0.262745, 1)
+theme_override_colors/font_hover_color = Color(0.309804, 0.560784, 0.729412, 1)
+theme_override_colors/font_focus_color = Color(0.309804, 0.560784, 0.729412, 1)
 theme_override_colors/font_disabled_color = Color(0.699653, 0.699653, 0.699653, 1)
+theme_override_colors/icon_disabled_color = Color(0.909804, 0.756863, 0.439216, 1)
 theme_override_fonts/font = ExtResource("2_w2njg")
 theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_pm2v8")
 text = "[FREE FLIGHT]"
 flat = true
 alignment = 0
 
 [node name="SettingsButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
 layout_mode = 2
-focus_neighbor_top = NodePath("../FSButton")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/font_hover_color = Color(0.647059, 0.188235, 0.188235, 1)
-theme_override_colors/font_focus_color = Color(0.647059, 0.188235, 0.188235, 1)
+theme_override_colors/font_pressed_color = Color(0.458824, 0.654902, 0.262745, 1)
+theme_override_colors/font_hover_color = Color(0.309804, 0.560784, 0.729412, 1)
+theme_override_colors/font_focus_color = Color(0.309804, 0.560784, 0.729412, 1)
+theme_override_colors/icon_disabled_color = Color(0.909804, 0.756863, 0.439216, 1)
 theme_override_fonts/font = ExtResource("2_w2njg")
 theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_pm2v8")
 text = "[settings]"
+flat = true
+alignment = 0
+
+[node name="QuitButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.458824, 0.654902, 0.262745, 1)
+theme_override_colors/font_hover_color = Color(0.309804, 0.560784, 0.729412, 1)
+theme_override_colors/font_focus_color = Color(0.309804, 0.560784, 0.729412, 1)
+theme_override_colors/icon_disabled_color = Color(0.909804, 0.756863, 0.439216, 1)
+theme_override_fonts/font = ExtResource("2_w2njg")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_pm2v8")
+text = "[quit]"
 flat = true
 alignment = 0
 
@@ -4812,3 +4832,4 @@ skeleton = NodePath("")
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/FSButton" to="." method="_on_button_2_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/FFButton" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

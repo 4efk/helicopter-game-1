@@ -8,6 +8,8 @@ extends Node3D
 @onready var hovering_timer_text = $WorldUI/IntructionMessage/ColorRect3/HoveringTimerText
 @onready var ui_finish = $WorldUI/FinishUI
 @onready var ui_fail = $WorldUI/FailUI
+@onready var ui_fail_animation_player = $WorldUI/FailUI/FailUIAnimationPlayer
+@onready var ui_finish_animation_player = $WorldUI/FinishUI/FinishUIAnimationPlayer
 
 @onready var player_helicopter = $PlayerHelicopter
 @onready var ending_camera = $EndingCamera
@@ -22,7 +24,7 @@ var instruction_messages = [
 		"The cyclic that tells the aircraft where to go with [w], [a], [s], [d], or the left thumbstick",
 		"And the anti-torque, which makes the ship turn in a certain direction. You would use the [mouse1]/[L1]/[LB] and [mouse2]/[R1]/[RB] for that.",
 		"So let's start her up!",
-		"Bring up the startup checklist by pressing [c] or [whatever] and follow it very carefully, otherwise you might damage the engine or transmission",
+		"Bring up the startup checklist by pressing [c], [triangle] or [Y] and follow it very carefully, otherwise you might damage the engine or transmission",
 	], [
 		"Nice work! Now we're ready to fly.",
 		"Let's land on the second helipad there. First slowly raise the collective to about 8˚, which will increase the rotor's thrust, remember? It should get us off the ground.",
@@ -47,7 +49,7 @@ var instruction_messages = [
 		"First autos are rarely ever soft landings, but a good landing is the one you walk away from, haha.",
 		"So first gain some altitude, get up to about 500 feet. Also, try to position yourself in front of where you wanna land. Preferably a long flat stretch.",
 	], [
-		"That's plenty. Now skip this message when you're ready. I'll cut the engine. \n [tab]"
+		"That's plenty. Now skip this message when you're ready. I'll cut the engine. \n [tab]/[square]/[X]"
 	], [
 		"Remember: lower the collective, glide, raise the collective and move your cyclic back before hitting the ground."
 	], [
@@ -97,9 +99,11 @@ func type_instruction_text(message_number):
 	typing = true
 
 func finish_task():
-	if current_task == len(instruction_messages)-1:
+	if current_task == len(instruction_messages)-1 and !ui_finish.visible:
 		print('you won and stuff')
 		ui_finish.show()
+		ui_finish_animation_player.play("finish")
+		ui_finish.get_node("HBoxContainer/MainMenuButton").grab_focus()
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		GlobalScript.flightschool_checkpoint = GlobalScript.DEFAULT_FLIGHTSCHOOL_CHECKPOINT.duplicate()
 		ending_camera.global_position = get_viewport().get_camera_3d().global_position
@@ -126,6 +130,8 @@ func save_checkpoint():
 	checkpoint_engine_state = player_helicopter.engine_on
 
 func player_die():
+	ui_checklist.hide()
+	ui_intruction_message.hide()
 	if current_task == tasks.find("second landing"):
 		current_task = tasks.find("second flight")
 	if current_task in [tasks.find('autorotation p2'), tasks.find('autorotation p3')]:
@@ -137,7 +143,6 @@ func player_die():
 	#get_tree().change_scene_to_file("res://World/flight_school.tscn")
 
 func player_fail(dead=false, immediate=false):
-	print(1)
 	player_die()
 	if immediate:
 		_on_fail_timer_timeout()
@@ -157,7 +162,7 @@ func _ready():
 	#current_task = 6
 
 func _process(delta):
-	#print((player_helicopter.global_position - $Helipad2.global_position).length())
+	GlobalScript.unpausable = ui_fail.visible or ui_finish.visible
 	
 	if Input.is_action_just_pressed("show_extra_ui"):
 		#ui_checklist.visible = !ui_checklist.visible
@@ -178,11 +183,11 @@ func _process(delta):
 	elif typing and current_message_character >= len(instruction_messages[current_task][current_message]):
 		typing = false
 		if current_message < len(instruction_messages[current_task])-1:
-			ui_instruction_text.text += '\n [tab]'
+			ui_instruction_text.text += '\n [tab]/[square]/[X]'
 	elif typing:
 		typing_timer += delta
 	
-	if Input.is_action_just_pressed("ui_focus_next") and !typing and current_message < len(instruction_messages[current_task])-1:
+	if Input.is_action_just_pressed("skip_message") and !typing and current_message < len(instruction_messages[current_task])-1:
 		current_message += 1
 		type_instruction_text(current_message)
 	
@@ -200,11 +205,11 @@ func _process(delta):
 		task_progress = 0
 	
 		type_instruction_text(len(instruction_messages[current_task])-1)
-	if current_task == tasks.find('autorotation p2') and Input.is_action_just_pressed("ui_focus_next"):
+	if current_task == tasks.find('autorotation p2') and Input.is_action_just_pressed("skip_message"):
 		finish_task()
 		player_helicopter.engine_working = false
 		player_helicopter.engine_on = false
-	if current_task == tasks.find('autorotation p3') and player_helicopter.global_position.y < 2 and player_helicopter.linear_velocity.length() < 0.005:
+	if current_task == tasks.find('autorotation p3') and player_helicopter.global_position.y < 250 and player_helicopter.linear_velocity.length() < 0.005:
 		finish_task()
 		#player_helicopter.engine_working = true
 	
@@ -265,6 +270,8 @@ func _on_hover_area_body_exited(body):
 
 func _on_fail_timer_timeout():
 	ui_fail.show()
+	ui_fail_animation_player.play("fail")
+	ui_fail.get_node("HBoxContainer/RetryButton").grab_focus()
 	ui_intruction_message.hide()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	if change_ending_camera:

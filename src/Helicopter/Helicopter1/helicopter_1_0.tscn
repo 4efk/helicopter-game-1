@@ -1,4 +1,4 @@
-[gd_scene load_steps=273 format=3 uid="uid://crx38qtc48mgg"]
+[gd_scene load_steps=275 format=3 uid="uid://crx38qtc48mgg"]
 
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_b05el"]
 [ext_resource type="Texture2D" uid="uid://cd5a324ph2lmj" path="res://Helicopter/Helicopter1/helicopter1_model_2_apollo_palette-1x.png" id="2_27dgy"]
@@ -25,6 +25,8 @@
 [ext_resource type="AudioStream" uid="uid://diyqhyrenf6pq" path="res://Audio/rotor_2.wav" id="22_s6ghh"]
 [ext_resource type="AudioStream" uid="uid://dc6jw5m3ttsn4" path="res://Audio/water_splash_1.wav" id="23_4yi5i"]
 [ext_resource type="AudioStream" uid="uid://ynnovggfigya" path="res://Audio/mr_break_1.wav" id="23_q5l6u"]
+[ext_resource type="AudioStream" uid="uid://dmg1p2n6we6bh" path="res://Audio/music1.wav" id="26_djb8a"]
+[ext_resource type="AudioStream" uid="uid://b38u5net6hm2x" path="res://Audio/217495__vkproduktion__switch-01.wav" id="27_8jt0g"]
 
 [sub_resource type="Curve" id="Curve_xwg30"]
 max_value = 124.0
@@ -4729,6 +4731,15 @@ bus = &"SFX"
 [node name="WaterSplash" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("23_4yi5i")
 volume_db = 3.0
+bus = &"SFX"
+
+[node name="BGMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("26_djb8a")
+volume_db = 5.0
+bus = &"Music"
+
+[node name="ClutchSwitch" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("27_8jt0g")
 bus = &"SFX"
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

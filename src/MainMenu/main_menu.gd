@@ -8,6 +8,8 @@ extends Node3D
 
 @onready var freeflight_button = $CanvasLayer/MainMenu/VBoxContainer/FFButton
 
+@onready var bg_music = $BGMusic
+
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	GlobalScript.flightschool_checkpoint = GlobalScript.DEFAULT_FLIGHTSCHOOL_CHECKPOINT.duplicate()
@@ -22,6 +24,9 @@ func _process(delta):
 	
 	moving_main_rotor_part.quaternion *= Quaternion(Vector3(0.0471064507, 0.99888987496, 0), main_rotor_omega * delta)
 	moving_tail_rotor_part.quaternion *= Quaternion(Vector3(0, 0, 1), tail_rotor_omega * delta)
+	
+	if !bg_music.playing:
+		bg_music.play()
 
 func _on_button_pressed():
 	GlobalScript.current_gamemode = 1

@@ -5,8 +5,18 @@ var air_density = 1.225
 const SETTINGS_FILEPATH = 'user://settings.dat'
 const GAMEDATA_FILEPATH = 'user://gamedata.dat'
 
+var fps_options = [30, 60, 120, 144, 240, 360, 0]
+
 var settings = {
-	'text_typing_time': 0.0166666
+	'text_typing_time': 0.0166666,
+	'mouse_sensitivity': 0.005,
+	'fps': 1,
+	'master_volume': 0,
+	'music_volume': 0,
+	'sfx_volume': 0,
+	'vsync':false,
+	'show_fps':false,
+	'fullscreen':4
 }
 
 var game_save = {
@@ -21,8 +31,16 @@ var flightschool_checkpoint = DEFAULT_FLIGHTSCHOOL_CHECKPOINT.duplicate()
 var unpausable = false
 
 func _ready():
+	save_settings()
 	load_settings()
 	load_game()
+	apply_settings()
+
+func _process(delta):
+	if Input.is_action_just_pressed("toggle_fullscreen"):
+		settings['fullscreen'] = 4 * int(!settings['fullscreen'])
+		DisplayServer.window_set_mode(settings['fullscreen'])
+		save_settings()
 
 func save_game():
 	var error = FileAccess.open(GAMEDATA_FILEPATH, FileAccess.WRITE)
@@ -47,3 +65,26 @@ func load_settings():
 		if error:
 			settings = error.get_var()
 			error.close()
+
+func apply_settings():
+	if GlobalScript.settings['master_volume'] <= -45:
+		AudioServer.set_bus_mute(0, true)
+	else:
+		AudioServer.set_bus_mute(0, false)
+		AudioServer.set_bus_volume_db(0, GlobalScript.settings['master_volume'])
+	
+	if GlobalScript.settings['sfx_volume'] <= -45:
+		AudioServer.set_bus_mute(1, true)
+	else:
+		AudioServer.set_bus_mute(1, false)
+		AudioServer.set_bus_volume_db(1, GlobalScript.settings['sfx_volume'])
+	
+	if GlobalScript.settings['music_volume'] <= -45:
+		AudioServer.set_bus_mute(2, true)
+	else:
+		AudioServer.set_bus_mute(2, false)
+		AudioServer.set_bus_volume_db(2, GlobalScript.settings['music_volume'])
+		
+	Engine.max_fps = GlobalScript.fps_options[GlobalScript.settings['fps']]
+	DisplayServer.window_set_vsync_mode(GlobalScript.settings['vsync'])
+	DisplayServer.window_set_mode(GlobalScript.settings['fullscreen'])

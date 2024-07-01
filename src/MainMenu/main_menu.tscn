@@ -1,13 +1,15 @@
-[gd_scene load_steps=238 format=3 uid="uid://dd457rl1u3dew"]
+[gd_scene load_steps=240 format=3 uid="uid://dd457rl1u3dew"]
 
 [ext_resource type="Script" path="res://MainMenu/main_menu.gd" id="1_y4a7q"]
 [ext_resource type="FontFile" uid="uid://2c0clvecpiwo" path="res://Fonts/DejaVuSans.ttf" id="2_w2njg"]
+[ext_resource type="PackedScene" uid="uid://6nm2bme800h3" path="res://MainMenu/settings.tscn" id="3_0hotv"]
 [ext_resource type="PackedScene" uid="uid://c17g4xyv6h8t2" path="res://World/Models/game_map_1.glb" id="3_wh2oj"]
 [ext_resource type="Environment" uid="uid://ckc2air8sqx7r" path="res://World/sunny_environment.tres" id="4_cohwq"]
 [ext_resource type="Texture2D" uid="uid://cd5a324ph2lmj" path="res://Helicopter/Helicopter1/helicopter1_model_2_apollo_palette-1x.png" id="5_b2e4r"]
 [ext_resource type="Texture2D" uid="uid://cgfotahctuhbf" path="res://Helicopter/Helicopter1/helicopter1_painted_parts_white_apollo_palette-1x.png" id="6_fw80x"]
 [ext_resource type="Texture2D" uid="uid://clo68j71rj7e1" path="res://Helicopter/Helicopter1/helicopter1_model_2_fuselage_roughness.png" id="6_satbe"]
 [ext_resource type="Texture2D" uid="uid://b8kk4a3pk3clb" path="res://Helicopter/Helicopter1/helicopter1_painted_parts_white_fuselage_roughness.png" id="7_38d4w"]
+[ext_resource type="AudioStream" uid="uid://cgrudxejnh7xx" path="res://Audio/music2.wav" id="9_ntlew"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pm2v8"]
 
@@ -3755,14 +3757,16 @@ alignment = 0
 [node name="Settings" type="Control" parent="CanvasLayer"]
 visible = false
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
-[node name="setting sLbel" type="Label" parent="CanvasLayer/Settings"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="Settings" parent="CanvasLayer/Settings" instance=ExtResource("3_0hotv")]
+layout_mode = 1
+mouse_filter = 2
 
 [node name="World" type="Node3D" parent="."]
 
@@ -4828,6 +4832,11 @@ skeleton = NodePath("")
 visible = false
 mesh = SubResource("ArrayMesh_8k6fa")
 skeleton = NodePath("")
+
+[node name="BGMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_ntlew")
+volume_db = 2.0
+bus = &"Music"
 
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/FSButton" to="." method="_on_button_2_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/FFButton" to="." method="_on_button_pressed"]

@@ -64,6 +64,8 @@ var detached_tail_rotor = preload("res://Helicopter/Helicopter1/detached_tail_ro
 @onready var rotor_sound = $Rotor
 @onready var main_rotor_break_sound = $MainRotorBreak
 @onready var tail_rotor_break_sound = $TailRotorBreak
+@onready var bg_music = $BGMusic
+@onready var clutch_switch_sound = $ClutchSwitch
 
 var dead = false
 
@@ -150,16 +152,16 @@ func rotor_broken(rotor, fling_direction=Vector3.UP):
 		hud.hide()
 
 func disable_collision():
-	# TODO USE set_deferred()
-	$"@CollisionShape3D@25131".disabled = true
-	$"@CollisionShape3D@25130".disabled = true
-	$"@CollisionShape3D@25129".disabled = true
-	$"@CollisionShape3D@25128".disabled = true
-	$"@CollisionShape3D@25127".disabled = true
-	$"@CollisionShape3D@25126".disabled = true
+	$"@CollisionShape3D@25131".set_deferred("disabled", true)
+	$"@CollisionShape3D@25130".set_deferred("disabled", true)
+	$"@CollisionShape3D@25129".set_deferred("disabled", true)
+	$"@CollisionShape3D@25128".set_deferred("disabled", true)
+	$"@CollisionShape3D@25127".set_deferred("disabled", true)
+	$"@CollisionShape3D@25126".set_deferred("disabled", true)
 
 
 func _ready():
+	mouse_sensitivity = GlobalScript.settings['mouse_sensitivity']
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	cam_spring_arm.add_excluded_object(self)
 	cam_pivot_y.rotation.y = default_camera_rotation.y
@@ -200,6 +202,9 @@ func _process(delta):
 			rotor_sound.play()
 			rotor_sound_timer = 0.0
 	rotor_sound_timer += delta
+	
+	if !bg_music.playing and !dead and !main_rotor_broken and !tail_rotor_broken:
+		bg_music.play()
 	
 	#camera control
 	cam_pivot_y.global_position = global_position
@@ -247,9 +252,10 @@ func _process(delta):
 		#engine_on = false
 		#main_rotor_omega += 0.05
 	
-	if Input.is_action_just_pressed('engage_clutch'):
+	if Input.is_action_just_pressed('engage_clutch') and !clutch_switch_sound.playing:
 		clutch_engaged = !clutch_engaged
 		clutch_movement = [-1.0, 1][int(clutch_engaged)]
+		clutch_switch_sound.play()
 		
 	belt_tension += delta/10 * clutch_movement
 	belt_tension = clampf(belt_tension, 0.05, 1.0)

@@ -5,7 +5,7 @@ a game with a helicopter. also available on [itch.io](https://4efk.itch.io/helic
 the code is reeaally awful, you have been warned
 
 ### credits
-these sounds from [freesound.org](freesound.org) have been used:
+these sounds from [freesound.org](https://freesound.org) have been used:
   - [helicopter-rotor-loop](https://freesound.org/people/qubodup/sounds/187681/) by qubodup
   - [japan_matsudo_small_truck_idle_engine](https://freesound.org/people/RutgerMuller/sounds/364819/) by rutgermuller
   - [helicopter](https://freesound.org/people/5ound5murf23/sounds/520915/) by 5ound5murf23

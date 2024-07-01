@@ -16,6 +16,8 @@ extends Node3D
 
 @onready var fail_timer = $FailTimer
 
+@onready var type_sound = $TypeSound
+
 var instruction_messages = [
 	[
 		"Hey, welcome to this helicopter training. You will learn the skills necessary to safely operate a chopper here",
@@ -130,6 +132,7 @@ func save_checkpoint():
 	checkpoint_engine_state = player_helicopter.engine_on
 
 func player_die():
+	type_sound.volume_db = -80
 	ui_checklist.hide()
 	ui_intruction_message.hide()
 	if current_task == tasks.find("second landing"):
@@ -178,6 +181,8 @@ func _process(delta):
 		ui_instruction_text.text += instruction_messages[current_task][current_message][current_message_character]
 		typing_timer = 0.0
 		current_message_character += 1
+		if current_message_character % 2 == 0:
+			type_sound.play()
 		if current_task == tasks.find("last landing") and current_message == 1 and current_message_character == len(instruction_messages[current_task][current_message])-1:
 			finish_task()
 	elif typing and current_message_character >= len(instruction_messages[current_task][current_message]):
@@ -195,7 +200,7 @@ func _process(delta):
 	if current_task == tasks.find('startup') and player_helicopter.main_rotor_omega == 55.5:
 		finish_task()
 	
-	if current_task == tasks.find('second flight') and player_helicopter.global_position.length() > longer_flight_distance:
+	if current_task == tasks.find('second flight') and (player_helicopter.global_position - $Helipad.global_position).length() > longer_flight_distance:
 		finish_task()
 	
 	if current_task == tasks.find('autorotation p1') and player_helicopter.global_position.y > autorotation_height:
@@ -209,6 +214,8 @@ func _process(delta):
 		finish_task()
 		player_helicopter.engine_working = false
 		player_helicopter.engine_on = false
+		player_helicopter.engine_run_sound.stop()
+		player_helicopter.engine_shutoff_sound.play()
 	if current_task == tasks.find('autorotation p3') and player_helicopter.global_position.y < 250 and player_helicopter.linear_velocity.length() < 0.005:
 		finish_task()
 		#player_helicopter.engine_working = true

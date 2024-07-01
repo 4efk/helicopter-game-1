@@ -24,6 +24,7 @@ var detached_tail_rotor = preload("res://Helicopter/Helicopter1/detached_tail_ro
 @onready var main_rotor_pos_ind = $helicopter1_model_2/MainRotorPosInd
 @onready var tail_rotor_pos_ind = $helicopter1_model_2/TailRotorPosInd
 @onready var engine_cooldown_timer = $EngineCooldownTimer
+@onready var engine_start_timer = $EngineStartTimer
 
 @onready var moving_main_rotor_part = $helicopter1_model_2/MovingMainRotorPart
 @onready var moving_tail_rotor_part = $helicopter1_model_2/MovingTailRotorPart
@@ -54,6 +55,16 @@ var detached_tail_rotor = preload("res://Helicopter/Helicopter1/detached_tail_ro
 
 @onready var fps_counter = $HUD/FPSCounter
 
+@onready var engine_startup_sound = $EngineStartup
+@onready var engine_startup_fail_sound = $EngineStartupFail
+@onready var engine_run_sound = $EngineRun
+@onready var engine_shutoff_sound = $EngineShutoff
+@onready var explosion_sound = $Explosion
+@onready var water_splash_sound = $WaterSplash
+@onready var rotor_sound = $Rotor
+@onready var main_rotor_break_sound = $MainRotorBreak
+@onready var tail_rotor_break_sound = $TailRotorBreak
+
 var dead = false
 
 var engine_working = true
@@ -83,16 +94,26 @@ var hooked_object = null
 
 var player_moving_camera = false
 
+var rotor_sound_timer = 0.0
+var rotor_sound_frequency = 0
+
 func die(immediate=false, explode=true):
 	if dead:
 		return
 	#get_tree().change_scene_to_file("res://World/world_0.tscn")
+	engine_run_sound.stop()
+	engine_shutoff_sound.play()
 	if explode:
 		disable_collision()
 		helicopter_form.hide()
 		helicopter_exploded.explode(main_rotor_omega, tail_rotor_omega)
+		explosion_sound.play()
+		engine_run_sound.stop()
+		engine_shutoff_sound.stop()
 	dead = true
 	hud.hide()
+	if main_rotor_broken or tail_rotor_broken:
+		return
 	if GlobalScript.current_gamemode == 1:
 		get_parent().player_die()
 	elif GlobalScript.current_gamemode == 0:
@@ -110,6 +131,7 @@ func rotor_broken(rotor, fling_direction=Vector3.UP):
 		detached_main_rotor_child.global_position = main_rotor_pos_ind.global_position + transform.basis.y * 1
 		detached_main_rotor_child.linear_velocity = fling_direction * randf_range(30, 50)
 		detached_main_rotor_child.angular_velocity = transform.basis.y * main_rotor_omega
+		main_rotor_break_sound.play()
 	elif rotor == 1 and !tail_rotor_broken:
 		tail_rotor_broken = true
 		moving_tail_rotor_part.hide()
@@ -119,6 +141,7 @@ func rotor_broken(rotor, fling_direction=Vector3.UP):
 		detached_tail_rotor_child.global_position = tail_rotor_pos_ind.global_position + transform.basis.z * -1
 		detached_tail_rotor_child.linear_velocity = fling_direction * randf_range(40, 50)
 		detached_tail_rotor_child.angular_velocity = transform.basis.z * tail_rotor_omega
+		tail_rotor_break_sound.play()
 	if GlobalScript.current_gamemode == 0 and !broken_before:
 		get_parent().player_fail()
 		hud.hide()
@@ -164,6 +187,20 @@ func _process(delta):
 	$extra_water_1.global_position = global_position
 	$extra_water_1.global_position.y =  10
 	
+	#SFX
+	if engine_on and engine_working and !dead:
+		if !engine_run_sound.playing and !engine_startup_sound.playing and !engine_startup_fail_sound.playing: engine_run_sound.play()
+	
+	rotor_sound_frequency = main_rotor_omega / PI # (1.5 * PI)
+	if rotor_sound_frequency > 9.0: rotor_sound_frequency = 9.0
+	if rotor_sound_frequency > 0.5:
+		if rotor_sound_timer >= 1 / rotor_sound_frequency and !main_rotor_broken and !dead:
+			rotor_sound.pitch_scale = randf_range(.9, 1.0)
+			rotor_sound.volume_db = main_rotor_omega / 55.5 * 10.0
+			rotor_sound.play()
+			rotor_sound_timer = 0.0
+	rotor_sound_timer += delta
+	
 	#camera control
 	cam_pivot_y.global_position = global_position
 	
@@ -181,10 +218,22 @@ func _process(delta):
 	cam_pivot_z.rotation.z = clamp(cam_pivot_z.rotation.z, -PI/2, PI/2)
 	
 	#helicopter control
-	if Input.is_action_just_pressed("start_engine") and engine_cooled:
+	if Input.is_action_just_pressed("start_engine") and engine_cooled and !engine_startup_fail_sound.playing and !engine_startup_sound.playing:
 		engine_on = !engine_on
 		engine_cooled = false
 		engine_cooldown_timer.start()
+		if !engine_on:
+			engine_run_sound.stop()
+			engine_shutoff_sound.play()
+			return
+		if engine_omega < 130 and main_rotor_omega < 10 and belt_tension > 0.5:
+			engine_on = false
+			main_rotor_omega += 0.05
+			engine_startup_fail_sound.play()
+		else:
+			engine_on = false
+			engine_start_timer.start()
+			engine_startup_sound.play()
 	engine_on = bool(int(engine_on) * int(engine_working))
 	if engine_on:
 		engine_alpha = [141.37, 282.7433/8][int(engine_omega > 141.37)]
@@ -194,9 +243,9 @@ func _process(delta):
 	engine_omega += engine_alpha * delta
 	engine_omega = clampf(engine_omega, 0, 282.7433)
 	
-	if engine_on and engine_omega < 130 and engine_omega > (530/2700 * main_rotor_omega) and belt_tension > 0.5:
-		engine_on = false
-		main_rotor_omega += 0.05
+	#if engine_on and engine_omega < 130 and engine_omega > (530/2700 * main_rotor_omega) and belt_tension > 0.5:
+		#engine_on = false
+		#main_rotor_omega += 0.05
 	
 	if Input.is_action_just_pressed('engage_clutch'):
 		clutch_engaged = !clutch_engaged
@@ -249,6 +298,7 @@ func _physics_process(_delta):
 	#falling into water
 	if global_position.y < 0 and !dead:
 		die(true, false)
+		water_splash_sound.play()
 	#kinda working cyclic control by offsetting the position of where the force is being applied along the rotor disc
 	#the offset is just made up in terms of how it feels, based on nothing at all
 	#cyclic += Vector2(main_rotor_pos_ind.position.x + helicopter_form.position.x, main_rotor_pos_ind.position.z + helicopter_form.position.z)
@@ -392,3 +442,6 @@ func _on_engine_cooldown_timer_timeout():
 
 func _on_camera_reset_timer_timeout():
 	player_moving_camera = false
+
+func _on_engine_start_timer_timeout():
+	engine_on = true

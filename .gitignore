@@ -1,5 +1,8 @@
-# Godot 4+ specific ignores
+﻿# Godot 4+ specific ignores
 .godot/
 
 #ignoring a folder with possibly copyrighted reference
 ref/
+
+#the audacity files are too big for github
+external/audacity/

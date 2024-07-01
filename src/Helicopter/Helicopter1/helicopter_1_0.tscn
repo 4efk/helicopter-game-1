@@ -1,4 +1,4 @@
-[gd_scene load_steps=265 format=3 uid="uid://crx38qtc48mgg"]
+[gd_scene load_steps=273 format=3 uid="uid://crx38qtc48mgg"]
 
 [ext_resource type="Script" path="res://Helicopter/helicopter_controller.gd" id="1_b05el"]
 [ext_resource type="Texture2D" uid="uid://cd5a324ph2lmj" path="res://Helicopter/Helicopter1/helicopter1_model_2_apollo_palette-1x.png" id="2_27dgy"]
@@ -17,6 +17,14 @@
 [ext_resource type="Texture2D" uid="uid://bjia0vhjomxdh" path="res://UI/HUD/altimeter_base.svg" id="8_p8j52"]
 [ext_resource type="Texture2D" uid="uid://b4gnr2ual1eh6" path="res://UI/HUD/collective_base.svg" id="9_1kqx4"]
 [ext_resource type="PackedScene" uid="uid://bl2er138id4gf" path="res://Helicopter/Helicopter1/helicopter_1_0_exploded.tscn" id="10_mvs5c"]
+[ext_resource type="AudioStream" uid="uid://jjab3qdrh30b" path="res://Audio/engine_startup_2.wav" id="18_oaqa4"]
+[ext_resource type="AudioStream" uid="uid://bh0em4iqvepsb" path="res://Audio/engine_startup_fail.wav" id="19_06qxn"]
+[ext_resource type="AudioStream" uid="uid://coh8wi8xfn1bb" path="res://Audio/engine_running.wav" id="20_hebby"]
+[ext_resource type="AudioStream" uid="uid://dppm3sacvy0xh" path="res://Audio/engine_shutoff.wav" id="21_jtr1y"]
+[ext_resource type="AudioStream" uid="uid://ckfkinulx0i8" path="res://Audio/explosion_1.wav" id="22_l6e4a"]
+[ext_resource type="AudioStream" uid="uid://diyqhyrenf6pq" path="res://Audio/rotor_2.wav" id="22_s6ghh"]
+[ext_resource type="AudioStream" uid="uid://dc6jw5m3ttsn4" path="res://Audio/water_splash_1.wav" id="23_4yi5i"]
+[ext_resource type="AudioStream" uid="uid://ynnovggfigya" path="res://Audio/mr_break_1.wav" id="23_q5l6u"]
 
 [sub_resource type="Curve" id="Curve_xwg30"]
 max_value = 124.0
@@ -4572,6 +4580,11 @@ top_level = true
 visible = false
 
 [node name="EngineCooldownTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="EngineStartTimer" type="Timer" parent="."]
+wait_time = 2.0
 one_shot = true
 
 [node name="CameraResetTimer" type="Timer" parent="."]
@@ -4674,9 +4687,54 @@ collision_mask = 2
 [node name="CollisionShape3D" type="CollisionShape3D" parent="extra_water_1/StaticBody3D"]
 shape = SubResource("BoxShape3D_s625e")
 
+[node name="EngineStartup" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("18_oaqa4")
+volume_db = -3.0
+bus = &"SFX"
+
+[node name="EngineStartupFail" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("19_06qxn")
+volume_db = -3.0
+bus = &"SFX"
+
+[node name="EngineRun" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("20_hebby")
+volume_db = -3.0
+bus = &"SFX"
+
+[node name="EngineShutoff" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("21_jtr1y")
+volume_db = -3.0
+bus = &"SFX"
+
+[node name="Rotor" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("22_s6ghh")
+bus = &"SFX"
+
+[node name="MainRotorBreak" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("23_q5l6u")
+bus = &"SFX"
+
+[node name="TailRotorBreak" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("23_q5l6u")
+volume_db = -10.0
+pitch_scale = 1.43
+bus = &"SFX"
+
+[node name="Explosion" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("22_l6e4a")
+volume_db = 1.0
+bus = &"SFX"
+
+[node name="WaterSplash" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("23_4yi5i")
+volume_db = 3.0
+bus = &"SFX"
+
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_entered" from="helicopter1_model_2/MainRotorDiscArea" to="." method="_on_main_rotor_disc_area_body_entered"]
 [connection signal="body_entered" from="helicopter1_model_2/TailRotorDiscArea" to="." method="_on_tail_rotor_disc_area_body_entered"]
 [connection signal="body_entered" from="Hook/HookArea" to="." method="_on_hook_area_body_entered"]
 [connection signal="timeout" from="EngineCooldownTimer" to="." method="_on_engine_cooldown_timer_timeout"]
+[connection signal="timeout" from="EngineStartTimer" to="." method="_on_engine_start_timer_timeout"]
 [connection signal="timeout" from="CameraResetTimer" to="." method="_on_camera_reset_timer_timeout"]

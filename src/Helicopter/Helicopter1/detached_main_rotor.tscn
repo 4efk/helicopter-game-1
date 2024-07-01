@@ -1,6 +1,8 @@
-[gd_scene load_steps=39 format=3 uid="uid://b8paviiinun0x"]
+[gd_scene load_steps=41 format=3 uid="uid://b8paviiinun0x"]
 
 [ext_resource type="Texture2D" uid="uid://cd5a324ph2lmj" path="res://Helicopter/Helicopter1/helicopter1_model_2_apollo_palette-1x.png" id="1_1mejf"]
+[ext_resource type="Script" path="res://Helicopter/Helicopter1/detached_main_rotor.gd" id="1_5p7y5"]
+[ext_resource type="AudioStream" uid="uid://diyqhyrenf6pq" path="res://Audio/rotor_2.wav" id="2_dbm3c"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mfra5"]
 size = Vector3(8.47304, 0.062561, 0.278809)
@@ -577,6 +579,7 @@ shadow_mesh = SubResource("ArrayMesh_eoia2")
 top_level = true
 mass = 25.0
 center_of_mass_mode = 1
+script = ExtResource("1_5p7y5")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00753021, 0.00375366, 0.0065918)
@@ -666,3 +669,9 @@ skeleton = NodePath("")
 transform = Transform3D(-0.998786, -0.0492247, -0.00200093, -0.0492247, 0.998788, -3.04752e-05, 0.00200001, 6.80571e-05, -0.999998, -3.29614e-05, -0.146735, -7.72876e-06)
 mesh = SubResource("ArrayMesh_hmxut")
 skeleton = NodePath("")
+
+[node name="RotorSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_dbm3c")
+volume_db = 10.0
+max_db = 6.0
+bus = &"SFX"

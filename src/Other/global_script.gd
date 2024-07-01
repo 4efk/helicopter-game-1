@@ -31,7 +31,6 @@ var flightschool_checkpoint = DEFAULT_FLIGHTSCHOOL_CHECKPOINT.duplicate()
 var unpausable = false
 
 func _ready():
-	save_settings()
 	load_settings()
 	load_game()
 	apply_settings()

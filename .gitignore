@@ -4,5 +4,6 @@
 #ignoring a folder with possibly copyrighted reference
 ref/
 
-#the audacity files are too big for github
+#these files are too big for github
 external/audacity/
+build/

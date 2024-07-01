@@ -47,7 +47,7 @@ var instruction_messages = [
 		"The most important thing is lowering the collective immediately after losing power.",
 		"After only 3 seconds, the rotor system will lose so much inertia that it won't be possible to land safely. During autorotation, rotor inertia is the most valuable thing you have.",
 		"Next thing you do is glide, with the drag coefficient similar to a parachute, the rotor disk will prevent us from falling like a rock.",
-		"Then about 6 feet off the ground you're gonna flare the collective back up to cushion the landing.",
+		"Then about 10 feet off the ground you're gonna flare the collective back up to cushion the landing.",
 		"First autos are rarely ever soft landings, but a good landing is the one you walk away from, haha.",
 		"So first gain some altitude, get up to about 500 feet. Also, try to position yourself in front of where you wanna land. Preferably a long flat stretch.",
 	], [
